@@ -1,0 +1,18 @@
+{
+	"name": "lumen",
+	"version": "0.1.0",
+	"description": "Skills for diagrams, charts, mermaid, slides, galleries, guides, project recaps, and fact-checks. Single-file HTML/SVG outputs.",
+	"author": "The Forge Flow",
+	"license": "MIT",
+	"homepage": "https://github.com/MonsieurBarti/lumen",
+	"skills": [
+		"skills/lumen-diagram",
+		"skills/lumen-chart",
+		"skills/lumen-mermaid",
+		"skills/lumen-slides",
+		"skills/lumen-gallery",
+		"skills/lumen-guide",
+		"skills/lumen-recap",
+		"skills/lumen-fact-check"
+	]
+}

@@ -1,0 +1,100 @@
+{
+	"name": "@the-forge-flow/lumen",
+	"version": "0.1.0",
+	"description": "Illuminate code: skills for diagrams, charts, mermaid, slides, galleries, guides, project recaps, and fact-checks. Works in Claude Code and PI coding agent.",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist",
+		"skills",
+		".claude-plugin",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"prebuild": "rm -rf dist/skills && mkdir -p dist && cp -R skills dist/skills",
+		"build": "tsc -p tsconfig.build.json",
+		"dev": "tsc -p tsconfig.build.json --watch",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"check": "biome check .",
+		"check:fix": "biome check --write .",
+		"fmt": "biome format --write .",
+		"typecheck": "tsc --noEmit",
+		"clean": "rm -rf dist",
+		"prepare": "lefthook install || true"
+	},
+	"keywords": [
+		"pi-package",
+		"pi",
+		"pi-coding-agent",
+		"claude-code",
+		"claude-code-plugin",
+		"extension",
+		"skills",
+		"diagrams",
+		"charts",
+		"mermaid",
+		"slides",
+		"gallery",
+		"visualization",
+		"html",
+		"svg",
+		"tff",
+		"the-forge-flow"
+	],
+	"author": "The Forge Flow",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MonsieurBarti/lumen.git"
+	},
+	"bugs": {
+		"url": "https://github.com/MonsieurBarti/lumen/issues"
+	},
+	"homepage": "https://github.com/MonsieurBarti/lumen#readme",
+	"publishConfig": {
+		"access": "public"
+	},
+	"engines": {
+		"node": ">=22.5.0"
+	},
+	"pi": {
+		"extensions": [
+			"./dist/index.js"
+		],
+		"skills": [
+			"./dist/skills"
+		]
+	},
+	"peerDependencies": {
+		"@mariozechner/pi-coding-agent": "*",
+		"@mariozechner/pi-ai": "*",
+		"@mariozechner/pi-tui": "*",
+		"@sinclair/typebox": "*"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@commitlint/cli": "^19.8.0",
+		"@commitlint/config-conventional": "^19.8.0",
+		"@mariozechner/pi-ai": "latest",
+		"@mariozechner/pi-coding-agent": "latest",
+		"@mariozechner/pi-tui": "latest",
+		"@sinclair/typebox": "^0.34.0",
+		"@types/node": "^22.0.0",
+		"@vitest/coverage-v8": "^2.1.0",
+		"lefthook": "^2.1.5",
+		"typescript": "^5.7.0",
+		"vitest": "^2.1.0"
+	}
+}

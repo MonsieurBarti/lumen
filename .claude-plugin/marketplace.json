@@ -1,0 +1,14 @@
+{
+	"name": "lumen",
+	"owner": {
+		"name": "The Forge Flow",
+		"url": "https://github.com/MonsieurBarti"
+	},
+	"plugins": [
+		{
+			"name": "lumen",
+			"source": "./",
+			"description": "Illuminate code: skills for diagrams, charts, mermaid, slides, galleries, guides, recaps, and fact-checks."
+		}
+	]
+}
