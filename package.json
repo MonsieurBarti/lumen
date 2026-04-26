@@ -14,12 +14,14 @@
 	"files": [
 		"dist",
 		"skills",
+		"composites",
+		"playbooks",
 		".claude-plugin",
 		"README.md",
 		"LICENSE"
 	],
 	"scripts": {
-		"prebuild": "rm -rf dist/skills && mkdir -p dist && cp -R skills dist/skills",
+		"prebuild": "rm -rf dist/skills dist/composites dist/playbooks && mkdir -p dist && cp -R skills dist/skills && cp -R composites dist/composites && cp -R playbooks dist/playbooks",
 		"build": "tsc -p tsconfig.build.json",
 		"dev": "tsc -p tsconfig.build.json --watch",
 		"test": "vitest run",
@@ -74,7 +76,9 @@
 			"./dist/index.js"
 		],
 		"skills": [
-			"./dist/skills"
+			"./dist/skills",
+			"./dist/composites",
+			"./dist/playbooks"
 		]
 	},
 	"peerDependencies": {

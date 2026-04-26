@@ -2,31 +2,43 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { LUMEN_SKILLS } from "../src/index.js";
+import { LUMEN_CAPABILITIES, LUMEN_COMPOSITES, LUMEN_PLAYBOOKS } from "../src/index.js";
 
-const SKILLS_DIR = join(import.meta.dirname, "..", "skills");
+const ROOT = join(import.meta.dirname, "..");
+const SKILLS_DIR = join(ROOT, "skills");
+
+const TIERS: ReadonlyArray<readonly [string, readonly string[]]> = [
+	["skills", LUMEN_CAPABILITIES],
+	["composites", LUMEN_COMPOSITES],
+	["playbooks", LUMEN_PLAYBOOKS],
+];
 
 describe("skill manifest integrity", () => {
-	for (const skill of LUMEN_SKILLS) {
-		it(`${skill} has a SKILL.md with required frontmatter`, () => {
-			const path = join(SKILLS_DIR, skill, "SKILL.md");
-			expect(existsSync(path), `Missing ${path}`).toBe(true);
-			const body = readFileSync(path, "utf8");
-			expect(body, "frontmatter must start at line 1").toMatch(/^---\n/);
-			expect(body).toMatch(/^name: /m);
-			expect(body).toMatch(/^description: /m);
-			expect(body).toMatch(/^version: \d+\.\d+\.\d+/m);
-		});
+	for (const [tierDir, ids] of TIERS) {
+		for (const skill of ids) {
+			it(`${skill} (in ${tierDir}/) has a SKILL.md with required frontmatter`, () => {
+				const path = join(ROOT, tierDir, skill, "SKILL.md");
+				expect(existsSync(path), `Missing ${path}`).toBe(true);
+				const body = readFileSync(path, "utf8");
+				expect(body, "frontmatter must start at line 1").toMatch(/^---\n/);
+				expect(body).toMatch(/^name: /m);
+				expect(body).toMatch(/^description: /m);
+				expect(body).toMatch(/^version: \d+\.\d+\.\d+/m);
+			});
 
-		it(`${skill} has a NOTICE.md attributing upstream(s)`, () => {
-			const path = join(SKILLS_DIR, skill, "NOTICE.md");
-			// lumen-mermaid is the one skill whose assets live in src/templates/shared.ts,
-			// not in skills/lumen-mermaid/, so its provenance is in the file header.
-			if (skill === "lumen-mermaid") return;
-			expect(existsSync(path), `Missing ${path}`).toBe(true);
-			const body = readFileSync(path, "utf8");
-			expect(body.toLowerCase()).toContain("mit");
-		});
+			it(`${skill} has a NOTICE.md (capabilities only; composites + playbooks are novel orchestration)`, () => {
+				// lumen-mermaid is the one capability whose assets live in src/templates/shared.ts,
+				// not in skills/lumen-mermaid/, so its provenance is in the file header.
+				if (skill === "lumen-mermaid") return;
+				// Composites and playbooks compose existing capabilities; their constituent
+				// capabilities carry the upstream attribution.
+				if (tierDir !== "skills") return;
+				const path = join(ROOT, tierDir, skill, "NOTICE.md");
+				expect(existsSync(path), `Missing ${path}`).toBe(true);
+				const body = readFileSync(path, "utf8");
+				expect(body.toLowerCase()).toContain("mit");
+			});
+		}
 	}
 });
 

@@ -7,7 +7,8 @@ import { describe, expect, it } from "vitest";
  *
  * Real bug class (caught at install time, not CI):
  *   - `author` must be an object {name,url?}, not a string.
- *   - `skills` must be a string path to the skills directory, not an array.
+ *   - `skills` must be a string path or an array of string paths
+ *     (https://code.claude.com/docs/en/plugins-reference — Component path fields).
  *   - plugin.json version MUST match package.json version (release-please
  *     bumps both via the extra-files entry).
  */
@@ -29,6 +30,10 @@ function readJson<T>(relative: string): T {
 	return JSON.parse(text) as T;
 }
 
+function isStringArray(value: unknown): value is string[] {
+	return Array.isArray(value) && value.every((v) => typeof v === "string");
+}
+
 describe("CC plugin manifest (.claude-plugin/plugin.json)", () => {
 	const manifest = readJson<PluginManifest>(".claude-plugin/plugin.json");
 	const pkg = readJson<{ version?: unknown }>("package.json");
@@ -48,10 +53,21 @@ describe("CC plugin manifest (.claude-plugin/plugin.json)", () => {
 		expect(typeof author.name).toBe("string");
 	});
 
-	it("declares skills as a string path (CC discovers subdirs from this)", () => {
-		expect(typeof manifest.skills).toBe("string");
-		expect(Array.isArray(manifest.skills)).toBe(false);
-		expect(manifest.skills).toMatch(/skills\/?$/);
+	it("declares skills as a string path or array of paths (CC discovers <name>/SKILL.md flat under each)", () => {
+		const skills = manifest.skills;
+		const paths = typeof skills === "string" ? [skills] : isStringArray(skills) ? skills : null;
+		expect(paths, "skills must be a string or an array of strings").not.toBeNull();
+		if (!paths) return;
+		for (const p of paths) {
+			expect(p).toMatch(/^\.\//);
+			expect(p).toMatch(/\/$/);
+		}
+	});
+
+	it("includes the default skills/ directory among its skill roots", () => {
+		const skills = manifest.skills;
+		const paths = typeof skills === "string" ? [skills] : isStringArray(skills) ? skills : [];
+		expect(paths).toContain("./skills/");
 	});
 
 	it("version matches package.json version", () => {

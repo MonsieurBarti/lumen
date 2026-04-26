@@ -8,6 +8,8 @@ version: 0.1.4 # x-release-please-version
 
 Mermaid in HTML shell. Zoom / pan / fit / new-tab. Offline-safe after first CDN load.
 
+**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
+
 ## When to invoke
 
 Triggers: `mermaid diagram`, `mermaid chart`, raw mermaid source pasted by user, or when mermaid syntax fits the request better than custom SVG (flowcharts with conditionals, sequence with many actors, ER schemas).

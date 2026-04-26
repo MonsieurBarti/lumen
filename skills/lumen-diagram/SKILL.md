@@ -8,6 +8,8 @@ version: 0.1.4 # x-release-please-version
 
 Single-file HTML diagram via `foreignObject` + CSS flexbox in 0–100 coordinate space. Offline-safe (`file://`). No JS at runtime.
 
+**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
+
 ## When to invoke
 
 Triggers: `draw`, `diagram`, `visualize`, `sketch`, `map`, `show the flow`, `architecture of X`, `sequence of Y`, `state machine`, `network topology`, `ER diagram`, `RAG pipeline`, `multi-agent`, `tool-call flow`, `dependency graph`.

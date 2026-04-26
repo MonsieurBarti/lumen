@@ -22,5 +22,5 @@
 		"html",
 		"svg"
 	],
-	"skills": "./skills/"
+	"skills": ["./skills/", "./composites/", "./playbooks/"]
 }

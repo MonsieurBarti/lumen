@@ -22,7 +22,13 @@
 				"skills/lumen-gallery/SKILL.md",
 				"skills/lumen-guide/SKILL.md",
 				"skills/lumen-recap/SKILL.md",
-				"skills/lumen-fact-check/SKILL.md"
+				"skills/lumen-fact-check/SKILL.md",
+				"composites/lumen-architecture-doc/SKILL.md",
+				"composites/lumen-readme-pack/SKILL.md",
+				"composites/lumen-launch-deck/SKILL.md",
+				"composites/lumen-postmortem/SKILL.md",
+				"playbooks/lumen-document-this-project/SKILL.md",
+				"playbooks/lumen-release-pack/SKILL.md"
 			]
 		}
 	}

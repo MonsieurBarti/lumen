@@ -8,6 +8,8 @@ version: 0.1.4 # x-release-please-version
 
 Single-file HTML+SVG chart. Nice axis ticks. Offline-safe.
 
+**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
+
 ## When to invoke
 
 Triggers: `chart`, `graph`, `plot`, `bar chart`, `pie chart`, `line chart`, `scatter`, `radar`, `funnel`, `bubble`, `comparison table`, `trend over time`, `distribution`, `proportion`, `feature matrix`.

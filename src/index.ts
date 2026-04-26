@@ -41,7 +41,7 @@ import {
 export const LUMEN_VERSION = "0.1.4";
 // x-release-please-end
 
-export const LUMEN_SKILLS = [
+export const LUMEN_CAPABILITIES = [
 	"lumen-diagram",
 	"lumen-chart",
 	"lumen-mermaid",
@@ -50,6 +50,21 @@ export const LUMEN_SKILLS = [
 	"lumen-guide",
 	"lumen-recap",
 	"lumen-fact-check",
+] as const;
+
+export const LUMEN_COMPOSITES = [
+	"lumen-architecture-doc",
+	"lumen-readme-pack",
+	"lumen-launch-deck",
+	"lumen-postmortem",
+] as const;
+
+export const LUMEN_PLAYBOOKS = ["lumen-document-this-project", "lumen-release-pack"] as const;
+
+export const LUMEN_SKILLS = [
+	...LUMEN_CAPABILITIES,
+	...LUMEN_COMPOSITES,
+	...LUMEN_PLAYBOOKS,
 ] as const;
 
 export type LumenSkillId = (typeof LUMEN_SKILLS)[number];
