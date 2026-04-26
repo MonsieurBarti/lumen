@@ -38,6 +38,36 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
+      # release-please-action regenerates files (e.g. .claude-plugin/plugin.json
+      # via extra-files: type=json) outside of lefthook, so biome formatting
+      # never runs on the bot's commit. This step checks out the release PR
+      # branch, runs `bun run check:fix`, and pushes the format-only fix back
+      # onto the same branch. Pushing with secrets.GITHUB_TOKEN does NOT
+      # re-trigger workflows, which prevents loops.
+      - name: Auto-format release-please PR
+        if: ${{ steps.release.outputs.pr }}
+        env:
+          PR: ${{ steps.release.outputs.pr }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_BRANCH=$(echo "$PR" | jq -r '.headBranchName')
+          if [ -z "$PR_BRANCH" ] || [ "$PR_BRANCH" = "null" ]; then
+            echo "No release PR branch in output — nothing to format."
+            exit 0
+          fi
+          git fetch origin "$PR_BRANCH"
+          git checkout "$PR_BRANCH"
+          bun run check:fix
+          if git diff --quiet; then
+            echo "release-please output already biome-clean — no fix needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: biome auto-format release-please bump"
+          git push origin "$PR_BRANCH"
+
       - name: Publish to npm
         if: ${{ steps.release.outputs.release_created }}
         env:
