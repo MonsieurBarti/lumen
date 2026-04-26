@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.5](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.4...lumen-v0.1.5) (2026-04-26)
+
+
+### Features
+
+* **composites:** add 4 molecular skills orchestrating capabilities ([17338b5](https://github.com/MonsieurBarti/lumen/commit/17338b5c014ba2bcf0835ed60d30f0170ba478d7))
+* **playbooks,tests:** add 2 compound skills + static skill-graph eval ([13888d0](https://github.com/MonsieurBarti/lumen/commit/13888d0c327e6764433d071078f7eabfcb3320c2))
+* **skills:** introduce capability/composite/playbook tiering ([a70f7bd](https://github.com/MonsieurBarti/lumen/commit/a70f7bdaaa52e9e1c06582fb28ab7755a2501a3c))
+* **skills:** tier skills into capabilities / composites / playbooks ([7c811b6](https://github.com/MonsieurBarti/lumen/commit/7c811b6bc37a5290f01ecf263bd534329191fa38))
+
 ## [0.1.4](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.3...lumen-v0.1.4) (2026-04-26)
 
 
