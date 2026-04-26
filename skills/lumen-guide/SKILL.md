@@ -1,7 +1,7 @@
 ---
 name: lumen-guide
 description: Generate multi-tab HTML document (shell + CSS + JS + per-tab fragments) for guides, architecture overviews, comparison matrices, recaps, roadmaps. Single-file or split-file mode. Invoke when user asks for guide, doc, architecture overview, multi-tab doc, comparison, or content with multiple sections that should be tabbed.
-version: 0.1.5 # x-release-please-version
+version: 0.1.6 # x-release-please-version
 ---
 
 # lumen-guide

@@ -1,7 +1,7 @@
 ---
 name: lumen-launch-deck
 description: Produce a magazine-quality scroll-snap HTML deck announcing a new feature, release, or milestone. Combines a state recap, metrics charts, a hero diagram, and an assembled slide deck. Invoke for "launch deck", "release deck", "announcement slides".
-version: 0.1.5 # x-release-please-version
+version: 0.1.6 # x-release-please-version
 ---
 
 # lumen-launch-deck

@@ -1,7 +1,7 @@
 ---
 name: lumen-release-pack
 description: Bundle release artifacts for a tagged release by orchestrating lumen-launch-deck + lumen-readme-pack and producing a "what shipped" archive. Higher-altitude than a single composite — produces multiple HTML artifacts plus a release index. Invoke for "release pack", "release artifacts", "package the release".
-version: 0.1.5 # x-release-please-version
+version: 0.1.6 # x-release-please-version
 ---
 
 # lumen-release-pack

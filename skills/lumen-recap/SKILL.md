@@ -1,7 +1,7 @@
 ---
 name: lumen-recap
 description: Generate single-file HTML project recap that rebuilds mental model of project's current state, recent decisions, and cognitive debt hotspots. Invoke when user asks to recap, summarize the project, show me where we are, or returns to project after break.
-version: 0.1.5 # x-release-please-version
+version: 0.1.6 # x-release-please-version
 ---
 
 # lumen-recap
