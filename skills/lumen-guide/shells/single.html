@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#6366f1">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <title>{TITLE}</title>
+  <!-- diagram-meta:start -->
+  <meta name="diagram:title"     content="{TITLE}">
+  <meta name="diagram:date"      content="{DATE}">
+  <meta name="diagram:category"  content="{CATEGORY}">
+  <meta name="diagram:cat-label" content="{CAT_LABEL}">
+  <meta name="diagram:color"     content="{COLOR}">
+  <meta name="diagram:badges"    content="{BADGES}">
+  <!-- diagram-meta:end -->
+  <!-- PRECONNECT: Add Google Fonts links for the aesthetic's font pair -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- HEAD_EXTRAS: Mermaid ESM + svg-pan-zoom CDN -->
+  {HEAD_EXTRAS}
+  <style>
+    /* BASE_STYLES: Concatenate base/*.css in order: reset → layout → typography → components → explainer-base */
+    {BASE_STYLES}
+
+    /* AESTHETIC_STYLES: Aesthetic CSS override (empty if no aesthetic selected) */
+    {AESTHETIC_STYLES}
+
+    /* EXTRA_STYLES: Diagram-specific CSS additions */
+    {EXTRA_STYLES}
+  </style>
+</head>
+<body>
+  <!-- CONTENT: Self-contained diagram body — hero section + sections + diagrams + cards
+       Info-card grid pattern (3-col summary row — drop in above diagrams):
+
+         <div class="info-card-grid">
+           <div class="info-card">
+             <span class="info-card__dot" style="background: var(--arch-frontend)"></span>
+             <h3 class="info-card__title">Frontend</h3>
+             <ul class="info-card__list">
+               <li>React SPA</li>
+               <li>TanStack Router</li>
+             </ul>
+           </div>
+           <div class="info-card">
+             <span class="info-card__dot" style="background: var(--arch-backend)"></span>
+             <h3 class="info-card__title">Backend</h3>
+             <ul class="info-card__list"><li>...</li></ul>
+           </div>
+           <div class="info-card">
+             <span class="info-card__dot" style="background: var(--arch-database)"></span>
+             <h3 class="info-card__title">Database</h3>
+             <ul class="info-card__list"><li>...</li></ul>
+           </div>
+         </div>
+
+       The `.info-card-grid` primitive is defined in base/components.css; the
+       `--arch-*` tier palette comes from references/tokens.md. -->
+  {CONTENT}
+
+  <!-- Theme Toggle -->
+  <button class="theme-btn" id="theme-toggle" aria-label="Toggle color theme" aria-pressed="false">◑ light</button>
+
+  <script>
+    /* THEME_TOGGLE_JS: theme-toggle.js content with {NAME} already substituted.
+       Must run before any script that reads data-theme. */
+    {THEME_TOGGLE_JS}
+  </script>
+  <!-- EXTRA_SCRIPTS: Mermaid init + pan/zoom + reveal observer -->
+  <script>
+    {EXTRA_SCRIPTS}
+  </script>
+</body>
+</html>

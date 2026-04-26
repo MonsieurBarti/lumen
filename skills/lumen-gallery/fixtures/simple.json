@@ -1,0 +1,11 @@
+{
+  "skill": "forge-gallery",
+  "variant": "simple",
+  "input": {
+    "prompt": "Create a simple gallery of voiceCLI TTS engine outputs organized by BATCHES tab. Each card shows the engine name, RTF, and star control. Tag each batch with date and engine version.",
+    "slug": "tts-engine-compare",
+    "project": "voicecli/engine-compare"
+  },
+  "expected_output_hash": null,
+  "notes": "Simple template — BATCHES tabs, starring, tags. Exercises the initStarred + buildDimFilters shared primitives."
+}

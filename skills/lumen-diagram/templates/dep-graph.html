@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- diagram-meta:start -->
+<meta name="diagram:title"     content="{{TITLE}}">
+<meta name="diagram:date"      content="{{DATE}}">
+<meta name="diagram:category"  content="{{CATEGORY}}">
+<meta name="diagram:cat-label" content="{{CAT_LABEL}}">
+<meta name="diagram:color"     content="{{COLOR}}">
+<!-- diagram-meta:end -->
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* {{BASE_STYLES}} — inline reset.css + layout.css + typography.css + components.css + explainer-base.css */
+/* {{AESTHETIC_STYLES}} — inline the chosen aesthetic (lyra.css / roxabi.css / blueprint.css / ...) */
+
+/* ══════════════════════════════════════════════════════════════════
+   fgraph primitives — inlined from references/graph-templates/fgraph-base.css
+   ══════════════════════════════════════════════════════════════════ */
+/* {{FGRAPH_BASE}} — inline fgraph-base.css here */
+
+/* ── dep-graph-specific layout ── */
+.fgraph-wrap.dep-graph { aspect-ratio: 16 / 10; max-width: 960px; }
+
+/* column header row (phase labels) */
+.fg-dep-phase-lbl {
+  position: absolute;
+  left: calc(var(--x, 0) * 1%);
+  top: 4%;
+  transform: translateX(-50%);
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: rgba(74,222,128,0.10);
+  border: 1px solid rgba(74,222,128,0.35);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--green);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+/* issue card (narrower than default .fgraph-node) */
+.fg-dep-card {
+  position: absolute;
+  left: calc(var(--x, 50) * 1%);
+  top:  calc(var(--y, 50) * 1%);
+  transform: translate(-50%, -50%);
+  width: 120px;
+  padding: 6px 9px;
+  background: var(--bg-card);
+  border: 1.2px solid var(--border-bright);
+  border-radius: 6px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9.5px;
+  color: var(--text);
+  z-index: 2;
+}
+.fg-dep-card .issue-num { color: var(--text-muted); font-size: 8.5px; margin-bottom: 2px; }
+.fg-dep-card .issue-title { color: var(--text); line-height: 1.25; }
+.fg-dep-card.amber  { border-color: rgba(251,191,36,0.55); }
+.fg-dep-card.cyan   { border-color: rgba(34,211,238,0.55); }
+.fg-dep-card.purple { border-color: rgba(192,132,252,0.55); }
+.fg-dep-card.green  { border-color: rgba(74,222,128,0.55); }
+.fg-dep-card.ghost  { opacity: 0.45; border-style: dashed; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">{{CATEGORY_LABEL}}</div>
+  <h1>{{TITLE_PLAIN}} <span class="accent">{{TITLE_ACCENT}}</span></h1>
+  <p class="header-subtitle">{{SUBTITLE}}</p>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CUSTOMISE — this is the authoring surface.
+
+     Layout: N phase columns along the X axis, issue cards stacked
+     vertically within each column. Author data comes from gen-deps.py
+     (issue-20 in Cycle 2); this template is declarative — card --x / --y
+     are injected, never hand-coded.
+
+     Positioning rules (gen-deps.py populates):
+       phase columns   : --x = 8 + (phase_index * column_width)
+                         phase_count=4 → column_width=22, first col x=15
+       intra-phase card: --y = 18 + (position_in_phase * 12)
+       ghost cards     : cross-phase dependency placeholders, .ghost class
+
+     Edge routing (elbow, from gen-deps.py):
+       intra-phase (same column) → straight vertical segment
+       cross-phase (different columns) → corridor-based elbow:
+
+         corridor = edge_index × CORRIDOR_WIDTH  (CORRIDOR_WIDTH = 2)
+         path = "M x1 y1 L x1 (y_corridor) L x2 (y_corridor) L x2 y2"
+
+       Corridors are sorted by source node --y so paths don't overlap.
+
+     All coordinate injection is Python-side. This HTML is pure scaffold.
+     ══════════════════════════════════════════════════════════════════ -->
+
+<div class="fgraph-wrap dep-graph green" role="img" aria-label="{{DIAGRAM_ARIA_LABEL}}">
+
+  <!-- ── PHASE COLUMN HEADERS (gen-deps.py emits one per phase) ─── -->
+  <div class="fg-dep-phase-lbl" style="--x:15">{{PHASE_1_LABEL}}</div>
+  <div class="fg-dep-phase-lbl" style="--x:37">{{PHASE_2_LABEL}}</div>
+  <div class="fg-dep-phase-lbl" style="--x:59">{{PHASE_3_LABEL}}</div>
+  <div class="fg-dep-phase-lbl" style="--x:81">{{PHASE_4_LABEL}}</div>
+
+  <!-- ── EDGE LAYER (elbow-routed paths — gen-deps.py emits) ─────
+       Each edge uses ≥ 2 line segments. Colour by dependency kind:
+         .fg-edge.amber   blocks
+         .fg-edge.cyan    depends-on
+         .fg-edge.purple  parent/child
+         .fg-edge.red     breaks-on
+  -->
+  <svg class="fgraph-edges" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="fg-arr-amber"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-amber"/></marker>
+      <marker id="fg-arr-cyan"   viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-cyan"/></marker>
+      <marker id="fg-arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-purple"/></marker>
+    </defs>
+
+    <!-- {{EDGES}} — gen-deps.py emits one <path> per dependency.
+         Each path has ≥ 2 segments for cross-phase elbows; straight
+         for intra-phase. Examples below are illustrative defaults. -->
+    <path class="fg-edge amber" d="M 15,30 L 26,30 L 26,50 L 37,50" marker-end="url(#fg-arr-amber)" fill="none"/>
+    <path class="fg-edge cyan"  d="M 37,50 L 48,50 L 48,30 L 59,30" marker-end="url(#fg-arr-cyan)" fill="none"/>
+    <path class="fg-edge amber" d="M 59,30 L 70,30 L 70,50 L 81,50" marker-end="url(#fg-arr-amber)" fill="none"/>
+  </svg>
+
+  <!-- ── ISSUE CARDS — gen-deps.py emits one per open issue ────── -->
+  <div class="fg-dep-card amber" style="--x:15; --y:30;">
+    <div class="issue-num">{{CARD_1_NUM}}</div>
+    <div class="issue-title">{{CARD_1_TITLE}}</div>
+  </div>
+  <div class="fg-dep-card cyan" style="--x:37; --y:50;">
+    <div class="issue-num">{{CARD_2_NUM}}</div>
+    <div class="issue-title">{{CARD_2_TITLE}}</div>
+  </div>
+  <div class="fg-dep-card purple" style="--x:59; --y:30;">
+    <div class="issue-num">{{CARD_3_NUM}}</div>
+    <div class="issue-title">{{CARD_3_TITLE}}</div>
+  </div>
+  <div class="fg-dep-card green" style="--x:81; --y:50;">
+    <div class="issue-num">{{CARD_4_NUM}}</div>
+    <div class="issue-title">{{CARD_4_TITLE}}</div>
+  </div>
+  <div class="fg-dep-card ghost" style="--x:37; --y:72;">
+    <div class="issue-num">{{GHOST_NUM}}</div>
+    <div class="issue-title">{{GHOST_TITLE}}</div>
+  </div>
+
+  <div class="fgraph-legend">{{LEGEND}}</div>
+</div>
+
+</main>
+
+</body>
+</html>

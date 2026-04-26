@@ -36,7 +36,16 @@
 		}
 	},
 	"files": {
-		"ignore": ["node_modules", "dist", "*.md", ".pi", "coverage", ".worktrees", "skills/**/*.html"]
+		"ignore": [
+			"node_modules",
+			"dist",
+			"*.md",
+			".pi",
+			"coverage",
+			".worktrees",
+			"skills/**",
+			"upstreams"
+		]
 	},
 	"overrides": [
 		{

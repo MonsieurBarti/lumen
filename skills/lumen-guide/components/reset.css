@@ -1,0 +1,78 @@
+/* ══════════════════════════════════════════════════════════════════
+   reset.css — box-sizing reset, antialiasing, baseline token contract
+   Part of forge base/ layer. Read once, inline into <style>.
+
+   Token contract: every aesthetic file must define the same custom
+   properties listed below. These are Lyra theme defaults.
+   Roxabi theme values are in aesthetics/roxabi.css (issue #79).
+
+   Extended palette (--amber through --red-dim, --border-bright,
+   --surface2, --bg-panel, --bg-card, --accent-glow) added for
+   fgraph-base.css and explainer-base.css compatibility.
+   Aesthetics override structural tokens; palette tokens are universal.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+/* ── Baseline Tokens — Lyra Dark (default) ── */
+:root, [data-theme="dark"] {
+  --bg:           #0a0a0f;
+  --surface:      #18181f;
+  --surface2:     #202028;
+  --border:       #2a2a35;
+  --border-bright: #3a3a45;
+  --text:         #fafafa;
+  --text-muted:   #9ca3af;
+  --text-dim:     #6b7280;
+  --accent:       #e85d04;
+  --accent-dim:   #7c2d0e;
+  --accent-glow:  rgba(232,93,4,0.2);
+  --radius:       8px;
+  --radius-sm:    6px;
+  --shadow:       0 1px 3px rgba(0,0,0,0.3);
+
+  /* fgraph + explainer palette */
+  --bg-panel:     var(--surface);
+  --bg-card:      var(--surface);
+  --amber:        #fbbf24;
+  --amber-dim:    rgba(251,191,36,0.12);
+  --cyan:         #22d3ee;
+  --cyan-dim:     rgba(34,211,238,0.12);
+  --green:        #4ade80;
+  --green-dim:    rgba(74,222,128,0.12);
+  --purple:       #c084fc;
+  --purple-dim:   rgba(192,132,252,0.12);
+  --red:          #f87171;
+  --red-dim:      rgba(248,113,113,0.12);
+}
+
+/* ── Baseline Tokens — Lyra Light ── */
+[data-theme="light"] {
+  --bg:           #fafaf9;
+  --surface:      #f4f4f0;
+  --surface2:     #eaeae6;
+  --border:       #d1ccc7;
+  --border-bright: #b0aaa5;
+  --text:         #1c1917;
+  --text-muted:   #57534e;
+  --text-dim:     #78716c;
+  --accent:       #c2410c;
+  --accent-dim:   #fef2e8;
+  --accent-glow:  rgba(194,65,12,0.15);
+  --shadow:       0 1px 3px rgba(0,0,0,0.1);
+
+  --bg-panel:     var(--surface);
+  --bg-card:      var(--surface);
+  --amber:        #d97706;
+  --amber-dim:    rgba(217,119,6,0.1);
+  --cyan:         #0891b2;
+  --cyan-dim:     rgba(8,145,178,0.1);
+  --green:        #16a34a;
+  --green-dim:    rgba(22,163,74,0.1);
+  --purple:       #9333ea;
+  --purple-dim:   rgba(147,51,234,0.1);
+  --red:          #dc2626;
+  --red-dim:      rgba(220,38,38,0.1);
+}

@@ -1,0 +1,100 @@
+/* ══════════════════════════════════════════════════════════════════
+   dark-professional.css — semantic dark aesthetic for system diagrams.
+
+   Palette derived from architecture-diagram-generator (Cocoon-AI, MIT):
+   semantic colors per component class — cyan=frontend, emerald=backend,
+   violet=database, amber=cloud/AWS, rose=security, orange=message-bus,
+   slate=external/generic. Tokens follow roxabi-forge fgraph-base.css
+   convention so this file is a drop-in alternative to editorial.css /
+   blueprint.css / terminal.css / lyra.css.
+
+   Identity: production architecture decks, executive system reviews.
+   Typography: JetBrains Mono — distinctive, technical, evidence-bearing.
+   ══════════════════════════════════════════════════════════════════ */
+
+:root,
+[data-theme="dark"] {
+	color-scheme: dark;
+
+	/* Surfaces */
+	--bg: #0f172a;
+	--bg-panel: #1e293b;
+	--bg-card: #1e293b;
+	--surface: #1e293b;
+	--surface2: #334155;
+	--border: rgba(148, 163, 184, 0.15);
+	--border-bright: rgba(148, 163, 184, 0.3);
+
+	/* Text — AAA contrast on --bg */
+	--text: #f1f5f9;
+	--text-dim: #cbd5e1;
+	--text-muted: #94a3b8;
+
+	/* Semantic component colors (ADG mapping) */
+	--cyan: #22d3ee; /* frontend */
+	--cyan-dim: rgba(34, 211, 238, 0.15);
+	--green: #34d399; /* backend */
+	--green-dim: rgba(52, 211, 153, 0.15);
+	--purple: #a78bfa; /* database */
+	--purple-dim: rgba(167, 139, 250, 0.15);
+	--amber: #fbbf24; /* cloud / AWS */
+	--amber-dim: rgba(251, 191, 36, 0.15);
+	--red: #fb7185; /* security */
+	--red-dim: rgba(251, 113, 133, 0.15);
+	--orange: #fb923c; /* message bus */
+	--orange-dim: rgba(251, 146, 60, 0.15);
+
+	/* Accent (used for primary edges, selection states) */
+	--accent: #22d3ee;
+	--accent-dim: rgba(34, 211, 238, 0.15);
+	--accent-glow: rgba(34, 211, 238, 0.25);
+}
+
+[data-theme="light"] {
+	color-scheme: light;
+
+	--bg: #f8fafc;
+	--bg-panel: #ffffff;
+	--bg-card: #ffffff;
+	--surface: #ffffff;
+	--surface2: #f1f5f9;
+	--border: rgba(15, 23, 42, 0.1);
+	--border-bright: rgba(15, 23, 42, 0.2);
+
+	--text: #0f172a;
+	--text-dim: #334155;
+	--text-muted: #64748b;
+
+	--cyan: #0891b2;
+	--cyan-dim: rgba(8, 145, 178, 0.1);
+	--green: #059669;
+	--green-dim: rgba(5, 150, 105, 0.1);
+	--purple: #7c3aed;
+	--purple-dim: rgba(124, 58, 237, 0.1);
+	--amber: #d97706;
+	--amber-dim: rgba(217, 119, 6, 0.1);
+	--red: #e11d48;
+	--red-dim: rgba(225, 29, 72, 0.1);
+	--orange: #ea580c;
+	--orange-dim: rgba(234, 88, 12, 0.1);
+
+	--accent: #0891b2;
+	--accent-dim: rgba(8, 145, 178, 0.1);
+	--accent-glow: rgba(8, 145, 178, 0.2);
+}
+
+/* Typography — JetBrains Mono for body, inherited for labels */
+body,
+.fgraph-wrap,
+.fgraph-lbl,
+.fgraph-frame-lbl {
+	font-family:
+		"JetBrains Mono", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+	font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+}
+
+/* Typography link to add to <head> when using this aesthetic:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+*/

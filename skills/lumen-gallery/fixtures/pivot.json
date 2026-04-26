@@ -1,0 +1,11 @@
+{
+  "skill": "forge-gallery",
+  "variant": "pivot",
+  "input": {
+    "prompt": "Create a pivot gallery of Lyra avatar concepts. Rows = aesthetic preset (editorial, cinematic, flat). Columns = pose (portrait, three-quarter, profile). Data source: face-scores.json. Enable filtering by cluster and score threshold.",
+    "slug": "lyra-avatar-pivot",
+    "project": "lyra/brand"
+  },
+  "expected_output_hash": null,
+  "notes": "Pivot template — col/row matrix, groupByDim, score filtering. Anchors the pivot-gallery.html template referenced in ~/.claude/CLAUDE.md."
+}

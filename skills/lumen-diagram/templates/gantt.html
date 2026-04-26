@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- diagram-meta:start -->
+<meta name="diagram:title"     content="{{TITLE}}">
+<meta name="diagram:date"      content="{{DATE}}">
+<meta name="diagram:category"  content="{{CATEGORY}}">
+<meta name="diagram:cat-label" content="{{CAT_LABEL}}">
+<meta name="diagram:color"     content="{{COLOR}}">
+<!-- diagram-meta:end -->
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* {{BASE_STYLES}} — inline reset.css + layout.css + typography.css + components.css + explainer-base.css */
+/* {{AESTHETIC_STYLES}} — inline the chosen aesthetic (lyra.css / roxabi.css / blueprint.css / ...) */
+
+/* ══════════════════════════════════════════════════════════════════
+   fgraph primitives — inlined from references/graph-templates/fgraph-base.css
+   ══════════════════════════════════════════════════════════════════ */
+/* {{FGRAPH_BASE}} — inline fgraph-base.css here */
+
+/* ── gantt-specific layout overrides ── */
+.fgraph-wrap.gantt { aspect-ratio: 16 / 9; max-width: 820px; }
+.fg-gantt-section-lbl {
+  position: absolute;
+  left: 2%;
+  top: calc(var(--y, 0) * 1%);
+  font-family: 'Space Mono', monospace;
+  font-size: 9.5px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">{{CATEGORY_LABEL}}</div>
+  <h1>{{TITLE_PLAIN}} <span class="accent">{{TITLE_ACCENT}}</span></h1>
+  <p class="header-subtitle">{{SUBTITLE}}</p>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CUSTOMISE — this is the authoring surface.
+
+     Layout: horizontal time bars grouped in N sections, sharing a
+     date axis at the bottom. Authoring coordinate space is 0..100 %.
+
+     Date → % mapping (pre-compute; no runtime math):
+       x% = (tick_date - start_date) / (end_date - start_date) * 100
+       w% = (bar_duration) / (end_date - start_date) * 100
+
+     Example — a project that runs 2026-04-15 → 2026-05-13 (28 days):
+       tick Apr 22 → (7/28)*100  = 25
+       tick Apr 29 → (14/28)*100 = 50
+       tick May 06 → (21/28)*100 = 75
+       tick May 13 → (28/28)*100 = 100
+
+     Bars occupy the UPPER portion of the wrap (≈ 16% → 72% --y space).
+     Axis lives in the LOWER portion (bottom: 14% of the wrap).
+
+     Row layout guidance (for a 3-section, 3-task-per-section layout):
+       SECTION 1 header  --y: 10
+         bar 1           --y: 16
+         bar 2           --y: 22
+         bar 3           --y: 28
+       SECTION 2 header  --y: 36
+         bar 1           --y: 42
+         bar 2           --y: 48
+         bar 3           --y: 54
+       SECTION 3 header  --y: 62
+         bar 1           --y: 68
+     ══════════════════════════════════════════════════════════════════ -->
+
+<div class="fgraph-wrap gantt green"
+     role="img"
+     aria-label="{{DIAGRAM_ARIA_LABEL}}">
+
+  <!-- ── SECTION LABELS ─────────────────────────────────────────── -->
+  <div class="fg-gantt-section-lbl" style="--y:10">{{SECTION_1_LABEL}}</div>
+  <div class="fg-gantt-section-lbl" style="--y:36">{{SECTION_2_LABEL}}</div>
+  <div class="fg-gantt-section-lbl" style="--y:62">{{SECTION_3_LABEL}}</div>
+
+  <!-- ── BARS — section 1 ───────────────────────────────────────── -->
+  <div class="fg-gantt-bar amber"  style="--x:{{TASK_1_1_START}}; --w:{{TASK_1_1_DURATION}}; --y:16">{{TASK_1_1_LABEL}}</div>
+  <div class="fg-gantt-bar amber"  style="--x:{{TASK_1_2_START}}; --w:{{TASK_1_2_DURATION}}; --y:22">{{TASK_1_2_LABEL}}</div>
+  <div class="fg-gantt-bar amber"  style="--x:{{TASK_1_3_START}}; --w:{{TASK_1_3_DURATION}}; --y:28">{{TASK_1_3_LABEL}}</div>
+
+  <!-- ── BARS — section 2 ───────────────────────────────────────── -->
+  <div class="fg-gantt-bar cyan"   style="--x:{{TASK_2_1_START}}; --w:{{TASK_2_1_DURATION}}; --y:42">{{TASK_2_1_LABEL}}</div>
+  <div class="fg-gantt-bar cyan"   style="--x:{{TASK_2_2_START}}; --w:{{TASK_2_2_DURATION}}; --y:48">{{TASK_2_2_LABEL}}</div>
+  <div class="fg-gantt-bar cyan"   style="--x:{{TASK_2_3_START}}; --w:{{TASK_2_3_DURATION}}; --y:54">{{TASK_2_3_LABEL}}</div>
+
+  <!-- ── BARS — section 3 ───────────────────────────────────────── -->
+  <div class="fg-gantt-bar purple" style="--x:{{TASK_3_1_START}}; --w:{{TASK_3_1_DURATION}}; --y:68">{{TASK_3_1_LABEL}}</div>
+  <div class="fg-gantt-bar purple" style="--x:{{TASK_3_2_START}}; --w:{{TASK_3_2_DURATION}}; --y:74">{{TASK_3_2_LABEL}}</div>
+
+  <!-- ── DATE AXIS ──────────────────────────────────────────────── -->
+  <div class="fg-axis-date">
+    <div class="fg-axis-date-baseline"></div>
+    <div class="fg-axis-date-tick" style="--x:0"  ><span class="fg-axis-date-label">{{TICK_0_LABEL}}</span></div>
+    <div class="fg-axis-date-tick" style="--x:25" ><span class="fg-axis-date-label">{{TICK_1_LABEL}}</span></div>
+    <div class="fg-axis-date-tick" style="--x:50" ><span class="fg-axis-date-label">{{TICK_2_LABEL}}</span></div>
+    <div class="fg-axis-date-tick" style="--x:75" ><span class="fg-axis-date-label">{{TICK_3_LABEL}}</span></div>
+    <div class="fg-axis-date-tick" style="--x:100"><span class="fg-axis-date-label">{{TICK_4_LABEL}}</span></div>
+  </div>
+
+  <div class="fgraph-legend">{{LEGEND}}</div>
+</div>
+
+</main>
+
+</body>
+</html>
