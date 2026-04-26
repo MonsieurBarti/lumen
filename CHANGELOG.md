@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.3...lumen-v0.1.4) (2026-04-26)
+
+
+### Features
+
+* **pi:** wire type:"chart" route with 4 chart types ([97a292a](https://github.com/MonsieurBarti/lumen/commit/97a292a01aff5338ab2be7aaf07ff2701f0eff50))
+* **pi:** wire type:"chart" route with 4 chart types ([152522b](https://github.com/MonsieurBarti/lumen/commit/152522b686e7aaa7f0221378f9e446340ced3300))
+
 ## [0.1.3](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.2...lumen-v0.1.3) (2026-04-26)
 
 
