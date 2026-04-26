@@ -14,7 +14,10 @@
 					"jsonpath": "$.version"
 				},
 				"src/index.ts",
-				"README.md",
+				{
+					"type": "generic",
+					"path": "README.md"
+				},
 				"skills/lumen-diagram/SKILL.md",
 				"skills/lumen-chart/SKILL.md",
 				"skills/lumen-mermaid/SKILL.md",
