@@ -31,7 +31,7 @@ Lifted from visual-explainer. 8 palettes, each with light + dark variants:
 
 `blueprint` (default), `editorial`, `paper`, `terminal`, `dracula`, `nord`, `solarized`, `gruvbox`.
 
-Lumen-specific aesthetics (`dark-professional` ADG palette, roxabi `lyra` / `editorial`, gmdiagram `glassmorphism` / `cyberpunk-neon` / `hand-drawn`) land in v0.2 alongside `_shared/aesthetics/`.
+The 5 fgraph aesthetics (`dark-professional`, `blueprint`, `editorial`, `terminal`, `lyra`) live in `skills/_shared/aesthetics/` and are consumed by the deterministic diagram / chart / guide / slide / gallery renderers — NOT by mermaid (mermaid uses the 8 palettes above, baked into `src/templates/shared.ts`). Future gmdiagram-derived aesthetics (`glassmorphism`, `cyberpunk-neon`, `hand-drawn`) land in `skills/_shared/aesthetics/` as patches.
 
 ## Shell features (`MERMAID_SHELL_CSS` + `MERMAID_SHELL_JS` in `src/templates/shared.ts`)
 

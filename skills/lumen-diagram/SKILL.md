@@ -81,7 +81,7 @@ Single HTML file. The CSS subset of `templates/fgraph-base.css` your topology us
 
 ## Aesthetics
 
-5 ship in `templates/aesthetics/`. Pick one and inline it into the output `<style>` block AFTER `fgraph-base.css` (it overrides tokens).
+5 ship in `skills/_shared/aesthetics/` (promoted from `templates/aesthetics/` in v0.2 once chart + guide + slides + gallery started consuming them). Pick one and inline it into the output `<style>` block AFTER `fgraph-base.css` (it overrides tokens).
 
 | File | Identity |
 |---|---|

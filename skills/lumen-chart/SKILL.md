@@ -64,4 +64,4 @@ The `lumen-generate_visual` PI tool currently wires only mermaid types. For char
 
 - [`gmdiagram/gm-data-chart`](https://github.com/ZeroZ-lab/gmdiagram) (MIT) — chart-type schemas. The original Chinese-language reference docs were dropped; their algorithms are restated in English in `references/chart-recipes.md`.
 - 3 English-only example pairs from gmdiagram's example set (`product-comparison`, `team-performance`, `team-skills`)
-- `lumen-diagram/templates/aesthetics/` (this package) — 5 aesthetics shared with diagrams when embedding charts in guides/recaps
+- `skills/_shared/aesthetics/` (this package) — 5 aesthetics shared with diagrams when embedding charts in guides/recaps

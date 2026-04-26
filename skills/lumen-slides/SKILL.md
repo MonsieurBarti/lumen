@@ -25,7 +25,7 @@ Full recipe in `references/generate-slides-recipe.md`. Summary:
    - Deep dive (content, diagrams, data)
    - Resolve (summary, next steps)
    - Assign a composition (centered / left-heavy / right-heavy / split / edge-aligned / full-bleed) to each slide
-3. **Style** — pick ONE aesthetic from the 4 slide presets in `references/slide-patterns.md` (Midnight Editorial, Warm Signal, Terminal Mono, Swiss Clean) or riff on a `lumen-diagram/templates/aesthetics/*.css` file. Commit to one direction; carry it through every slide. Vary from previous decks in the same session.
+3. **Style** — pick ONE aesthetic from the 4 slide presets in `references/slide-patterns.md` (Midnight Editorial, Warm Signal, Terminal Mono, Swiss Clean) or riff on a `_shared/aesthetics/*.css` file. Commit to one direction; carry it through every slide. Vary from previous decks in the same session.
 4. **Deliver** — start from `templates/slide-deck.html`. All CSS/JS inlined. Offline `file://` safe.
 
 ## 10 slide patterns
@@ -76,7 +76,7 @@ Consecutive slides MUST vary their spatial approach. Three centered slides in a 
 - **Terminal Mono** — monospace, high-contrast, technical
 - **Swiss Clean** — minimalist, tight grid, sharp typography
 
-Or riff on any of `lumen-diagram/templates/aesthetics/*.css` adapted for slides (5 options there).
+Or riff on any of `_shared/aesthetics/*.css` adapted for slides (5 options there).
 
 `templates/slide-deck-base.css` (lifted from roxabi-forge) provides an alternative styling foundation if you want roxabi's slide tokens instead of visual-explainer's defaults.
 

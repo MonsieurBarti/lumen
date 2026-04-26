@@ -1,6 +1,6 @@
 /**
  * Shared helpers for fgraph topology renderers.
- * - aesthetic CSS loader (reads from skills/lumen-diagram/templates/aesthetics/)
+ * - aesthetic CSS loader (reads from skills/_shared/aesthetics/)
  * - HTML document shell (header + main + style block)
  * - common SVG arrow markers + base CSS shared across all 4 topologies
  */
@@ -22,8 +22,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
  *   - dev / vitest: src/templates/diagram/ → repo-root/skills/...
  */
 const CANDIDATE_AESTHETICS_DIRS = [
-	join(__dirname, "..", "..", "skills", "lumen-diagram", "templates", "aesthetics"),
-	join(__dirname, "..", "..", "..", "skills", "lumen-diagram", "templates", "aesthetics"),
+	join(__dirname, "..", "..", "skills", "_shared", "aesthetics"),
+	join(__dirname, "..", "..", "..", "skills", "_shared", "aesthetics"),
 ] as const;
 
 let resolvedAestheticsDir: string | undefined;
