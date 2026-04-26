@@ -10,6 +10,8 @@ Read a document → extract every verifiable claim → check each against code +
 
 📄 Rendered example: [`docs/examples/fact-check/`](../../docs/examples/fact-check/) (before/after pair, 11 cited corrections)
 
+**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
+
 ## When to invoke
 
 Triggers: `fact-check`, `verify this doc`, `is this still accurate`, `check this against the codebase`, `does this README match the code`, `audit this doc`.

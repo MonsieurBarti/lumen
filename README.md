@@ -76,6 +76,14 @@ Then reload PI with `/reload`.
 
 ## 🎯 Skills
 
+Skills are organized in three tiers (inspired by Shiv Sakhuja's [Skill Graphs 2.0](https://x.com/shivsakhuja/status/2047124337191444844)):
+
+- **Capabilities** (atomic) — single-purpose, deterministic. Don't invoke other skills.
+- **Composites** (molecular) — orchestrate 2–10 capabilities in a fixed pipeline.
+- **Playbooks** (compound) — human-driven orchestrators over composites.
+
+### Capabilities (`skills/`)
+
 | Skill | What it does | Triggers |
 |---|---|---|
 | `lumen-diagram` | Architecture / flow / sequence / ER / state / mindmap / network / AI-pattern diagrams | `draw`, `diagram`, `visualize`, `sketch`, `architecture of X` |
@@ -86,6 +94,14 @@ Then reload PI with `/reload`.
 | `lumen-guide` | Multi-tab HTML doc with component library | `write a guide`, `architecture doc`, `multi-tab doc` |
 | `lumen-recap` | Project state recap (state + recent + debt + next) | `recap`, `where are we`, `summarize the project` |
 | `lumen-fact-check` | Verify a doc against the codebase, propose corrections | `fact-check`, `verify this doc`, `is this still accurate` |
+
+### Composites (`composites/`)
+
+_Empty in v0.1 — composites land in v0.2._
+
+### Playbooks (`playbooks/`)
+
+_Empty in v0.1 — playbooks land in v0.2._
 
 Each skill ships with a full `SKILL.md` describing triggers, pipeline, output spec, quality checks, and PI extension route.
 
@@ -137,7 +153,7 @@ lumen/
 ├── .claude-plugin/
 │   ├── plugin.json              # CC plugin manifest
 │   └── marketplace.json         # CC marketplace listing
-├── skills/                      # Source of truth (read by both CC and PI)
+├── skills/                      # Capabilities (atomic) — single-purpose, no cross-skill calls
 │   ├── _shared/aesthetics/      # 5 cross-cutting palettes
 │   ├── lumen-diagram/SKILL.md
 │   ├── lumen-chart/SKILL.md
@@ -147,6 +163,8 @@ lumen/
 │   ├── lumen-guide/SKILL.md
 │   ├── lumen-recap/SKILL.md
 │   └── lumen-fact-check/SKILL.md
+├── composites/                  # Composites (molecular) — orchestrate 2–10 capabilities with explicit pipelines
+├── playbooks/                   # Playbooks (compound) — human-driven orchestrators over composites
 ├── src/                         # PI extension TypeScript
 │   ├── index.ts                 # Tool registration + lifecycle
 │   ├── templates/               # Deterministic HTML renderers (mermaid, diagram, …)

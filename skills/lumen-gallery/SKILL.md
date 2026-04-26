@@ -10,6 +10,8 @@ Multi-mode gallery. Auto-discovered filters. Lightbox + starring + lazy load + s
 
 📄 Rendered example: [`docs/examples/gallery.html`](../../docs/examples/gallery.html)
 
+**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
+
 ## When to invoke
 
 Triggers: `gallery`, `showcase`, `compare visually`, `sprite gallery`, `side by side`, `create a gallery`, `show iterations`, `multi-mode gallery`, `audio comparison`, `voice cloning A/B`.

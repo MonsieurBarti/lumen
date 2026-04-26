@@ -1,14 +1,21 @@
 import { describe, expect, it } from "vitest";
 
-import { LUMEN_SKILLS, LUMEN_VERSION, generateMermaidTemplate } from "../src/index.js";
+import {
+	LUMEN_CAPABILITIES,
+	LUMEN_COMPOSITES,
+	LUMEN_PLAYBOOKS,
+	LUMEN_SKILLS,
+	LUMEN_VERSION,
+	generateMermaidTemplate,
+} from "../src/index.js";
 
 describe("lumen package", () => {
 	it("exposes a semver version string", () => {
 		expect(LUMEN_VERSION).toMatch(/^\d+\.\d+\.\d+/);
 	});
 
-	it("declares the eight v0 skills", () => {
-		expect(LUMEN_SKILLS).toEqual([
+	it("declares the eight v0 capabilities (atomic skills)", () => {
+		expect(LUMEN_CAPABILITIES).toEqual([
 			"lumen-diagram",
 			"lumen-chart",
 			"lumen-mermaid",
@@ -18,6 +25,18 @@ describe("lumen package", () => {
 			"lumen-recap",
 			"lumen-fact-check",
 		]);
+	});
+
+	it("declares composites (molecular skills) that orchestrate capabilities; empty until v0.2", () => {
+		expect(LUMEN_COMPOSITES).toEqual([]);
+	});
+
+	it("declares playbooks (compound skills) that orchestrate composites; empty until v0.2", () => {
+		expect(LUMEN_PLAYBOOKS).toEqual([]);
+	});
+
+	it("LUMEN_SKILLS is the union of all tiers", () => {
+		expect(LUMEN_SKILLS).toEqual([...LUMEN_CAPABILITIES, ...LUMEN_COMPOSITES, ...LUMEN_PLAYBOOKS]);
 	});
 });
 

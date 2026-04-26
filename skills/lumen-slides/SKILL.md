@@ -10,6 +10,8 @@ Single-file scroll-snap deck. Inlined CSS + JS. Offline-playable. Magazine-quali
 
 📄 Rendered example: [`docs/examples/slides.html`](../../docs/examples/slides.html)
 
+**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
+
 ## When to invoke
 
 **Slides are always opt-in.** Only generate when this skill is explicitly invoked or the user asks for a slide deck.

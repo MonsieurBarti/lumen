@@ -10,6 +10,8 @@ Single-file HTML recap. Hero image (optional) + architecture diagram + activity 
 
 📄 Rendered example: [`docs/examples/recap.html`](../../docs/examples/recap.html) (a real recap of this repo)
 
+**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
+
 ## When to invoke
 
 Triggers: `recap`, `summarize the project`, `where are we`, `rebuild mental model`, `project state`, `coming back to this project`, `what changed since last week`.

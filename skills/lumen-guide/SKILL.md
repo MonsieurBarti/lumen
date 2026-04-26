@@ -10,6 +10,8 @@ Multi-tab HTML guide. Two output modes: single-file (everything inlined) or spli
 
 📄 Rendered example: [`docs/examples/guide.html`](../../docs/examples/guide.html)
 
+**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
+
 ## When to invoke
 
 Triggers: `write a guide`, `create a guide`, `multi-tab doc`, `architecture doc`, `create a doc`, `make a recap`, `illustrate architecture`, `comparison matrix`, `roadmap`, `explain visually`, `document with forge`.
