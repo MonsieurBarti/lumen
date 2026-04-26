@@ -73,12 +73,31 @@ Consecutive slides MUST vary their spatial approach. Three centered slides in a 
 
 ## Aesthetic presets
 
-4 slide-specific presets in `references/slide-patterns.md`:
+Two families of preset are available — pick **one direction** per deck and carry it through every slide.
+
+### Typographic family (4 — minimalist)
+
+Detail in `references/slide-patterns.md`. Best for technical / executive audiences where text is the payload.
 
 - **Midnight Editorial** — dark serif, warm gold accents, magazine feel
 - **Warm Signal** — cream + amber, narrative tone
 - **Terminal Mono** — monospace, high-contrast, technical
 - **Swiss Clean** — minimalist, tight grid, sharp typography
+
+### Illustrated family (6 — visual-rich, AI-generation-friendly)
+
+Summary below; detailed per-preset specs (palette tokens, typography, layout rules, decorative SVG fragments, image-prompt templates, do/don't) in `references/slide-illustrated-presets.md`.
+
+- **comic-strip** — warm round-headed characters with minimalist bodies, sparse backgrounds, occasional speech bubbles, zigzag ground/grass lines. Beige + sky-blue + grass-green palette. Best for warm, story-led explainers.
+- **ligne-claire** — uniform line weight, flat color fills, 2–4 panel layouts, info-clarity over emotional warmth. Best for technical sequences where comic framing aids comprehension.
+- **neo-pop-magazine** — aggressive typographic contrast (titles ~50% of slide), color-block sections, youth / social-feed aesthetic. Best for launch announcements and consumer-facing decks.
+- **bauhaus-geometric** — circle / triangle / square / star carry semantic meaning per step; primary red-blue-yellow on paper white; form follows function. Best for process / framework decks where shapes reinforce structure.
+- **engineering-blueprint** — white line-drawings on deep blueprint blue (~75% bg coverage), grid paper, dimension lines, red annotations as ~5% accent. Best for systems / architecture decks.
+- **neo-brutalism** — 4–6px thick black borders on every element, high-saturation color blocks, ultra-large sans-serif (3–6vw), 6–10px solid drop shadows. Best for far-distance readability on long decks (auditorium, projection).
+
+### Design heuristic — illustration beats minimalism for AI imagery
+
+When generating images for a deck via `surf gemini --generate-image` or similar, **prefer illustrated presets over typographic-minimalist ones**. Illustrated styles have an explicit visual vocabulary (lines, characters, color blocks) that image models can exploit; minimalist styles (dark bg + glowing text + whitespace) lack visual elements to anchor generation and produce flat, empty results. Image prompts should be **short** — 3 sentences describing mood and content beat 30-line specifications.
 
 Or riff on any of `_shared/aesthetics/*.css` adapted for slides (5 options there).
 
@@ -113,3 +132,4 @@ Not wired through `lumen-generate_visual` PI tool. Slides need multi-step compos
 - [`Roxabi/roxabi-forge/plugins/forge/references/slide-patterns.md`](https://github.com/Roxabi/roxabi-forge) (MIT) — complementary slide-pattern perspective → `references/slide-patterns-roxabi.md`
 - `lumen-mermaid` (this package) — for `.slide--diagram` Mermaid embeds
 - `lumen-diagram` (this package) — for `.slide--diagram` fgraph embeds
+- [`alchaincyf/huashu-skills`](https://github.com/alchaincyf/huashu-skills) — *idea-level credit only, no license at time of writing.* The `huashu-slides` skill's 18-style taxonomy and the heuristic that illustration beats minimalism for AI image generation informed the 6 illustrated presets and the "Design heuristic" note above. Lumen presets are independently authored in English with generic art-history names — no Snoopy/xkcd/Oatmeal-style brand references, no file-level reuse.

@@ -33,6 +33,23 @@ Triggers: `chart`, `graph`, `plot`, `bar chart`, `pie chart`, `line chart`, `sca
 | x,y,size triplets | `schema-bubble.json` |
 | structured comparison | `schema-table.json` (min/max highlighting) |
 
+## Chart presets (style direction — orthogonal to aesthetic)
+
+**Aesthetic** = palette + typography (reused from `_shared/aesthetics/`).
+**Preset** = chart-specific style choices: gridline density, axis treatment, label conventions, annotation grammar. Composes freely with any aesthetic — `aesthetic: lyra` + `preset: editorial-broadsheet` is a valid combination.
+
+| Preset | Gridlines | Axes & labels | Annotation grammar | Best for |
+|---|---|---|---|---|
+| `editorial-broadsheet` | sparse horizontal only | sans-serif, single accent color, units in subtitle | inline endpoint labels, no separate legend | newspaper-style charts; one chart per insight |
+| `consulting-deck` | none — value labels on the bars themselves | bold action title above, source footnote below | takeaway box top-right summarizing the "so what" | board / executive decks; one chart = one decision |
+| `newsweekly` | dense horizontal with one accent bar (often red) | high label density, integrated callouts | annotation arrows pointing to named outliers | dense-information charts the reader is expected to study |
+| `investment-bank` | tight grid, monospaced numerics | dual-axis common, footnoted units | min/max highlighted in table form, decimal precision rules | tables and dense numeric charts |
+| `swiss-grid` | hairline horizontals only | sans-serif, no axis titles | no chart junk, generous whitespace | minimalist single-message charts |
+
+Presets dictate **defaults**; the LLM-authored pipeline may override per-chart when context warrants. The PI deterministic route ignores presets in v0.1.x (LLM-only); they may be threaded into `ChartContent` in a future version.
+
+Detailed CSS / SVG fragment specs per preset, plus a preset × chart-type compatibility matrix, in `references/chart-presets.md`.
+
 ## Examples
 
 3 paired `(name).html` + `(name).json` files in `examples/`:
@@ -95,3 +112,4 @@ Full `ChartContent` shape per chart type: `src/templates/chart/schemas.ts`. Cros
 - [`gmdiagram/gm-data-chart`](https://github.com/ZeroZ-lab/gmdiagram) (MIT) — chart-type schemas. The original Chinese-language reference docs were dropped; their algorithms are restated in English in `references/chart-recipes.md`.
 - 3 English-only example pairs from gmdiagram's example set (`product-comparison`, `team-performance`, `team-skills`)
 - `skills/_shared/aesthetics/` (this package) — 5 aesthetics shared with diagrams when embedding charts in guides/recaps
+- [`alchaincyf/huashu-skills`](https://github.com/alchaincyf/huashu-skills) — *idea-level credit only, no license at time of writing.* The `huashu-data-pro` skill's named-preset taxonomy (FT / McKinsey / Economist / Goldman / Swiss) inspired the chart-preset axis above. Lumen presets are independently authored in English with descriptive names — no brand references, no file-level reuse.
