@@ -1,60 +1,16 @@
 /**
  * Shared helpers for fgraph topology renderers.
- * - aesthetic CSS loader (reads from skills/_shared/aesthetics/)
  * - HTML document shell (header + main + style block)
  * - common SVG arrow markers + base CSS shared across all 4 topologies
+ *
+ * Aesthetic CSS loading lives in src/utils/aesthetic-loader.ts so the chart
+ * renderers (and any future deterministic renderer) can reuse it without
+ * reaching across template directories.
  */
 
-import { existsSync, readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-
-import type { FgraphAesthetic } from "../../types.js";
 import { escapeHtml } from "../shared.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-/**
- * Candidate locations for the aesthetics CSS directory. Try each in order,
- * use the first that exists. Two layouts to support:
- *   - production install: <pkg>/dist/templates/diagram/ → <pkg>/dist/skills/...
- *     (also mirrored at <pkg>/skills/... since both are in package.files)
- *   - dev / vitest: src/templates/diagram/ → repo-root/skills/...
- */
-const CANDIDATE_AESTHETICS_DIRS = [
-	join(__dirname, "..", "..", "skills", "_shared", "aesthetics"),
-	join(__dirname, "..", "..", "..", "skills", "_shared", "aesthetics"),
-] as const;
-
-let resolvedAestheticsDir: string | undefined;
-
-function resolveAestheticsDir(): string {
-	if (resolvedAestheticsDir !== undefined) return resolvedAestheticsDir;
-	for (const dir of CANDIDATE_AESTHETICS_DIRS) {
-		if (existsSync(dir)) {
-			resolvedAestheticsDir = dir;
-			return dir;
-		}
-	}
-	throw new Error(
-		`Could not locate fgraph aesthetics directory. Tried: ${CANDIDATE_AESTHETICS_DIRS.join(", ")}. Ensure the package was built (bun run build) so dist/skills/ exists.`,
-	);
-}
-
-const aestheticCache = new Map<FgraphAesthetic, string>();
-
-/** Read and cache an aesthetic CSS file. */
-export function loadAestheticCss(aesthetic: FgraphAesthetic): string {
-	const cached = aestheticCache.get(aesthetic);
-	if (cached !== undefined) return cached;
-	const path = join(resolveAestheticsDir(), `${aesthetic}.css`);
-	if (!existsSync(path)) {
-		throw new Error(`Aesthetic CSS file not found: ${path}`);
-	}
-	const css = readFileSync(path, "utf-8");
-	aestheticCache.set(aesthetic, css);
-	return css;
-}
+export { loadAestheticCss } from "../../utils/aesthetic-loader.js";
 
 /* ────────────────────────────────────────────────────────────────────
    Common SVG arrow-marker defs — shared across all 4 topologies.

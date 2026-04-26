@@ -15,6 +15,7 @@ import type {
 
 const VALID_VISUAL_TYPES: readonly VisualType[] = [
 	"architecture",
+	"chart",
 	"diagram",
 	"flowchart",
 	"sequence",
