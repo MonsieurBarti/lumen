@@ -15,7 +15,7 @@
 import { StringEnum } from "@mariozechner/pi-ai";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { defineTool } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import Type from "typebox";
 import { generateChartTemplate, parseChartContent } from "./templates/chart/index.js";
 import { generateDiagramTemplate, parseFgraphContent } from "./templates/diagram/index.js";
 import { generateMermaidTemplate } from "./templates/mermaid.js";
