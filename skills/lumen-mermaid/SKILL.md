@@ -1,7 +1,7 @@
 ---
 name: lumen-mermaid
 description: Render Mermaid diagram (flowchart, sequence, ER, state, gantt, mindmap, class) as self-contained HTML with zoom, pan, fit-to-screen, expand-to-tab. Invoke when user asks for mermaid diagram or supplies mermaid source.
-version: 0.1.3 # x-release-please-version
+version: 0.1.4 # x-release-please-version
 ---
 
 # lumen-mermaid
