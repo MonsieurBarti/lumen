@@ -147,8 +147,17 @@ describe("validateParams", () => {
 
 	it("rejects content of wrong shape", () => {
 		expect(() => validateParams({ ...minValid, content: 42 })).toThrow(/content/);
-		expect(() => validateParams({ ...minValid, content: { not: "array" } })).toThrow(/content/);
 		expect(() => validateParams({ ...minValid, content: [42, "x"] })).toThrow(/content/);
+	});
+
+	it("accepts plain-object content (used by type:'diagram' fgraph route)", () => {
+		expect(() =>
+			validateParams({
+				...minValid,
+				type: "diagram",
+				content: { topology: "sequence", participants: [], messages: [] },
+			}),
+		).not.toThrow();
 	});
 });
 

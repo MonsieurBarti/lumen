@@ -16,12 +16,25 @@ import { StringEnum } from "@mariozechner/pi-ai";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { defineTool } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
+import { generateDiagramTemplate, parseFgraphContent } from "./templates/diagram/index.js";
 import { generateMermaidTemplate } from "./templates/mermaid.js";
-import type { ExtensionState, GenerateResult, GenerateVisualParams } from "./types.js";
+import type {
+	Aesthetic,
+	ExtensionState,
+	FgraphAesthetic,
+	GenerateResult,
+	GenerateVisualParams,
+} from "./types.js";
 import { checkForUpdates } from "./update-check.js";
 import { openInBrowser } from "./utils/browser-open.js";
 import { createInitialState, writeHtmlFile } from "./utils/file-writer.js";
-import { generateDefaultFilename, sanitizeFilename, validateParams } from "./utils/validators.js";
+import {
+	generateDefaultFilename,
+	isAesthetic,
+	isFgraphAesthetic,
+	sanitizeFilename,
+	validateParams,
+} from "./utils/validators.js";
 
 // x-release-please-start-version
 export const LUMEN_VERSION = "0.1.2";
@@ -48,14 +61,66 @@ const MERMAID_TYPES: readonly GenerateVisualParams["type"][] = [
 	"mermaid_custom",
 ];
 
+const FGRAPH_TYPES: readonly GenerateVisualParams["type"][] = ["diagram"];
+
 class NotImplementedError extends Error {
 	constructor(type: string) {
-		const wired = MERMAID_TYPES.join(", ");
+		const wired = [...MERMAID_TYPES, ...FGRAPH_TYPES].join(", ");
 		super(
-			`Visual type "${type}" is not implemented in lumen v${LUMEN_VERSION}. Only mermaid types (${wired}) are wired through the PI tool today; other types land as their lumen-* skills are filled in. See PLAN.md.`,
+			`Visual type "${type}" is not implemented in lumen v${LUMEN_VERSION}. Wired types: ${wired}. Other types land as their lumen-* skills are filled in.`,
 		);
 		this.name = "NotImplementedError";
 	}
+}
+
+function narrowMermaidAesthetic(aesthetic: GenerateVisualParams["aesthetic"]): Aesthetic {
+	if (aesthetic === undefined) return "blueprint";
+	if (isAesthetic(aesthetic)) return aesthetic;
+	console.warn(
+		`Aesthetic "${aesthetic}" is fgraph-only; mermaid renderer falling back to "blueprint".`,
+	);
+	return "blueprint";
+}
+
+function narrowFgraphAesthetic(aesthetic: GenerateVisualParams["aesthetic"]): FgraphAesthetic {
+	if (aesthetic === undefined) return "dark-professional";
+	if (isFgraphAesthetic(aesthetic)) return aesthetic;
+	console.warn(
+		`Aesthetic "${aesthetic}" is mermaid-only; diagram renderer falling back to "dark-professional".`,
+	);
+	return "dark-professional";
+}
+
+async function renderMermaid(params: GenerateVisualParams): Promise<string> {
+	if (typeof params.content !== "string") {
+		throw new Error(
+			`Mermaid types require string content (the mermaid source); got ${typeof params.content}.`,
+		);
+	}
+	return generateMermaidTemplate(
+		params.title,
+		{
+			mermaidSyntax: params.content,
+			caption: `${params.type} diagram`,
+		},
+		narrowMermaidAesthetic(params.aesthetic),
+		params.theme === "dark",
+	);
+}
+
+async function renderDiagram(params: GenerateVisualParams): Promise<string> {
+	if (typeof params.content === "string" || Array.isArray(params.content)) {
+		const got = typeof params.content === "string" ? "string" : "array";
+		throw new Error(
+			`type:"diagram" requires structured content (an object describing an fgraph topology); got ${got}. See FgraphContent in src/templates/diagram/schemas.ts for the shape.`,
+		);
+	}
+	const fgraphContent = parseFgraphContent(params.content);
+	return generateDiagramTemplate({
+		title: params.title,
+		content: fgraphContent,
+		aesthetic: narrowFgraphAesthetic(params.aesthetic),
+	});
 }
 
 async function generateVisual(
@@ -63,27 +128,14 @@ async function generateVisual(
 	pi: ExtensionAPI,
 	state: ExtensionState,
 ): Promise<GenerateResult> {
-	const isDark = params.theme === "dark";
-
-	if (!MERMAID_TYPES.includes(params.type)) {
+	let html: string;
+	if (MERMAID_TYPES.includes(params.type)) {
+		html = await renderMermaid(params);
+	} else if (FGRAPH_TYPES.includes(params.type)) {
+		html = await renderDiagram(params);
+	} else {
 		throw new NotImplementedError(params.type);
 	}
-
-	if (typeof params.content !== "string") {
-		throw new Error(
-			`Mermaid types require string content (the mermaid source); got ${typeof params.content}.`,
-		);
-	}
-
-	const html = generateMermaidTemplate(
-		params.title,
-		{
-			mermaidSyntax: params.content,
-			caption: `${params.type} diagram`,
-		},
-		params.aesthetic ?? "blueprint",
-		isDark,
-	);
 
 	const filename = params.filename
 		? sanitizeFilename(params.filename)
@@ -125,18 +177,20 @@ export default function lumenExtension(pi: ExtensionAPI) {
 		name: "lumen-generate_visual",
 		label: "Generate Visual",
 		description:
-			"Generate a single-file HTML visualization (mermaid diagrams in v0.1.x; architecture, charts, slides, galleries, guides, recaps, and fact-checks land as their lumen-* skills are filled in). Opens result in browser.",
+			'Generate a single-file HTML visualization. Wired routes: mermaid (flowchart/sequence/er/state/mermaid_custom — pass mermaid source as `content`) and fgraph diagram (type:"diagram" — pass a structured FgraphContent object as `content`, currently supporting topologies sequence / layered / linear-flow / radial-hub). Other types (architecture, charts, slides, galleries, guides, recaps, fact-checks) throw NotImplementedError; invoke the matching lumen-* skill directly. Opens result in browser.',
 		promptSnippet: "Create a visual diagram",
 		promptGuidelines: [
-			"v0.1.x only `mermaid_custom`, `flowchart`, `sequence`, `er`, and `state` are fully wired through this tool. Other types throw NotImplementedError.",
-			"Pass mermaid source as `content` for mermaid types.",
-			"Pick an aesthetic from the 8 palettes (blueprint default).",
-			"For other visual types, invoke the matching lumen-* skill directly until v0.2.",
+			"Mermaid types (`mermaid_custom`, `flowchart`, `sequence`, `er`, `state`): pass mermaid source as `content` (string).",
+			'Fgraph diagram (`type:"diagram"`): pass a structured object as `content` with a `topology` discriminator. Supported topologies in v0.2: "sequence" (participants + messages), "layered" (layers of nodes), "linear-flow" (left→right pipeline of stages), "radial-hub" (hub + spokes at compass positions). See FgraphContent in src/templates/diagram/schemas.ts for the exact shape.',
+			"Coordinates are computed from logical indices / compass positions — do NOT pass --x/--y; use participant/layer/stage/position vocabulary instead.",
+			"Aesthetic: mermaid renderer accepts blueprint / editorial / paper / terminal / dracula / nord / solarized / gruvbox; diagram renderer accepts blueprint / dark-professional / editorial / lyra / terminal. Defaults: blueprint (mermaid), dark-professional (diagram).",
+			"For visual types other than mermaid + diagram, invoke the matching lumen-* skill directly until that route lands.",
 		],
 		parameters: Type.Object({
 			type: StringEnum(
 				[
 					"architecture",
+					"diagram",
 					"flowchart",
 					"sequence",
 					"er",
@@ -156,6 +210,14 @@ export default function lumenExtension(pi: ExtensionAPI) {
 				Type.Array(Type.Record(Type.String(), Type.Unknown()), {
 					description: "Structured data rows (for tables, charts)",
 				}),
+				Type.Object(
+					{},
+					{
+						description:
+							'Structured object content. Required for type:"diagram" — see FgraphContent shape (topology + topology-specific fields).',
+						additionalProperties: true,
+					},
+				),
 			]),
 			title: Type.String({ description: "Title for the visualization" }),
 			aesthetic: Type.Optional(
@@ -169,8 +231,13 @@ export default function lumenExtension(pi: ExtensionAPI) {
 						"nord",
 						"solarized",
 						"gruvbox",
+						"dark-professional",
+						"lyra",
 					] as const,
-					{ description: "Visual aesthetic / theme palette" },
+					{
+						description:
+							"Visual aesthetic / palette. First 8 are mermaid-only; dark-professional + lyra are diagram-only; blueprint / editorial / terminal work for both.",
+					},
 				),
 			),
 			theme: Type.Optional(
@@ -253,11 +320,33 @@ export type {
 	ArchitectureContent,
 	ArchitectureSection,
 } from "./templates/architecture.js";
+export {
+	generateDiagramTemplate,
+	parseFgraphContent,
+	SUPPORTED_TOPOLOGIES,
+	type FgraphContent,
+	type FgraphEdge,
+	type FgraphNode,
+	type FgraphSemantic,
+	type FgraphShape,
+	type FgraphTone,
+	type LayeredContent,
+	type LinearFlowContent,
+	type RadialHubContent,
+	type RadialPosition,
+	type RadialSpoke,
+	type SequenceContent,
+	type SequenceMessage,
+	type SequenceParticipant,
+	type SupportedTopology,
+} from "./templates/diagram/index.js";
 export { generateMermaidTemplate } from "./templates/mermaid.js";
 export type { MermaidContent } from "./templates/mermaid.js";
 export type {
 	Aesthetic,
+	AnyAesthetic,
 	ExtensionState,
+	FgraphAesthetic,
 	GenerateResult,
 	GenerateVisualParams,
 	Palette,

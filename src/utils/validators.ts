@@ -4,10 +4,18 @@
  * Adapted to avoid type casts: uses Set membership + Reflect.get + type guards.
  */
 
-import type { Aesthetic, GenerateVisualParams, Theme, VisualType } from "../types.js";
+import type {
+	Aesthetic,
+	AnyAesthetic,
+	FgraphAesthetic,
+	GenerateVisualParams,
+	Theme,
+	VisualType,
+} from "../types.js";
 
 const VALID_VISUAL_TYPES: readonly VisualType[] = [
 	"architecture",
+	"diagram",
 	"flowchart",
 	"sequence",
 	"er",
@@ -32,18 +40,41 @@ const VALID_AESTHETICS: readonly Aesthetic[] = [
 	"gruvbox",
 ];
 
+const VALID_FGRAPH_AESTHETICS: readonly FgraphAesthetic[] = [
+	"blueprint",
+	"dark-professional",
+	"editorial",
+	"lyra",
+	"terminal",
+];
+
+// Union of mermaid + fgraph aesthetics with duplicates collapsed.
+const VALID_ANY_AESTHETICS: readonly AnyAesthetic[] = Array.from(
+	new Set<AnyAesthetic>([...VALID_AESTHETICS, ...VALID_FGRAPH_AESTHETICS]),
+);
+
 const VALID_THEMES: readonly Theme[] = ["light", "dark", "auto"];
 
 const VISUAL_TYPE_SET: ReadonlySet<string> = new Set(VALID_VISUAL_TYPES);
 const AESTHETIC_SET: ReadonlySet<string> = new Set(VALID_AESTHETICS);
+const FGRAPH_AESTHETIC_SET: ReadonlySet<string> = new Set(VALID_FGRAPH_AESTHETICS);
+const ANY_AESTHETIC_SET: ReadonlySet<string> = new Set(VALID_ANY_AESTHETICS);
 const THEME_SET: ReadonlySet<string> = new Set(VALID_THEMES);
 
 function isVisualType(value: unknown): value is VisualType {
 	return typeof value === "string" && VISUAL_TYPE_SET.has(value);
 }
 
-function isAesthetic(value: unknown): value is Aesthetic {
+export function isAesthetic(value: unknown): value is Aesthetic {
 	return typeof value === "string" && AESTHETIC_SET.has(value);
+}
+
+export function isFgraphAesthetic(value: unknown): value is FgraphAesthetic {
+	return typeof value === "string" && FGRAPH_AESTHETIC_SET.has(value);
+}
+
+function isAnyAesthetic(value: unknown): value is AnyAesthetic {
+	return typeof value === "string" && ANY_AESTHETIC_SET.has(value);
 }
 
 function isTheme(value: unknown): value is Theme {
@@ -52,8 +83,11 @@ function isTheme(value: unknown): value is Theme {
 
 function isContent(value: unknown): value is GenerateVisualParams["content"] {
 	if (typeof value === "string") return true;
-	if (!Array.isArray(value)) return false;
-	return value.every((item) => typeof item === "object" && item !== null && !Array.isArray(item));
+	if (Array.isArray(value)) {
+		return value.every((item) => typeof item === "object" && item !== null && !Array.isArray(item));
+	}
+	// Plain object — used by structured types (e.g. diagram fgraph content).
+	return typeof value === "object" && value !== null;
 }
 
 export function validateVisualType(type: unknown): VisualType {
@@ -65,9 +99,15 @@ export function validateVisualType(type: unknown): VisualType {
 	return type;
 }
 
-export function validateAesthetic(aesthetic: unknown): Aesthetic {
+/**
+ * Tool-level aesthetic validation. Accepts any value from either the mermaid
+ * palette set OR the fgraph aesthetic set; renderers narrow at render time
+ * (mermaid → narrow to Aesthetic with isAesthetic; diagram → narrow to
+ * FgraphAesthetic with isFgraphAesthetic).
+ */
+export function validateAesthetic(aesthetic: unknown): AnyAesthetic {
 	if (aesthetic === undefined) return "blueprint";
-	if (!isAesthetic(aesthetic)) {
+	if (!isAnyAesthetic(aesthetic)) {
 		console.warn(`Invalid aesthetic: ${String(aesthetic)}. Falling back to "blueprint"`);
 		return "blueprint";
 	}
