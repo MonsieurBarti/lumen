@@ -1,6 +1,6 @@
 {
 	"name": "lumen",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"description": "Skills for diagrams, charts, mermaid, slides, galleries, guides, project recaps, and fact-checks. Single-file HTML/SVG outputs.",
 	"author": {
 		"name": "The Forge Flow",
@@ -22,5 +22,9 @@
 		"html",
 		"svg"
 	],
-	"skills": ["./skills/", "./composites/", "./playbooks/"]
+	"skills": [
+		"./skills/",
+		"./composites/",
+		"./playbooks/"
+	]
 }

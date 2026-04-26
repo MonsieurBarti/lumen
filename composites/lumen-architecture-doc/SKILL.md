@@ -1,7 +1,7 @@
 ---
 name: lumen-architecture-doc
 description: Produce a multi-tab, fact-checked HTML architecture document for a codebase by orchestrating lumen-diagram, lumen-guide, and lumen-fact-check in a fixed sequence. Invoke when user asks for an architecture doc, design doc, or to "document this architecture".
-version: 0.1.6 # x-release-please-version
+version: 0.1.7 # x-release-please-version
 ---
 
 # lumen-architecture-doc

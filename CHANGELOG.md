@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.7](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.6...lumen-v0.1.7) (2026-04-26)
+
+
+### Features
+
+* **chart,slides:** add named presets + illustrated slide family ([70ebd95](https://github.com/MonsieurBarti/lumen/commit/70ebd95a973c4b10c1a6a789a8c6c4f85aeaa0db))
+* **chart,slides:** named chart presets + illustrated slide family ([72101ce](https://github.com/MonsieurBarti/lumen/commit/72101ce5861d9a813b297c831c94fce599e4dd71))
+
 ## [0.1.6](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.5...lumen-v0.1.6) (2026-04-26)
 
 

@@ -1,7 +1,7 @@
 ---
 name: lumen-postmortem
 description: Produce a multi-tab HTML postmortem for a production incident. Combines a scoped recap, a mermaid sequence-diagram timeline, impact charts, and a structured write-up (Summary / Timeline / Impact / Root Cause / Action Items). Invoke for "postmortem", "post-mortem", "incident review".
-version: 0.1.6 # x-release-please-version
+version: 0.1.7 # x-release-please-version
 ---
 
 # lumen-postmortem

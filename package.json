@@ -1,6 +1,6 @@
 {
 	"name": "@the-forge-flow/lumen",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"description": "Illuminate code: skills for diagrams, charts, mermaid, slides, galleries, guides, project recaps, and fact-checks. Works in Claude Code and PI coding agent.",
 	"type": "module",
 	"main": "./dist/index.js",
