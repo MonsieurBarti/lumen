@@ -12,6 +12,12 @@ markdown files in a viewer or side-by-side `diff`.
 | `lumen-recap`      | [`recap.html`](./recap.html)                | A real recap of *this* repo over the last 14 days — identity, architecture, KPIs, decisions, mental model, debt hotspots, next steps. |
 | `lumen-fact-check` | [`fact-check/`](./fact-check/)              | Before/after pair: a doc with 11 intentional inaccuracies, plus the corrected version with a verification summary citing each fix. |
 
+## Composites
+
+| Skill | Example | What it shows |
+|---|---|---|
+| `lumen-architecture-doc` | [`architecture.html`](./architecture.html) | A 5-tab architecture document for *this* repo (Overview / Components / Flows / Decisions / Verification). Produced by the validated `diagram → guide → fact-check` pipeline; embeds 4 fgraph diagrams via `<iframe srcdoc>` to preserve per-topology CSS. |
+
 ## Conventions
 
 - All HTML examples are **self-contained, offline-safe** — open via `file://`,
