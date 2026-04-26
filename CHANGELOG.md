@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.6](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.5...lumen-v0.1.6) (2026-04-26)
+
+
+### Bug Fixes
+
+* address post-0.1.5 release fallout ([6c53ff3](https://github.com/MonsieurBarti/lumen/commit/6c53ff3e48e968cd46e9a7508328415393f1fe06))
+* address post-0.1.5 release fallout (lint, README drift, release-please config) ([aa2baab](https://github.com/MonsieurBarti/lumen/commit/aa2baab73d9a16893597ec1a69d18c30f182f974))
+
 ## [0.1.5](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.4...lumen-v0.1.5) (2026-04-26)
 
 

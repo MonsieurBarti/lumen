@@ -136,7 +136,7 @@ Skills are auto-routed by trigger phrases. Output is a single HTML file you can 
 ## 🪶 Status
 
 <!-- x-release-please-start-version -->
-v0.1.5
+v0.1.6
 <!-- x-release-please-end -->
 
 8 capabilities + 4 composites + 2 playbooks shipped, all with production-ready `SKILL.md` and the tier-aware structure described above. PI tool routes wire mermaid + diagram + chart deterministically; composites and playbooks are LLM-authored only by design — they orchestrate other skills, so there's no single deterministic route to expose. Skill-graph eval (`tests/skill-graph.spec.ts`) guards structural invariants (tier banners, pipeline references, no cross-tier ID collisions). New aesthetics (`glassmorphism` / `cyberpunk-neon` / `hand-drawn`) remain on the v0.2 roadmap.

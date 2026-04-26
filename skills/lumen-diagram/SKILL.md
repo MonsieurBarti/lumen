@@ -1,7 +1,7 @@
 ---
 name: lumen-diagram
 description: Generate single-file HTML diagram (architecture, flow, sequence, ER, state, gantt, network, dependency graph, AI pattern). Invoke when user asks to draw, diagram, visualize, sketch architecture, show flow, or describes system / pipeline / topology to illustrate.
-version: 0.1.5 # x-release-please-version
+version: 0.1.6 # x-release-please-version
 ---
 
 # lumen-diagram
