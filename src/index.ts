@@ -16,6 +16,7 @@ import { StringEnum } from "@mariozechner/pi-ai";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { defineTool } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
+import { generateChartTemplate, parseChartContent } from "./templates/chart/index.js";
 import { generateDiagramTemplate, parseFgraphContent } from "./templates/diagram/index.js";
 import { generateMermaidTemplate } from "./templates/mermaid.js";
 import type {
@@ -63,9 +64,11 @@ const MERMAID_TYPES: readonly GenerateVisualParams["type"][] = [
 
 const FGRAPH_TYPES: readonly GenerateVisualParams["type"][] = ["diagram"];
 
+const CHART_TYPES: readonly GenerateVisualParams["type"][] = ["chart"];
+
 class NotImplementedError extends Error {
 	constructor(type: string) {
-		const wired = [...MERMAID_TYPES, ...FGRAPH_TYPES].join(", ");
+		const wired = [...MERMAID_TYPES, ...FGRAPH_TYPES, ...CHART_TYPES].join(", ");
 		super(
 			`Visual type "${type}" is not implemented in lumen v${LUMEN_VERSION}. Wired types: ${wired}. Other types land as their lumen-* skills are filled in.`,
 		);
@@ -123,6 +126,21 @@ async function renderDiagram(params: GenerateVisualParams): Promise<string> {
 	});
 }
 
+async function renderChart(params: GenerateVisualParams): Promise<string> {
+	if (typeof params.content === "string" || Array.isArray(params.content)) {
+		const got = typeof params.content === "string" ? "string" : "array";
+		throw new Error(
+			`type:"chart" requires structured content (an object describing a chart); got ${got}. See ChartContent in src/templates/chart/schemas.ts for the shape.`,
+		);
+	}
+	const chartContent = parseChartContent(params.content);
+	return generateChartTemplate({
+		title: params.title,
+		content: chartContent,
+		aesthetic: narrowFgraphAesthetic(params.aesthetic),
+	});
+}
+
 async function generateVisual(
 	params: GenerateVisualParams,
 	pi: ExtensionAPI,
@@ -133,6 +151,8 @@ async function generateVisual(
 		html = await renderMermaid(params);
 	} else if (FGRAPH_TYPES.includes(params.type)) {
 		html = await renderDiagram(params);
+	} else if (CHART_TYPES.includes(params.type)) {
+		html = await renderChart(params);
 	} else {
 		throw new NotImplementedError(params.type);
 	}
@@ -177,19 +197,21 @@ export default function lumenExtension(pi: ExtensionAPI) {
 		name: "lumen-generate_visual",
 		label: "Generate Visual",
 		description:
-			'Generate a single-file HTML visualization. Wired routes: mermaid (flowchart/sequence/er/state/mermaid_custom — pass mermaid source as `content`) and fgraph diagram (type:"diagram" — pass a structured FgraphContent object as `content`, currently supporting topologies sequence / layered / linear-flow / radial-hub). Other types (architecture, charts, slides, galleries, guides, recaps, fact-checks) throw NotImplementedError; invoke the matching lumen-* skill directly. Opens result in browser.',
-		promptSnippet: "Create a visual diagram",
+			'Generate a single-file HTML visualization. Wired routes: mermaid (flowchart/sequence/er/state/mermaid_custom — pass mermaid source as `content`); fgraph diagram (type:"diagram" — structured FgraphContent object, topologies sequence / layered / linear-flow / radial-hub); chart (type:"chart" — structured ChartContent object, types bar / pie / line / table). Other types (architecture, slides, galleries, guides, recaps, fact-checks) throw NotImplementedError; invoke the matching lumen-* skill directly. Opens result in browser.',
+		promptSnippet: "Create a visual diagram or chart",
 		promptGuidelines: [
 			"Mermaid types (`mermaid_custom`, `flowchart`, `sequence`, `er`, `state`): pass mermaid source as `content` (string).",
-			'Fgraph diagram (`type:"diagram"`): pass a structured object as `content` with a `topology` discriminator. Supported topologies in v0.2: "sequence" (participants + messages), "layered" (layers of nodes), "linear-flow" (left→right pipeline of stages), "radial-hub" (hub + spokes at compass positions). See FgraphContent in src/templates/diagram/schemas.ts for the exact shape.',
-			"Coordinates are computed from logical indices / compass positions — do NOT pass --x/--y; use participant/layer/stage/position vocabulary instead.",
-			"Aesthetic: mermaid renderer accepts blueprint / editorial / paper / terminal / dracula / nord / solarized / gruvbox; diagram renderer accepts blueprint / dark-professional / editorial / lyra / terminal. Defaults: blueprint (mermaid), dark-professional (diagram).",
-			"For visual types other than mermaid + diagram, invoke the matching lumen-* skill directly until that route lands.",
+			'Fgraph diagram (`type:"diagram"`): pass a structured object as `content` with a `topology` discriminator. Supported topologies in v0.2: "sequence" (participants + messages), "layered" (layers of nodes), "linear-flow" (left→right pipeline of stages), "radial-hub" (hub + spokes at compass positions). See FgraphContent in src/templates/diagram/schemas.ts.',
+			'Chart (`type:"chart"`): pass a structured object as `content` with a `chart` discriminator. Supported types in v0.2: "bar" (vertical, grouped or stacked), "pie" (with optional donut innerRadius), "line" (linear or smooth), "table" (with min/max highlighting + verdict pills). See ChartContent in src/templates/chart/schemas.ts.',
+			"Coordinates / scales are computed by the renderer — do NOT pass --x/--y or pre-computed pixel values. Use logical indices, compass positions, and Nice-Numbers axis ticks.",
+			"Aesthetic: mermaid renderer accepts blueprint / editorial / paper / terminal / dracula / nord / solarized / gruvbox; diagram + chart renderers accept blueprint / dark-professional / editorial / lyra / terminal. Defaults: blueprint (mermaid), dark-professional (diagram + chart).",
+			"For visual types other than mermaid + diagram + chart, invoke the matching lumen-* skill directly until that route lands.",
 		],
 		parameters: Type.Object({
 			type: StringEnum(
 				[
 					"architecture",
+					"chart",
 					"diagram",
 					"flowchart",
 					"sequence",
@@ -208,13 +230,13 @@ export default function lumenExtension(pi: ExtensionAPI) {
 			content: Type.Union([
 				Type.String({ description: "Raw content (mermaid syntax, markdown)" }),
 				Type.Array(Type.Record(Type.String(), Type.Unknown()), {
-					description: "Structured data rows (for tables, charts)",
+					description: "Structured data rows",
 				}),
 				Type.Object(
 					{},
 					{
 						description:
-							'Structured object content. Required for type:"diagram" — see FgraphContent shape (topology + topology-specific fields).',
+							'Structured object content. Required for type:"diagram" (FgraphContent) and type:"chart" (ChartContent). See the per-type schemas in src/templates/.',
 						additionalProperties: true,
 					},
 				),
@@ -320,6 +342,23 @@ export type {
 	ArchitectureContent,
 	ArchitectureSection,
 } from "./templates/architecture.js";
+export {
+	generateChartTemplate,
+	parseChartContent,
+	SUPPORTED_CHARTS,
+	type BarContent,
+	type BarSeries,
+	type ChartContent,
+	type DataPoint,
+	type LineContent,
+	type LineSeries,
+	type PieContent,
+	type PieSlice,
+	type SupportedChart,
+	type TableColumn,
+	type TableContent,
+	type TableRow,
+} from "./templates/chart/index.js";
 export {
 	generateDiagramTemplate,
 	parseFgraphContent,

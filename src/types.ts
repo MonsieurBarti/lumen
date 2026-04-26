@@ -9,6 +9,7 @@
 
 export type VisualType =
 	| "architecture"
+	| "chart"
 	| "diagram"
 	| "flowchart"
 	| "sequence"
