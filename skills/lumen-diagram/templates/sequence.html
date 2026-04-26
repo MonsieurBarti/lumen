@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- diagram-meta:start -->
+<meta name="diagram:title"     content="{{TITLE}}">
+<meta name="diagram:date"      content="{{DATE}}">
+<meta name="diagram:category"  content="{{CATEGORY}}">
+<meta name="diagram:cat-label" content="{{CAT_LABEL}}">
+<meta name="diagram:color"     content="{{COLOR}}">
+<!-- diagram-meta:end -->
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* {{BASE_STYLES}} — inline reset.css + layout.css + typography.css + components.css + explainer-base.css */
+/* {{AESTHETIC_STYLES}} — inline the chosen aesthetic (lyra.css / roxabi.css / blueprint.css / ...) */
+
+/* ══════════════════════════════════════════════════════════════════
+   fgraph primitives — inlined from references/graph-templates/fgraph-base.css
+   ══════════════════════════════════════════════════════════════════ */
+/* {{FGRAPH_BASE}} — inline fgraph-base.css here */
+
+/* ── sequence-specific height override ──
+   Aspect-ratio is replaced with a derived height so vertical spacing
+   adapts to the message count. Cap at 15 messages — denser sequences
+   belong in a flowchart (see Shape picker). */
+.fgraph-wrap.sequence {
+  aspect-ratio: unset;
+  --msg-count: 5;
+  height: calc(120px + var(--msg-count) * 40px);
+  max-width: 820px;
+}
+
+/* ── participant pill row (top) ── */
+.fg-seq-participant {
+  position: absolute;
+  left: calc(var(--x, 50) * 1%);
+  top: 6%;
+  transform: translate(-50%, 0);
+  padding: 5px 14px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-bright);
+  border-radius: 999px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text);
+  white-space: nowrap;
+  z-index: 2;
+}
+.fg-seq-participant.amber  { border-color: rgba(251,191,36,0.55);  color: var(--amber); }
+.fg-seq-participant.cyan   { border-color: rgba(34,211,238,0.55);  color: var(--cyan); }
+.fg-seq-participant.purple { border-color: rgba(192,132,252,0.55); color: var(--purple); }
+.fg-seq-participant.green  { border-color: rgba(74,222,128,0.55);  color: var(--green); }
+
+/* ── message label (sits on top of a message arrow) ── */
+.fg-seq-msg-lbl {
+  position: absolute;
+  left: calc(var(--x, 50) * 1%);
+  top:  calc(var(--y, 50) * 1%);
+  transform: translate(-50%, -110%);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--text-dim);
+  background: var(--bg-panel);
+  padding: 1px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  z-index: 1;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">{{CATEGORY_LABEL}}</div>
+  <h1>{{TITLE_PLAIN}} <span class="accent">{{TITLE_ACCENT}}</span></h1>
+  <p class="header-subtitle">{{SUBTITLE}}</p>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CUSTOMISE — this is the authoring surface.
+
+     Layout: participants along the top, lifelines dropping vertically,
+     horizontal message arrows between lifelines spaced by --y.
+
+     Cap: 15 messages per diagram. Denser sequences become illegible —
+     use a flowchart or split into multiple sequences.
+
+     Set --msg-count on .fgraph-wrap.sequence to drive the container
+     height (each message gets 40px of vertical space plus 120px padding).
+
+     Default layout:
+       participant pill row  top = 6%
+       lifeline top-anchor   top = 12%   (fg-lifeline --top default)
+       first message         --y = 22
+       second message        --y = 30
+       third message         --y = 38
+       fourth message        --y = 46
+       fifth message         --y = 54
+
+     Activation box pattern (.fg-lifeline-activation): overlay on a
+     lifeline's --x between --y1 and --y2 to show "this participant is
+     processing a message during this span".
+     ══════════════════════════════════════════════════════════════════ -->
+
+<div class="fgraph-wrap sequence green"
+     style="--msg-count: 5;"
+     role="img"
+     aria-label="{{DIAGRAM_ARIA_LABEL}}">
+
+  <!-- ── PARTICIPANT PILLS (top row) ──────────────────────────── -->
+  <div class="fg-seq-participant amber"  style="--x:12">{{PARTICIPANT_1}}</div>
+  <div class="fg-seq-participant cyan"   style="--x:38">{{PARTICIPANT_2}}</div>
+  <div class="fg-seq-participant purple" style="--x:62">{{PARTICIPANT_3}}</div>
+  <div class="fg-seq-participant green"  style="--x:88">{{PARTICIPANT_4}}</div>
+
+  <!-- ── LIFELINES ──────────────────────────────────────────── -->
+  <div class="fg-lifeline" style="--x:12"></div>
+  <div class="fg-lifeline" style="--x:38"></div>
+  <div class="fg-lifeline" style="--x:62"></div>
+  <div class="fg-lifeline" style="--x:88"></div>
+
+  <!-- ── ACTIVATION BOX (participant 2 busy during msgs 2 → 3) ── -->
+  <div class="fg-lifeline-activation" style="--x:38; --y1:28; --y2:42"></div>
+
+  <!-- ── MESSAGE ARROWS ─────────────────────────────────────── -->
+  <svg class="fgraph-edges" viewBox="0 0 100 100" preserveAspectRatio="none"
+       xmlns="http://www.w3.org/2000/svg"
+       style="position:absolute; inset:0; width:100%; height:100%;">
+    <defs>
+      <marker id="fg-arr-amber"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-amber"/></marker>
+      <marker id="fg-arr-cyan"   viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-cyan"/></marker>
+      <marker id="fg-arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-purple"/></marker>
+      <marker id="fg-arr-green"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-green"/></marker>
+    </defs>
+    <path class="fg-edge amber"  d="M 12,22 L 38,22" marker-end="url(#fg-arr-amber)"/>
+    <path class="fg-edge cyan"   d="M 38,30 L 62,30" marker-end="url(#fg-arr-cyan)"/>
+    <path class="fg-edge purple" d="M 62,38 L 88,38" marker-end="url(#fg-arr-purple)"/>
+    <path class="fg-edge purple dashed" d="M 88,46 L 62,46" marker-end="url(#fg-arr-purple)"/>
+    <path class="fg-edge green dashed"  d="M 38,54 L 12,54" marker-end="url(#fg-arr-green)"/>
+  </svg>
+
+  <!-- ── MESSAGE LABELS (sit just above each arrow) ──────────── -->
+  <div class="fg-seq-msg-lbl" style="--x:25; --y:22;">{{MSG_1_LABEL}}</div>
+  <div class="fg-seq-msg-lbl" style="--x:50; --y:30;">{{MSG_2_LABEL}}</div>
+  <div class="fg-seq-msg-lbl" style="--x:75; --y:38;">{{MSG_3_LABEL}}</div>
+  <div class="fg-seq-msg-lbl" style="--x:75; --y:46;">{{MSG_4_LABEL}}</div>
+  <div class="fg-seq-msg-lbl" style="--x:25; --y:54;">{{MSG_5_LABEL}}</div>
+
+  <div class="fgraph-legend">{{LEGEND}}</div>
+</div>
+
+</main>
+
+</body>
+</html>

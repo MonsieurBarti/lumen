@@ -1,0 +1,11 @@
+{
+  "skill": "forge-gallery",
+  "variant": "comparison",
+  "input": {
+    "prompt": "Create a comparison gallery of three competitor skills (architecture-diagram-generator, fireworks-tech-graph, visual-explainer) vs roxabi-forge. Each card has spec rows (primary format, distribution model, test fixtures) and a verdict badge (lead, parity, gap).",
+    "slug": "competitor-skills-compare",
+    "project": "roxabi-plugins/brand"
+  },
+  "expected_output_hash": null,
+  "notes": "Comparison template — spec cards with verdict badges. Regression anchor for the comparison-gallery.html template."
+}

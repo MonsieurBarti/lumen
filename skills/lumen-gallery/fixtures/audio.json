@@ -1,0 +1,11 @@
+{
+  "skill": "forge-gallery",
+  "variant": "audio",
+  "input": {
+    "prompt": "Create an audio gallery of Chatterbox voice clones grouped by voice persona. Each card has an inline audio player, duration, and engine variant. Support card/list toggle.",
+    "slug": "voice-clone-audio",
+    "project": "meeting-regen"
+  },
+  "expected_output_hash": null,
+  "notes": "Audio template — players, grouping, card/list toggle. Anchors the audio-gallery.html template's group-by-persona layout."
+}

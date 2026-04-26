@@ -1,0 +1,643 @@
+/* ══════════════════════════════════════════════════════════════════
+   slide-deck-base.css — scroll-snap slide engine + nav chrome
+   Part of forge slide-templates/ layer.
+   Inline AFTER: reset.css, typography.css, aesthetics/<name>.css.
+
+   Relies on forge token contract: --bg, --surface, --border,
+   --text, --text-muted, --text-dim, --accent, --accent-dim,
+   --accent-glow, --error (all 6 aesthetics must ship these).
+
+   Ships 3 V1 slide types (title, content, closing).
+   V2 appends: section, diagram, table, code, quote, image, comparison.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Type Scale ── */
+:root {
+  --fs-display: clamp(48px,  8vw,  120px);
+  --fs-heading: clamp(28px,  4vw,  48px);
+  --fs-body:    clamp(16px,  2vw,  24px);
+  --fs-caption: clamp(10px,  1vw,  14px);
+}
+
+/* ── Deck container + slides ── */
+html, body { height: 100%; }
+body.deck-body { overflow: hidden; }  /* opt-in so non-deck pages unaffected */
+
+.deck {
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.slide {
+  height: 100dvh;
+  scroll-snap-align: start;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(40px, 6vh, 80px) clamp(40px, 8vw, 120px);
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  transition:
+    opacity   0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Staggered child reveals (use class="reveal" on children) ── */
+.slide .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity   0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide.visible .reveal { opacity: 1; transform: none; }
+.slide.visible .reveal:nth-child(1) { transition-delay: 0.10s; }
+.slide.visible .reveal:nth-child(2) { transition-delay: 0.20s; }
+.slide.visible .reveal:nth-child(3) { transition-delay: 0.30s; }
+.slide.visible .reveal:nth-child(4) { transition-delay: 0.40s; }
+.slide.visible .reveal:nth-child(5) { transition-delay: 0.50s; }
+.slide.visible .reveal:nth-child(6) { transition-delay: 0.60s; }
+
+/* Explicit stagger override via --i (index) */
+.slide.visible .reveal[style*="--i"] {
+  transition-delay: calc(var(--i) * 0.10s);
+}
+
+/* ── Reduced motion — kill switch ── */
+@media (prefers-reduced-motion: reduce) {
+  .deck { scroll-behavior: auto; }
+  .slide,
+  .slide .reveal,
+  .slide * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  /* Nav chrome lives outside .slide — kill its animations too */
+  .deck-progress,
+  .deck-dot,
+  .deck-hints {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   NAV CHROME
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Progress bar (top) ── */
+.deck-progress {
+  position: fixed; top: 0; left: 0;
+  height: 3px; width: 0;
+  background: var(--accent);
+  z-index: 100;
+  transition: width 0.3s ease;
+  pointer-events: none;
+}
+
+/* ── Dot indicator (right side) ── */
+.deck-dots {
+  position: fixed;
+  right: clamp(12px, 2vw, 24px); top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+  padding: 8px;
+  background: color-mix(in srgb, var(--bg) 60%, transparent 40%);
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.deck-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  opacity: 0.3;
+  border: none; padding: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.deck-dot:hover  { opacity: 0.6; }
+.deck-dot:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  opacity: 1;
+}
+.deck-dot.active { opacity: 1; transform: scale(1.5); background: var(--accent); }
+
+/* ── Slide counter (bottom right) ── */
+.deck-counter {
+  position: fixed;
+  bottom: clamp(12px, 2vh, 24px);
+  right:  clamp(12px, 2vw, 24px);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  z-index: 100;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Keyboard hints (bottom center) ── */
+.deck-hints {
+  position: fixed;
+  bottom: clamp(12px, 2vh, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  opacity: 0.6;
+  z-index: 100;
+  transition: opacity 0.5s ease;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+.deck-hints.faded { opacity: 0; }
+
+/* ══════════════════════════════════════════════════════════════════
+   SHARED SLIDE ELEMENTS
+   ══════════════════════════════════════════════════════════════════ */
+
+.slide__display {
+  font-size: var(--fs-display);
+  font-weight: 600;
+  letter-spacing: -2px;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+
+.slide__heading {
+  font-size: var(--fs-heading);
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.slide__body {
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--text-muted);
+  text-wrap: pretty;
+  max-width: 68ch;
+}
+
+.slide__subtitle {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: clamp(12px, 1.5vw, 18px);
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.slide__label {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.slide__decor {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Auto-fit wrapper — autoFit() JS applies transform:scale to this */
+.slide-inner {
+  width: 100%;
+  transform-origin: center center;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   V1 SLIDE TYPES — title, content, closing
+   (V2 appends section, diagram, table, code, quote, image, comparison)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── title ── opening deck slide */
+.slide--title {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-image:
+    radial-gradient(ellipse at 50% 30%, var(--accent-dim) 0%, transparent 50%);
+}
+
+.slide--title .slide__display {
+  color: var(--accent);
+  max-width: 20ch;
+}
+
+.slide--title .slide__subtitle {
+  margin-top: 1.25rem;
+}
+
+/* ── content ── bullet / prose body */
+.slide--content {
+  justify-content: center;
+}
+
+.slide--content .slide__heading {
+  max-width: 22ch;
+  margin-bottom: 1.5rem;
+}
+
+.slide--content ul,
+.slide--content ol {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+  max-width: 68ch;
+  font-size: var(--fs-body);
+  color: var(--text-muted);
+}
+
+.slide--content li {
+  padding-left: 1.75rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.slide--content li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.slide--content ol {
+  counter-reset: slide-ol;
+}
+.slide--content ol li {
+  counter-increment: slide-ol;
+}
+.slide--content ol li::before {
+  content: counter(slide-ol, decimal-leading-zero);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+/* ── closing ── final CTA / sign-off */
+.slide--closing {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-image:
+    radial-gradient(ellipse at 50% 70%, var(--accent-dim) 0%, transparent 60%);
+}
+
+.slide--closing .slide__heading {
+  color: var(--accent);
+  max-width: 22ch;
+}
+
+.slide--closing .slide__body {
+  max-width: 50ch;
+  margin-top: 1rem;
+}
+
+.slide--closing .cta {
+  margin-top: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+}
+
+.slide--closing .cta:hover {
+  background: var(--accent-dim);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RESPONSIVE — small-screen sanity
+   ══════════════════════════════════════════════════════════════════ */
+
+@media (max-height: 600px) {
+  .slide { padding: 24px clamp(24px, 6vw, 64px); }
+}
+
+@media (max-width: 640px) {
+  .deck-dots  { right: 8px; gap: 6px; }
+  .deck-dot   { width: 6px; height: 6px; }
+  .deck-hints { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   V2 SLIDE TYPES — section, diagram, table, code, quote, image, comparison
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── section ── breathing-room divider with oversized numeral */
+.slide--section {
+  justify-content: center;
+  text-align: left;
+  padding: clamp(40px, 6vh, 80px) clamp(40px, 8vw, 140px);
+}
+.slide--section .slide__number {
+  font-size: clamp(100px, 22vw, 260px);
+  font-weight: 200;
+  line-height: 0.85;
+  opacity: 0.08;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -55%);
+  pointer-events: none;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.slide--section .slide__content {
+  position: relative;
+  z-index: 1;
+}
+.slide--section .slide__subtitle {
+  margin-top: 1rem;
+  color: var(--text-dim);
+  max-width: 50ch;
+}
+
+/* ── diagram ── in-slide Mermaid or fgraph */
+.slide--diagram {
+  padding: clamp(24px, 4vh, 48px) clamp(32px, 6vw, 80px);
+  justify-content: center;
+  gap: 1.25rem;
+}
+.slide--diagram .slide__heading {
+  font-size: clamp(22px, 3vw, 36px);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.slide--diagram .slide__diagram-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-height: 75vh;
+  overflow: hidden;
+}
+.slide--diagram .slide__diagram-wrap svg,
+.slide--diagram .slide__diagram-wrap .fgraph-wrap {
+  width: 100%;
+  max-width: 100%;
+  max-height: 75vh;
+  height: auto;
+}
+.slide--diagram .slide__caption {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: var(--fs-caption);
+  color: var(--text-dim);
+  text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── table ── presentation-scale data grid */
+.slide--table {
+  padding: clamp(32px, 5vh, 60px) clamp(32px, 5vw, 80px);
+}
+.slide--table .slide__heading {
+  font-size: clamp(22px, 3vw, 36px);
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+.slide--table .table-scroll {
+  max-height: 70vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.slide--table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(14px, 1.6vw, 18px);
+}
+.slide--table th,
+.slide--table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.slide--table th {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: sticky; top: 0;
+}
+.slide--table tbody tr:hover { background: var(--surface); }
+.slide--table td { color: var(--text-muted); }
+
+/* ── code ── code-focused slide */
+.slide--code {
+  padding: clamp(32px, 5vh, 60px) clamp(32px, 5vw, 80px);
+  justify-content: center;
+}
+.slide--code .slide__heading {
+  font-size: clamp(22px, 3vw, 36px);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.slide--code .slide__code-block {
+  max-height: 70vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  padding: 1rem 1.25rem;
+  position: relative;
+}
+.slide--code .slide__code-filename {
+  position: absolute;
+  top: -0.75rem; left: 1rem;
+  background: var(--bg);
+  padding: 0 0.5rem;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.slide--code pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: clamp(13px, 1.5vw, 18px);
+  line-height: 1.55;
+  color: var(--text);
+  white-space: pre;
+  overflow-x: auto;
+}
+.slide--code .hl { color: var(--accent); font-weight: 600; }
+.slide--code .cm { color: var(--text-dim); font-style: italic; }
+
+/* ── quote ── pull-quote / callout */
+.slide--quote {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-image:
+    radial-gradient(ellipse at 50% 50%, var(--accent-dim) 0%, transparent 35%);
+}
+.slide--quote .slide__quote-mark {
+  font-size: clamp(80px, 15vw, 200px);
+  line-height: 0.6;
+  color: var(--accent);
+  opacity: 0.3;
+  margin-bottom: 0.5rem;
+  font-family: Georgia, serif;
+}
+.slide--quote blockquote {
+  font-size: clamp(24px, 4vw, 48px);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  max-width: 24ch;
+  margin: 0 auto;
+  color: var(--text);
+  text-wrap: balance;
+}
+.slide--quote cite {
+  display: block;
+  margin-top: 1.5rem;
+  font-style: normal;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: var(--fs-caption);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+}
+
+/* ── image ── full-bleed image slide */
+.slide--image {
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.slide--image .slide__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+.slide--image .slide__bg--gradient {
+  background:
+    linear-gradient(135deg, var(--accent) 0%, var(--bg) 100%);
+}
+.slide--image .slide__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 70%, rgba(0,0,0,0.85) 100%);
+  z-index: 1;
+}
+.slide--image .slide__content {
+  position: relative;
+  z-index: 2;
+  padding: clamp(40px, 6vh, 80px) clamp(40px, 8vw, 120px);
+  margin-top: auto;
+  max-width: 70ch;
+}
+.slide--image .slide__heading,
+.slide--image .slide__label,
+.slide--image .slide__subtitle {
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+}
+
+/* ── comparison ── 2-column side-by-side */
+.slide--comparison {
+  padding: clamp(32px, 5vh, 60px) clamp(32px, 5vw, 80px);
+}
+.slide--comparison .slide__heading {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: clamp(22px, 3vw, 36px);
+}
+.slide--comparison .slide__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(16px, 3vw, 40px);
+  align-items: stretch;
+}
+.slide--comparison .slide__col {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.slide--comparison .slide__col h3 {
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+.slide--comparison .slide__col.accent {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.slide--comparison .slide__col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+  font-size: clamp(14px, 1.6vw, 18px);
+  color: var(--text-muted);
+}
+.slide--comparison .slide__col li {
+  padding-left: 1.25rem;
+  position: relative;
+}
+.slide--comparison .slide__col li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+@media (max-width: 700px) {
+  .slide--comparison .slide__columns { grid-template-columns: 1fr; }
+}

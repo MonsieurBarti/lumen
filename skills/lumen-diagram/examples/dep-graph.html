@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- diagram-meta:start -->
+<meta name="diagram:title"     content="Mermaid purge — dependency chain (#21 → 22 → 23 → 24)">
+<meta name="diagram:date"      content="2026-04-15">
+<meta name="diagram:category"  content="forge">
+<meta name="diagram:cat-label" content="Forge · dependencies">
+<meta name="diagram:color"     content="green">
+<!-- diagram-meta:end -->
+<title>Mermaid purge — dependency chain (#21 → 22 → 23 → 24)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0d10; --bg-panel: #11141a; --bg-card: #161a21;
+    --border: #1f252e; --border-bright: #2b3340;
+    --text: #e4e7ec; --text-dim: #9aa4b2; --text-muted: #6b7380;
+    --amber: #fbbf24; --cyan: #22d3ee; --purple: #c084fc; --green: #4ade80; --red: #f87171;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; padding: 32px 24px 40px; max-width: 1040px; margin: 0 auto; }
+  header { margin-bottom: 20px; }
+  .header-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  h1 { font-size: 28px; font-weight: 700; margin: 6px 0 4px; }
+  h1 .accent { color: var(--green); }
+  .header-subtitle { color: var(--text-dim); font-size: 13px; margin: 0; }
+
+  .fgraph-wrap { position: relative; width: 100%; max-width: 960px; aspect-ratio: 16/10; margin: 0 auto 20px; background: var(--bg-panel); border: 1px solid rgba(74,222,128,0.35); border-radius: 10px; padding: 14px; }
+  .fgraph-legend { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font-family: 'Space Mono', monospace; font-size: 9.5px; color: var(--text-muted); pointer-events: none; }
+
+  .fg-dep-phase-lbl {
+    position: absolute;
+    left: calc(var(--x, 0) * 1%);
+    top: 4%;
+    transform: translateX(-50%);
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: rgba(74,222,128,0.10);
+    border: 1px solid rgba(74,222,128,0.35);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 2;
+  }
+  .fg-dep-card {
+    position: absolute;
+    left: calc(var(--x, 50) * 1%);
+    top:  calc(var(--y, 50) * 1%);
+    transform: translate(-50%, -50%);
+    width: 140px;
+    padding: 8px 10px;
+    background: var(--bg-card);
+    border: 1.2px solid var(--border-bright);
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text);
+    z-index: 2;
+  }
+  .fg-dep-card .issue-num { color: var(--text-muted); font-size: 9px; margin-bottom: 3px; }
+  .fg-dep-card .issue-title { color: var(--text); line-height: 1.25; }
+  .fg-dep-card.amber  { border-color: rgba(251,191,36,0.55); }
+  .fg-dep-card.cyan   { border-color: rgba(34,211,238,0.55); }
+  .fg-dep-card.purple { border-color: rgba(192,132,252,0.55); }
+  .fg-dep-card.green  { border-color: rgba(74,222,128,0.55); }
+  .fg-dep-card.ghost  { opacity: 0.45; border-style: dashed; }
+  .fg-dep-card .issue-num.amber { color: var(--amber); } .fg-dep-card .issue-num.cyan { color: var(--cyan); } .fg-dep-card .issue-num.purple { color: var(--purple); } .fg-dep-card .issue-num.green { color: var(--green); }
+
+  .fgraph-edges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 1; }
+  .fgraph-edges .mk-amber { fill: var(--amber); } .fgraph-edges .mk-cyan { fill: var(--cyan); } .fgraph-edges .mk-purple { fill: var(--purple); }
+  .fgraph-edges .fg-edge.amber  { stroke: var(--amber);  stroke-width: 1.5; fill: none; }
+  .fgraph-edges .fg-edge.cyan   { stroke: var(--cyan);   stroke-width: 1.5; fill: none; }
+  .fgraph-edges .fg-edge.purple { stroke: var(--purple); stroke-width: 1.5; fill: none; stroke-dasharray: 4 3; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">Forge · dependencies</div>
+  <h1>Mermaid purge <span class="accent">dependency chain</span></h1>
+  <p class="header-subtitle">Cycle 1 (P1) ships standalone; Cycle 2 (P2 → P3+P4) depends on earlier slices landing first. Parent #21 shown as a ghost card above the chain.</p>
+</header>
+
+<main>
+
+<div class="fgraph-wrap" role="img"
+     aria-label="Dependency graph: issue #21 parent; children #22 P1, #23 P2, #24 P3+P4 connected left-to-right with amber blocks edges and a dashed purple parent-child edge from #21 down to the chain.">
+
+  <!-- ── PHASE COLUMNS ──────────────────────────── -->
+  <div class="fg-dep-phase-lbl" style="--x:15">Cycle 1 · P1</div>
+  <div class="fg-dep-phase-lbl" style="--x:42">Cycle 2 · P2</div>
+  <div class="fg-dep-phase-lbl" style="--x:69">Cycle 2 · P3 + P4</div>
+  <div class="fg-dep-phase-lbl" style="--x:90">Close</div>
+
+  <!-- ── EDGES ──────────────────────────────────── -->
+  <svg class="fgraph-edges" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="fg-arr-amber"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-amber"/></marker>
+      <marker id="fg-arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-purple"/></marker>
+    </defs>
+
+    <!-- #22 blocks #23 (elbow, 2 segments) -->
+    <path class="fg-edge amber" d="M 22,50 L 32,50 L 32,50 L 35,50" marker-end="url(#fg-arr-amber)"/>
+    <!-- #23 blocks #24 (elbow) -->
+    <path class="fg-edge amber" d="M 49,50 L 59,50 L 59,50 L 62,50" marker-end="url(#fg-arr-amber)"/>
+    <!-- #24 blocks close-#19 -->
+    <path class="fg-edge amber" d="M 76,50 L 83,50 L 83,50 L 86,50" marker-end="url(#fg-arr-amber)"/>
+
+    <!-- parent #21 ghost → all 3 children (dashed purple, 2 segments each) -->
+    <path class="fg-edge purple" d="M 42,20 L 15,20 L 15,42" marker-end="url(#fg-arr-purple)"/>
+    <path class="fg-edge purple" d="M 42,20 L 42,20 L 42,42" marker-end="url(#fg-arr-purple)"/>
+    <path class="fg-edge purple" d="M 42,20 L 69,20 L 69,42" marker-end="url(#fg-arr-purple)"/>
+  </svg>
+
+  <!-- ── GHOST PARENT CARD ───────────────────────── -->
+  <div class="fg-dep-card green ghost" style="--x:42; --y:20;">
+    <div class="issue-num green">#21 (parent)</div>
+    <div class="issue-title">Purge Mermaid — 4 phases across 2 cycles</div>
+  </div>
+
+  <!-- ── CHILDREN ─────────────────────────────────── -->
+  <div class="fg-dep-card amber" style="--x:15; --y:50;">
+    <div class="issue-num amber">#22</div>
+    <div class="issue-title">P1 — native templates + soft deprecation</div>
+  </div>
+
+  <div class="fg-dep-card cyan" style="--x:42; --y:50;">
+    <div class="issue-num cyan">#23</div>
+    <div class="issue-title">P2 — migrate 5 SKILL.md + 3 scripts</div>
+  </div>
+
+  <div class="fg-dep-card purple" style="--x:69; --y:50;">
+    <div class="issue-num purple">#24</div>
+    <div class="issue-title">P3+P4 — delete + blocking guard + CI mirror</div>
+  </div>
+
+  <div class="fg-dep-card green" style="--x:92; --y:50;">
+    <div class="issue-num green">close #19</div>
+    <div class="issue-title">superseded by #21</div>
+  </div>
+
+  <div class="fgraph-legend">solid amber = blocks · dashed purple = parent-child · ghost = cross-cycle scope</div>
+</div>
+
+</main>
+
+</body>
+</html>

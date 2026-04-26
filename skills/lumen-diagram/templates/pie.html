@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- diagram-meta:start -->
+<meta name="diagram:title"     content="{{TITLE}}">
+<meta name="diagram:date"      content="{{DATE}}">
+<meta name="diagram:category"  content="{{CATEGORY}}">
+<meta name="diagram:cat-label" content="{{CAT_LABEL}}">
+<meta name="diagram:color"     content="{{COLOR}}">
+<!-- diagram-meta:end -->
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* {{BASE_STYLES}} — inline reset.css + layout.css + typography.css + components.css + explainer-base.css */
+/* {{AESTHETIC_STYLES}} — inline the chosen aesthetic (lyra.css / roxabi.css / blueprint.css / ...) */
+
+/* ══════════════════════════════════════════════════════════════════
+   fgraph primitives — inlined from references/graph-templates/fgraph-base.css
+   ══════════════════════════════════════════════════════════════════ */
+/* {{FGRAPH_BASE}} — inline fgraph-base.css here */
+
+/* ── pie-specific sizing ── */
+.fgraph-wrap.pie { aspect-ratio: 4 / 3; max-width: 680px; }
+.fg-pie-slice { transition: opacity 0.15s, transform 0.15s; transform-origin: 50% 50%; }
+.fg-pie-slice:hover { opacity: 0.85; transform: scale(1.02); }
+
+.fg-pie-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  padding: 3px 0;
+}
+.fg-pie-legend-row .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+.fg-pie-legend-row .swatch.amber  { background: var(--amber); }
+.fg-pie-legend-row .swatch.cyan   { background: var(--cyan); }
+.fg-pie-legend-row .swatch.purple { background: var(--purple); }
+.fg-pie-legend-row .swatch.green  { background: var(--green); }
+.fg-pie-legend-row .swatch.red    { background: var(--red); }
+.fg-pie-legend-row .value { margin-left: auto; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">{{CATEGORY_LABEL}}</div>
+  <h1>{{TITLE_PLAIN}} <span class="accent">{{TITLE_ACCENT}}</span></h1>
+  <p class="header-subtitle">{{SUBTITLE}}</p>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CUSTOMISE — this is the authoring surface.
+
+     Layout: a single SVG pie in a 0..100 viewBox (circle at 50,50,
+     radius 40) with N pre-computed arc paths. A legend below lists
+     each slice's label + value.
+
+     Arc-path computation (pre-compute in author's head / in a cell,
+     NOT at runtime):
+
+       angle_start = sum(prior slice pcts) * 3.6      // degrees, 0..360
+       angle_end   = angle_start + slice_pct * 3.6
+
+       x1 = 50 + 40 * cos(angle_start_rad)
+       y1 = 50 + 40 * sin(angle_start_rad)
+       x2 = 50 + 40 * cos(angle_end_rad)
+       y2 = 50 + 40 * sin(angle_end_rad)
+
+       large = (slice_pct > 50) ? 1 : 0
+       sweep = 1   // always clockwise
+
+       d = "M 50,50 L {x1},{y1} A 40 40 0 {large} {sweep} {x2},{y2} Z"
+
+     Angles are measured in SVG convention: 0° at 3 o'clock, clockwise.
+     JS equivalent for convenience:
+
+       const rad = (deg) => (deg - 90) * Math.PI / 180;   // offset so 0° = 12 o'clock
+       // If you prefer 12 o'clock start, subtract 90 from every angle
+       // before computing x/y.
+
+     PRE-COMPUTED EXAMPLE — 5 slices of 10 / 20 / 30 / 25 / 15 %:
+
+       slice 1  (10%)  start=0°,   end=36°   → Moved into d1 below
+       slice 2  (20%)  start=36°,  end=108°  → d2
+       slice 3  (30%)  start=108°, end=216°  → d3 (large=1)
+       slice 4  (25%)  start=216°, end=306°  → d4
+       slice 5  (15%)  start=306°, end=360°  → d5
+
+     The placeholders below preserve the d= paths so authors only edit
+     percentages and labels when the distribution is already known.
+     For arbitrary distributions, regenerate d= values using the
+     formula above.
+     ══════════════════════════════════════════════════════════════════ -->
+
+<div class="fgraph-wrap pie green" role="img" aria-label="{{DIAGRAM_ARIA_LABEL}}">
+
+  <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"
+       xmlns="http://www.w3.org/2000/svg"
+       style="position:absolute; left:8%; top:4%; width:54%; height:92%;">
+
+    <!-- Default distribution is 10 / 20 / 30 / 25 / 15. To change,
+         recompute each d= using the formula in the block above and
+         regenerate below, or replace the whole <path> stack. -->
+
+    <!-- Slice 1 — {{SLICE_1_LABEL}} — {{SLICE_1_VALUE}}    (0 → 10%) -->
+    <path class="fg-pie-slice" fill="var(--amber)"  d="M 50,50 L 50,10 A 40 40 0 0 1 73.51,17.64 Z"/>
+    <!-- Slice 2 — {{SLICE_2_LABEL}} — {{SLICE_2_VALUE}}    (10 → 30%) -->
+    <path class="fg-pie-slice" fill="var(--cyan)"   d="M 50,50 L 73.51,17.64 A 40 40 0 0 1 88.04,62.36 Z"/>
+    <!-- Slice 3 — {{SLICE_3_LABEL}} — {{SLICE_3_VALUE}}    (30 → 60%) -->
+    <path class="fg-pie-slice" fill="var(--purple)" d="M 50,50 L 88.04,62.36 A 40 40 0 0 1 26.49,82.36 Z"/>
+    <!-- Slice 4 — {{SLICE_4_LABEL}} — {{SLICE_4_VALUE}}    (60 → 85%) -->
+    <path class="fg-pie-slice" fill="var(--green)"  d="M 50,50 L 26.49,82.36 A 40 40 0 0 1 17.64,26.49 Z"/>
+    <!-- Slice 5 — {{SLICE_5_LABEL}} — {{SLICE_5_VALUE}}    (85 → 100%) -->
+    <path class="fg-pie-slice" fill="var(--red)"    d="M 50,50 L 17.64,26.49 A 40 40 0 0 1 50,10 Z"/>
+
+    <!-- border ring -->
+    <circle cx="50" cy="50" r="40" fill="none" stroke="var(--border-bright)" stroke-width="0.5"/>
+  </svg>
+
+  <!-- ── LEGEND (right-hand column) ─────────────────────────────── -->
+  <div style="position:absolute; right:4%; top:14%; width:36%;">
+    <div class="fg-pie-legend-row"><div class="swatch amber"></div><div>{{SLICE_1_LABEL}}</div><div class="value">{{SLICE_1_VALUE}}</div></div>
+    <div class="fg-pie-legend-row"><div class="swatch cyan"></div><div>{{SLICE_2_LABEL}}</div><div class="value">{{SLICE_2_VALUE}}</div></div>
+    <div class="fg-pie-legend-row"><div class="swatch purple"></div><div>{{SLICE_3_LABEL}}</div><div class="value">{{SLICE_3_VALUE}}</div></div>
+    <div class="fg-pie-legend-row"><div class="swatch green"></div><div>{{SLICE_4_LABEL}}</div><div class="value">{{SLICE_4_VALUE}}</div></div>
+    <div class="fg-pie-legend-row"><div class="swatch red"></div><div>{{SLICE_5_LABEL}}</div><div class="value">{{SLICE_5_VALUE}}</div></div>
+  </div>
+
+  <div class="fgraph-legend">{{LEGEND}}</div>
+</div>
+
+</main>
+
+</body>
+</html>

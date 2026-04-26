@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- diagram-meta:start -->
+<meta name="diagram:title"     content="GitHub issue / PR / label schema">
+<meta name="diagram:date"      content="2026-04-15">
+<meta name="diagram:category"  content="forge">
+<meta name="diagram:cat-label" content="Forge · schema">
+<meta name="diagram:color"     content="green">
+<!-- diagram-meta:end -->
+<title>GitHub issue / PR / label schema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0d10; --bg-panel: #11141a; --bg-card: #161a21;
+    --border: #1f252e; --border-bright: #2b3340;
+    --text: #e4e7ec; --text-dim: #9aa4b2; --text-muted: #6b7380;
+    --amber: #fbbf24; --cyan: #22d3ee; --purple: #c084fc; --green: #4ade80; --red: #f87171;
+  }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    padding: 32px 24px 40px; max-width: 980px; margin: 0 auto;
+  }
+  header { margin-bottom: 20px; }
+  .header-eyebrow { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  h1 { font-size: 28px; font-weight: 700; margin: 6px 0 4px; }
+  h1 .accent { color: var(--green); }
+  .header-subtitle { color: var(--text-dim); font-size: 13px; margin: 0; }
+
+  .fgraph-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 880px;
+    aspect-ratio: 16 / 10;
+    margin: 0 auto 20px;
+    background: var(--bg-panel);
+    border: 1px solid rgba(74,222,128,0.35);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .fgraph-edges {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .fgraph-edges .mk-er-stroke { stroke: var(--border-bright); fill: none; stroke-width: 1.4; }
+  .fgraph-edges .fg-edge { fill: none; stroke-width: 1.6; opacity: 0.85; vector-effect: non-scaling-stroke; }
+  .fgraph-edges .fg-edge.dim { stroke: var(--text-muted); opacity: 0.5; }
+
+  .fgraph-lbl {
+    position: absolute;
+    left: calc(var(--x, 50) * 1%);
+    top:  calc(var(--y, 50) * 1%);
+    transform: translate(-50%, -50%);
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    padding: 2px 6px;
+    background: var(--bg-panel);
+    border-radius: 4px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  .fg-er-entity {
+    position: absolute;
+    left: calc(var(--x, 0) * 1%);
+    top:  calc(var(--y, 0) * 1%);
+    transform: translate(-50%, -50%);
+    width: calc(var(--w, 16) * 1%);
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-bright);
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--text);
+    z-index: 2;
+  }
+  .fg-er-entity-name {
+    padding: 5px 10px;
+    background: rgba(74,222,128,0.12);
+    border-bottom: 1px solid var(--border-bright);
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 9.5px;
+  }
+  .fg-er-attr {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 3px 10px;
+    color: var(--text-dim);
+    border-top: 1px dashed var(--border);
+  }
+  .fg-er-attr:first-of-type { border-top: none; }
+  .fg-er-attr .type { color: var(--text-muted); font-size: 8.5px; }
+  .fg-er-attr.pk { color: var(--amber); }
+  .fg-er-attr.fk { color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">Forge · schema</div>
+  <h1>GitHub issue <span class="accent">schema</span></h1>
+  <p class="header-subtitle">Core entities and relationships backing the issue-triage / dev pipeline.</p>
+</header>
+
+<main>
+
+<div class="fgraph-wrap" role="img"
+     aria-label="ER diagram of GitHub issue schema: Issue one-to-many PullRequest; Issue many-to-many Label; Issue zero-or-many-to-one User (author).">
+
+  <!-- ── RELATIONSHIP EDGE LAYER ──────────────── -->
+  <svg class="fgraph-edges" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="fg-er-one"       viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+        <path d="M2,0 L2,10 M5,0 L5,10" class="mk-er-stroke"/>
+      </marker>
+      <marker id="fg-er-zero-one"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+        <circle cx="2.5" cy="5" r="1.6" class="mk-er-stroke"/>
+        <path d="M6,0 L6,10" class="mk-er-stroke"/>
+      </marker>
+      <marker id="fg-er-many"      viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+        <path d="M0,0 L9,5 L0,10" class="mk-er-stroke"/>
+        <path d="M9,0 L9,10" class="mk-er-stroke"/>
+      </marker>
+      <marker id="fg-er-one-many"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+        <path d="M2,0 L2,10" class="mk-er-stroke"/>
+        <path d="M0,0 L9,5 L0,10" class="mk-er-stroke"/>
+      </marker>
+      <marker id="fg-er-zero-many" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+        <circle cx="2" cy="5" r="1.5" class="mk-er-stroke"/>
+        <path d="M4,0 L9,5 L4,10" class="mk-er-stroke"/>
+      </marker>
+    </defs>
+
+    <!-- Issue (center, x=50) → PullRequest (right, x=82)   : one-to-many -->
+    <path class="fg-edge dim" d="M 58,30 L 74,30"
+          marker-start="url(#fg-er-one)" marker-end="url(#fg-er-many)"/>
+
+    <!-- Issue (center, x=50) ↔ Label (left, x=18)         : many-to-many -->
+    <path class="fg-edge dim" d="M 26,30 L 42,30"
+          marker-start="url(#fg-er-many)" marker-end="url(#fg-er-many)"/>
+
+    <!-- Issue (center) → User (bottom, x=50 y=72)         : zero-or-many-to-one -->
+    <path class="fg-edge dim" d="M 50,40 L 50,62"
+          marker-start="url(#fg-er-zero-many)" marker-end="url(#fg-er-one)"/>
+  </svg>
+
+  <!-- ── RELATIONSHIP LABELS ─────────────────── -->
+  <div class="fgraph-lbl" style="--x:66;--y:27;">has · 1:N</div>
+  <div class="fgraph-lbl" style="--x:34;--y:27;">tagged · M:N</div>
+  <div class="fgraph-lbl" style="--x:55;--y:51;">authored by · 0,N:1</div>
+
+  <!-- ── ENTITY: Label (left) ─────────────────── -->
+  <div class="fg-er-entity" style="--x:18;--y:30;--w:18;">
+    <div class="fg-er-entity-name">Label</div>
+    <div class="fg-er-attr pk"><span>id</span><span class="type">pk</span></div>
+    <div class="fg-er-attr">   <span>name</span><span class="type">text</span></div>
+    <div class="fg-er-attr">   <span>color</span><span class="type">text</span></div>
+  </div>
+
+  <!-- ── ENTITY: Issue (center) ───────────────── -->
+  <div class="fg-er-entity" style="--x:50;--y:30;--w:18;">
+    <div class="fg-er-entity-name">Issue</div>
+    <div class="fg-er-attr pk"><span>number</span><span class="type">pk</span></div>
+    <div class="fg-er-attr">   <span>title</span><span class="type">text</span></div>
+    <div class="fg-er-attr">   <span>state</span><span class="type">enum</span></div>
+    <div class="fg-er-attr fk"><span>author_id</span><span class="type">fk</span></div>
+  </div>
+
+  <!-- ── ENTITY: PullRequest (right) ──────────── -->
+  <div class="fg-er-entity" style="--x:82;--y:30;--w:18;">
+    <div class="fg-er-entity-name">PullRequest</div>
+    <div class="fg-er-attr pk"><span>number</span><span class="type">pk</span></div>
+    <div class="fg-er-attr fk"><span>issue_num</span><span class="type">fk</span></div>
+    <div class="fg-er-attr">   <span>state</span><span class="type">enum</span></div>
+  </div>
+
+  <!-- ── ENTITY: User (bottom) ────────────────── -->
+  <div class="fg-er-entity" style="--x:50;--y:72;--w:18;">
+    <div class="fg-er-entity-name">User</div>
+    <div class="fg-er-attr pk"><span>id</span><span class="type">pk</span></div>
+    <div class="fg-er-attr">   <span>login</span><span class="type">text</span></div>
+    <div class="fg-er-attr">   <span>role</span><span class="type">enum</span></div>
+  </div>
+
+  <div style="position:absolute; bottom:14px; left:0; right:0; text-align:center; font-family:'Space Mono',monospace; font-size:9.5px; color:var(--text-muted);">
+    pk = primary key · fk = foreign key · crow's-foot markers indicate cardinality
+  </div>
+</div>
+
+</main>
+
+</body>
+</html>

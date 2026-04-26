@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ══════════════════════════════════════════════════════════════════
+     system-architecture.html — WORKED EXAMPLE TEMPLATE
+
+     This file is itself a correct rendering of a generic distributed
+     web service. Every coord, width, color, and edge follows every
+     Layout Rule (R1–R7) documented in forge-chart/SKILL.md.
+
+     To customize: replace the CONTENT strings (titles, sublabels, card
+     bullets) — NOT the coordinates, widths, or colors. The geometry is
+     pre-verified; changing it without re-computing the rules breaks
+     alignment.
+
+     If you need more / fewer cards in a row, consult the R1 even-stride
+     formula in forge-chart/SKILL.md: centers at (100/2N) × (2i+1).
+     ══════════════════════════════════════════════════════════════════ -->
+<!-- diagram-meta:start -->
+<meta name="diagram:title"     content="Web Service — System Architecture">
+<meta name="diagram:date"      content="TBD">
+<meta name="diagram:category"  content="architecture">
+<meta name="diagram:cat-label" content="Architecture">
+<meta name="diagram:color"     content="amber">
+<!-- diagram-meta:end -->
+<title>Web Service — System Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* {{BASE_STYLES}} — inline reset.css + layout.css + typography.css + components.css */
+/* {{AESTHETIC_STYLES}} — inline the chosen aesthetic (lyra.css / roxabi.css / blueprint.css / ...) */
+
+/* ══════════════════════════════════════════════════════════════════
+   fgraph primitives — inlined from references/graph-templates/fgraph-base.css
+   ══════════════════════════════════════════════════════════════════ */
+/* {{FGRAPH_BASE}} — inline fgraph-base.css here */
+
+.fgraph-wrap.arch {
+  aspect-ratio: 16 / 10;
+  max-width: 1200px;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CANONICAL SHARED DEFS — paste once per document.
+     ══════════════════════════════════════════════════════════════════ -->
+<svg class="fgraph-defs" aria-hidden="true" width="0" height="0" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="fg-arr-amber"   viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="mk-amber"/></marker>
+    <marker id="fg-arr-cyan"    viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="mk-cyan"/></marker>
+    <marker id="fg-arr-purple"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="mk-purple"/></marker>
+    <marker id="fg-arr-green"   viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="mk-green"/></marker>
+    <marker id="fg-arr-red"     viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="mk-red"/></marker>
+    <marker id="fg-arr-orange"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="mk-orange"/></marker>
+    <marker id="fg-arr-dim"     viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="mk-dim"/></marker>
+  </defs>
+</svg>
+
+<header>
+  <div class="header-eyebrow">Architecture · Example</div>
+  <h1>
+    <span class="fg-live-dot"></span>
+    Web Service — <span class="accent">System Architecture</span>
+  </h1>
+  <p class="header-subtitle">distributed backend · async workers · event bus · request lifecycle</p>
+</header>
+
+<main>
+
+<div class="fgraph-wrap arch gridded amber"
+     role="img"
+     aria-label="Worked example: generic distributed web service — users, cloud APIs, gateway processes, event bus, service layer with auth overlay, data stores, Phase 2 ML cluster">
+
+  <!-- ── Machine 1 frame (R3 row clearance — label/sub above row 3) ───── -->
+  <div class="fgraph-frame" style="inset: 24% 2% 8% 2%;"></div>
+  <div class="fgraph-frame-lbl" style="top: 24.5%; left: 3%;">CLUSTER · prod-east · 24/7</div>
+  <div class="fgraph-frame-sub" style="top: 26.5%; left: 3%;">k8s · autoscale · systemd timers · deployment tier</div>
+
+  <!-- ── SVG edge layer ──────────────────────────────────────────── -->
+  <svg class="fgraph-edges" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Users → Cloud APIs (dim; R4 straight vertical; R1 stride 25) -->
+    <path class="fg-edge dim" d="M 12.5,10 L 12.5,13" marker-end="url(#fg-arr-dim)"/>
+    <path class="fg-edge dim" d="M 37.5,10 L 37.5,13" marker-end="url(#fg-arr-dim)"/>
+    <path class="fg-edge dim" d="M 62.5,10 L 62.5,13" marker-end="url(#fg-arr-dim)"/>
+
+    <!-- Cloud APIs → Adapters (cyan = ingress; R5) -->
+    <path class="fg-edge cyan" d="M 12.5,22 L 12.5,29" marker-end="url(#fg-arr-cyan)"/>
+    <path class="fg-edge cyan" d="M 37.5,22 L 37.5,29" marker-end="url(#fg-arr-cyan)"/>
+
+    <!-- Observability pull (amber dashed = cloud-API out; R5) — crosses rows intentionally, labeled with 2-control bezier -->
+    <path class="fg-edge amber dashed" d="M 62.5,22 C 62.5,40 56,55 48,66" marker-end="url(#fg-arr-amber)"/>
+
+    <!-- Adapters → Event bus (orange = message bus; R5) -->
+    <path class="fg-edge orange" d="M 12.5,39 L 12.5,44" marker-end="url(#fg-arr-orange)"/>
+    <path class="fg-edge orange" d="M 37.5,39 L 37.5,44" marker-end="url(#fg-arr-orange)"/>
+    <path class="fg-edge orange" d="M 62.5,39 L 62.5,44" marker-end="url(#fg-arr-orange)"/>
+    <path class="fg-edge orange" d="M 87.5,39 L 87.5,44" marker-end="url(#fg-arr-orange)"/>
+
+    <!-- Event bus → Hub interior (orange thick) -->
+    <path class="fg-edge orange thick" d="M 31,52 L 31,57" marker-end="url(#fg-arr-orange)"/>
+
+    <!-- Hub → side cluster workers (orange dashed — async background jobs) -->
+    <path class="fg-edge orange dashed" d="M 58,62 L 70,62" marker-end="url(#fg-arr-orange)"/>
+    <path class="fg-edge orange dashed" d="M 58,72 L 70,72" marker-end="url(#fg-arr-orange)"/>
+
+    <!-- Hub → Data stores (purple = storage; R4 straight vertical; R5) -->
+    <path class="fg-edge purple" d="M 14,79 L 14,83" marker-end="url(#fg-arr-purple)"/>
+    <path class="fg-edge purple" d="M 31,79 L 31,83" marker-end="url(#fg-arr-purple)"/>
+    <path class="fg-edge purple" d="M 48,79 L 48,83" marker-end="url(#fg-arr-purple)"/>
+
+    <!-- Hub → ML cluster (dim dashed = phase-2 / optional; R5) -->
+    <path class="fg-edge dim dashed" d="M 55,78 C 62,84 70,87 73,90" marker-end="url(#fg-arr-dim)"/>
+  </svg>
+
+  <!-- ═══════════════════════ ROW 1 — USERS (R1: centers at 12.5/37.5/62.5 for 3 cards aligned with 4-col grid) ═══════════ -->
+  <div class="fgraph-node narrow solid" style="--x:12.5;--y:6;--w:19%;">
+    <div class="fgraph-title">Web Users</div>
+    <div class="fgraph-sub muted">browsers · HTTPS</div>
+  </div>
+  <div class="fgraph-node narrow solid" style="--x:37.5;--y:6;--w:19%;">
+    <div class="fgraph-title">Mobile App</div>
+    <div class="fgraph-sub muted">iOS · Android · REST</div>
+  </div>
+  <div class="fgraph-node narrow solid" style="--x:62.5;--y:6;--w:19%;">
+    <div class="fgraph-title">Internal Admin</div>
+    <div class="fgraph-sub muted">CLI · dashboards</div>
+  </div>
+
+  <!-- ═══════════════════════ ROW 2 — CLOUD APIs (R1: 4-card even stride) ═══════════ -->
+  <div class="fgraph-node amber solid narrow" style="--x:12.5;--y:17;--w:19%;">
+    <div class="fgraph-title amber">CDN</div>
+    <div class="fgraph-sub">Fastly · edge cache</div>
+    <div class="fgraph-sub muted">TLS 1.3 · HTTP/3</div>
+  </div>
+  <div class="fgraph-node amber solid narrow" style="--x:37.5;--y:17;--w:19%;">
+    <div class="fgraph-title amber">Identity Provider</div>
+    <div class="fgraph-sub">Auth0 · OIDC</div>
+    <div class="fgraph-sub muted">JWT · PKCE</div>
+  </div>
+  <div class="fgraph-node amber solid narrow" style="--x:62.5;--y:17;--w:19%;">
+    <div class="fgraph-title amber">Observability</div>
+    <div class="fgraph-sub">Datadog · Sentry</div>
+    <div class="fgraph-sub muted">OTEL · traces · logs</div>
+  </div>
+  <div class="fgraph-node amber solid narrow" style="--x:87.5;--y:17;--w:19%;">
+    <div class="fgraph-title amber">Container Registry</div>
+    <div class="fgraph-sub">GHCR · image pulls</div>
+    <div class="fgraph-sub muted">deploy-time only</div>
+  </div>
+
+  <!-- ═══════════════════════ ROW 3 — GATEWAY PROCESSES (R1: 4-card stride 25) ═══════════ -->
+  <div class="fgraph-node green solid narrow" style="--x:12.5;--y:34;--w:19%;">
+    <div class="fgraph-title green">
+      http-gateway <span class="fgraph-pill green">proc</span>
+    </div>
+    <div class="fgraph-sub">nginx + envoy</div>
+    <div class="fgraph-sub muted">routing · rate-limit · TLS</div>
+    <div class="fgraph-sub muted">3 replicas · HPA</div>
+  </div>
+  <div class="fgraph-node green solid narrow" style="--x:37.5;--y:34;--w:19%;">
+    <div class="fgraph-title green">
+      websocket-gateway <span class="fgraph-pill green">proc</span>
+    </div>
+    <div class="fgraph-sub">sticky sessions</div>
+    <div class="fgraph-sub muted">auth · fanout · heartbeat</div>
+    <div class="fgraph-sub muted">2 replicas</div>
+  </div>
+  <div class="fgraph-node green solid narrow" style="--x:62.5;--y:34;--w:19%;">
+    <div class="fgraph-title green">api-gateway</div>
+    <div class="fgraph-sub">GraphQL + REST</div>
+    <div class="fgraph-sub muted">schema · dataloader</div>
+    <div class="fgraph-sub muted">4 replicas</div>
+  </div>
+  <div class="fgraph-node green solid narrow" style="--x:87.5;--y:34;--w:19%;">
+    <div class="fgraph-title green">queue-listener</div>
+    <div class="fgraph-sub">consumer group</div>
+    <div class="fgraph-sub muted">delivery · retry · DLQ</div>
+    <div class="fgraph-sub muted">2 replicas</div>
+  </div>
+
+  <!-- ═══════════════════════ BUS STRIP (.fg-bus-strip.orange = message bus; R5) ═══════════ -->
+  <div class="fg-bus-strip orange" style="--y:45; --h:6;">
+    <div class="fg-bus-strip__title">Event Bus · Kafka</div>
+    <div class="fg-bus-strip__sub">events.ingress.*  ·  events.domain.*  ·  events.outbound.*  ·  3-broker cluster · replication 3</div>
+  </div>
+
+  <!-- ═══════════════════════ ROW 4 — SERVICE LAYER (nested group — R1 stride 17 inside cluster) ═══════════ -->
+  <div class="fgraph-group cluster" style="--x:5;--y:54;--w:52;--h:23;">
+    <span class="fgraph-group__label">service layer · hub</span>
+  </div>
+
+  <!-- Sub-row 4a: pipeline components (cyan = hub components) -->
+  <div class="fgraph-node cyan solid narrow" style="--x:14;--y:62;--w:15%;">
+    <div class="fgraph-title cyan">Router</div>
+    <div class="fgraph-sub">request dispatch</div>
+    <div class="fgraph-sub muted">circuit breaker</div>
+  </div>
+  <div class="fgraph-node cyan solid narrow" style="--x:31;--y:62;--w:15%;">
+    <div class="fgraph-title cyan">Validator</div>
+    <div class="fgraph-sub">schema + RBAC</div>
+    <div class="fgraph-sub muted">pydantic · zod</div>
+  </div>
+  <div class="fgraph-node cyan solid narrow" style="--x:48;--y:62;--w:15%;">
+    <div class="fgraph-title cyan">Executor</div>
+    <div class="fgraph-sub">business logic</div>
+    <div class="fgraph-sub muted">idempotency · retry</div>
+  </div>
+
+  <!-- Sub-row 4b: stateful layer (purple = data-owning; green = compute) -->
+  <div class="fgraph-node purple solid narrow" style="--x:14;--y:72;--w:15%;">
+    <div class="fgraph-title purple">Domain Service</div>
+    <div class="fgraph-sub">aggregate roots</div>
+    <div class="fgraph-sub muted">tx · event-emit</div>
+  </div>
+  <div class="fgraph-node purple solid narrow" style="--x:31;--y:72;--w:15%;">
+    <div class="fgraph-title purple">Cache Layer</div>
+    <div class="fgraph-sub">read-through + TTL</div>
+    <div class="fgraph-sub muted">write-invalidate</div>
+  </div>
+  <div class="fgraph-node green solid narrow" style="--x:48;--y:72;--w:15%;">
+    <div class="fgraph-title green">Compute Pool</div>
+    <div class="fgraph-sub">async workers</div>
+    <div class="fgraph-sub muted">CPU-bound · queue</div>
+  </div>
+
+  <!-- Security overlay (R5 red = security; R7 label ≤ 20 chars) -->
+  <div class="fgraph-group security-group" style="--x:7;--y:68;--w:32;--h:9;">
+    <span class="fgraph-group__label">Auth · RBAC · trust</span>
+  </div>
+
+  <!-- Right side cluster: background workers + observability -->
+  <div class="fgraph-group region" style="--x:59;--y:54;--w:37;--h:23;">
+    <span class="fgraph-group__label">background workers</span>
+  </div>
+  <div class="fgraph-node green solid narrow" style="--x:79;--y:62;--w:30%;">
+    <div class="fgraph-title green">bg-workers</div>
+    <div class="fgraph-sub">cron · delayed jobs</div>
+    <div class="fgraph-sub muted">celery / sidekiq · CB</div>
+  </div>
+  <div class="fgraph-node solid narrow" style="--x:79;--y:72;--w:30%;">
+    <div class="fgraph-title">otel-agent · log-shipper</div>
+    <div class="fgraph-sub">metrics · traces · logs</div>
+    <div class="fgraph-sub muted">sidecar pattern</div>
+  </div>
+
+  <!-- ═══════════════════════ ROW 5 — DATA STORES (R1: 3-card stride 17, R2: width 15 → 2% gap) ═══════════ -->
+  <div class="fgraph-node purple solid narrow" style="--x:14;--y:86;--w:15%;">
+    <div class="fgraph-title purple">PostgreSQL</div>
+    <div class="fgraph-sub">primary + 2 replicas</div>
+    <div class="fgraph-sub muted">partitioned · WAL</div>
+  </div>
+  <div class="fgraph-node purple solid narrow" style="--x:31;--y:86;--w:15%;">
+    <div class="fgraph-title purple">Redis</div>
+    <div class="fgraph-sub">cluster mode · AOF</div>
+    <div class="fgraph-sub muted">cache · queue · locks</div>
+  </div>
+  <div class="fgraph-node purple solid narrow" style="--x:48;--y:86;--w:15%;">
+    <div class="fgraph-title purple">Object Storage</div>
+    <div class="fgraph-sub">S3 · versioned</div>
+    <div class="fgraph-sub muted">lifecycle · archival</div>
+  </div>
+
+  <!-- ═══════════════════════ ML / PHASE-2 BAND (R5 dim = phase-2; R7 label ≤ 20 chars) ═══════════ -->
+  <div class="fgraph-group region" style="--x:66;--y:81;--w:32;--h:14;">
+    <span class="fgraph-group__label">ML cluster · GPU · async</span>
+  </div>
+  <div class="fgraph-node narrow solid" style="--x:75;--y:89;--w:15%;">
+    <div class="fgraph-title">Inference Service</div>
+    <div class="fgraph-sub muted">Triton · TensorRT</div>
+  </div>
+  <div class="fgraph-node narrow solid" style="--x:91;--y:89;--w:15%;">
+    <div class="fgraph-title">Training Pipeline</div>
+    <div class="fgraph-sub muted">Airflow · GPU-nodes</div>
+  </div>
+
+</div>
+
+<!-- Info-card row — 3-column executive summary below the diagram. -->
+<div class="info-card-grid" style="margin-top: 24px;">
+  <div class="info-card">
+    <div class="info-card__dot green"></div>
+    <h3 class="info-card__title">Runtime · Gateway Layer</h3>
+    <ul class="info-card__list">
+      <li>http-gateway, websocket-gateway, api-gateway as k8s deployments</li>
+      <li>HPA scales on p95 latency + CPU</li>
+      <li>nginx + envoy sidecar pattern</li>
+      <li>queue-listener consumer group</li>
+    </ul>
+  </div>
+  <div class="info-card">
+    <div class="info-card__dot purple"></div>
+    <h3 class="info-card__title">Data · Storage</h3>
+    <ul class="info-card__list">
+      <li>Postgres primary + 2 streaming replicas (WAL)</li>
+      <li>Redis cluster — cache, rate-limit, distributed locks</li>
+      <li>S3 versioned buckets with lifecycle rules</li>
+      <li>Kafka 3-broker cluster, replication factor 3</li>
+    </ul>
+  </div>
+  <div class="info-card">
+    <div class="info-card__dot amber"></div>
+    <h3 class="info-card__title">Transport · Integrations</h3>
+    <ul class="info-card__list">
+      <li>Event topics: events.{ingress,domain,outbound}.*</li>
+      <li>Auth0 OIDC / JWT + PKCE</li>
+      <li>Datadog + Sentry for telemetry</li>
+      <li>ML cluster async via dedicated topic</li>
+    </ul>
+  </div>
+</div>
+
+</main>
+
+</body>
+</html>

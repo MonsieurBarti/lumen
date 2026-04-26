@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<!--
+  lane-swim.html — reusable swimlane template  (rev 2 — row-per-node)
+  ─────────────────────────────────────────────────────────────────────
+  Shape: N vertical lanes × N rows (one node per row, any lane).
+  Flow runs top-to-bottom. Phases are visual groupings via faint
+  horizontal separator lines, NOT via shared y-coordinates — every
+  node gets its own y row.
+
+  LAYOUT RULES
+  ─────────────
+  • Container: absolute-positioned, height driven by --fg-lane-min-height
+    (default 900px). Aspect-ratio is dropped in favour of explicit height
+    so the row spacing remains predictable regardless of viewport width.
+  • Header strip: top 0..4% — one .fg-lane-header per lane, centred on
+    its x-axis at style="left:{x}%".
+  • Nodes: each .fg-lane-node + .fg-lane-label pair is absolutely
+    positioned via style="left:{lane-x}%; top:{row-y}%".
+    One pair per row — never share y between two nodes.
+  • Phase separators: .fg-lane-phase-lbl (name, left:2px) +
+    .fg-lane-phase-line (full-width 1px rule) placed at the y where
+    the phase starts.
+  • Lane rules: .fg-lane-rule — dashed vertical from below header to
+    near bottom, one per lane.
+
+  CURVE FORMULA (git-graph-style cubic bezier)
+  ─────────────────────────────────────────────
+  SVG viewBox="0 0 100 100" preserveAspectRatio="none".
+  All coordinates are 0..100 matching node left%/top%.
+
+    Same lane  → straight vertical:  M x,y1 L x,y2
+    Diff lanes → S-curve:            M x1,y1 C x1,ymid x2,ymid x2,y2
+                                     where ymid = (y1+y2) / 2
+
+  The two control-points share the same ymid — the curve departs x1
+  heading straight down, crosses smoothly at mid-height, and arrives
+  at x2 heading straight down. No kink.
+
+  PARALLEL EDGES IN THE SAME LANE (XOR / fork rule)
+  ────────────────────────────────────────────────────
+  When two edges leave the same source node on the same lane (e.g.
+  Router→Command and Router→LLM both at x=41), draw them as bent
+  curves with a perpendicular offset of ±2–3 units at the apex so
+  they read as distinct branches:
+
+    Branch A (right bulge, apex at x+2):
+      M x,y1 C (x+2),cy1 (x+2),cy2 x,y2
+
+    Branch B (left bulge, apex at x−3):
+      M x,y1 C (x-3),cy1 (x-3),cy2 x,y2
+
+  The edge label sits at the apex coordinates (x±offset, (cy1+cy2)/2).
+  Never draw two branches as coincident straight lines.
+
+  LABEL-ON-BULGE-APEX RULE
+  ──────────────────────────
+  Labels (`.fg-edge-lbl`) sit at the visible midpoint of the curve —
+  for a bezier M x1,y1 C cx,cy1 cx,cy2 x2,y2 that is (cx, (cy1+cy2)/2),
+  not the straight-line midpoint between endpoints.
+
+  EDGE LABELS (.fg-edge-lbl)
+  ────────────────────────────
+  HTML div pills, chip-on-a-wire style. Position via --x/--y.
+  background:var(--bg) hides the stroke underneath.
+  border:1px solid currentColor — caller sets tone class and both
+  text and border follow it; no per-tone border rule needed.
+
+  MIN-HEIGHT KNOB
+  ─────────────────
+  Set --fg-lane-min-height on .fgraph-wrap.lane-swim to control height.
+  Default 900px suits 14 rows. Scale proportionally:
+    height ≈ 60px × row_count + 120px (header + legend padding)
+
+  DISTRIBUTION MODE
+  ──────────────────
+  Mode A (inline) — {{FGRAPH_BASE}} placeholder is replaced with the
+  full content of fgraph-base.css by the build tool. Single-file, works
+  with file://. Switch to Mode B for multi-diagram shells.
+
+  PLACEHOLDERS (fill all before shipping)
+  ─────────────────────────────────────────
+  Diagram meta:
+    {{TITLE}}          — full diagram title
+    {{DATE}}           — ISO date e.g. 2026-04-17
+    {{CATEGORY}}       — e.g. architecture
+    {{CAT_LABEL}}      — display e.g. ARCHITECTURE
+    {{COLOR}}          — e.g. orange
+    {{WRAP_TONE}}      — container border tone: teal|amber|accent|green|cyan|purple
+
+  Header:
+    {{CATEGORY_LABEL}} — eyebrow text
+    {{TITLE_PLAIN}}    — h1 text before accent span
+    {{TITLE_ACCENT}}   — h1 accent span text
+    {{SUBTITLE}}       — one-line subtitle
+    {{DIAGRAM_ARIA}}   — aria-label for role="img" wrapper
+
+  Lanes (L→R; default 4):
+    {{LANE_1_LABEL}} .. {{LANE_N_LABEL}}
+    {{LANE_1_TONE}}  .. {{LANE_N_TONE}}    — fgraph tone class
+    {{LANE_1_X}}     .. {{LANE_N_X}}       — lane x-position (0..100)
+
+  Phases (visual separators; N separator lines, one per phase boundary):
+    {{PHASE_N_LABEL}} — short label e.g. "① Receive"
+    {{PHASE_N_Y}}     — y position in 0..100 for the separator line
+
+  Per-node (one pair per row; hand-author, do not use a loop):
+    Node circle:   <div class="fg-lane-node {tone} [optional]"
+                        style="left:{lane-x}%; top:{row-y}%">
+    Label block:   <div class="fg-lane-label" style="left:calc({lane-x}% + 12px); top:{row-y}%">
+                     <div class="fg-lane-title {tone}">
+                       {{NODE_NAME}} <span class="fg-lane-tag [pure|opt]">{{NODE_TAG}}</span>
+                     </div>
+                     <div class="fg-lane-sig">{{NODE_SIG}}</div>
+                   </div>
+
+  Edge labels (optional, one per notable edge):
+    <div class="fg-edge-lbl {tone}" style="--x:{cx}; --y:{cy}">{{EDGE_LBL}}</div>
+    where (cx, cy) = bulge apex of the curve (see LABEL-ON-BULGE-APEX RULE above)
+
+  Legend:
+    {{LEGEND}}         — bottom strip text
+
+  ─────────────────────────────────────────────────────────────────────
+-->
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- diagram-meta:start -->
+<meta name="diagram:title"     content="{{TITLE}}">
+<meta name="diagram:date"      content="{{DATE}}">
+<meta name="diagram:category"  content="{{CATEGORY}}">
+<meta name="diagram:cat-label" content="{{CAT_LABEL}}">
+<meta name="diagram:color"     content="{{COLOR}}">
+<!-- diagram-meta:end -->
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* {{BASE_STYLES}} — inline reset.css + layout.css + typography.css + components.css + explainer-base.css */
+/* {{AESTHETIC_STYLES}} — inline the chosen aesthetic (lyra.css / roxabi.css / blueprint.css / ...) */
+
+/* ══════════════════════════════════════════════════════════════════
+   fgraph primitives — inlined from references/graph-templates/fgraph-base.css
+   ══════════════════════════════════════════════════════════════════ */
+/* {{FGRAPH_BASE}} — inline fgraph-base.css here */
+
+/* ── lane-swim container override ───────────────────────────────────
+   Drop aspect-ratio in favour of explicit min-height driven by
+   --fg-lane-min-height so row spacing stays predictable regardless
+   of viewport width.
+
+   --bg-panel fallback: if the consuming document doesn't declare it,
+   fall back to --bg so the node ring-gap renders correctly. */
+.fgraph-wrap.lane-swim {
+  --bg-panel: var(--bg-panel, var(--bg));
+  aspect-ratio: unset;
+  min-height: var(--fg-lane-min-height, 900px);
+  max-width: 740px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">{{CATEGORY_LABEL}}</div>
+  <h1>{{TITLE_PLAIN}} <span class="accent">{{TITLE_ACCENT}}</span></h1>
+  <p class="header-subtitle">{{SUBTITLE}}</p>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CUSTOMISE — this is the authoring surface.
+
+     Layout: N vertical lanes (fixed x) × N rows (one node per row).
+     Phases are visual groupings via separator lines, not shared y.
+     Flow direction: top → bottom.
+
+     DEFAULT 4-lane x-positions:
+       Lane 1 (Presentation)  → x = 22%
+       Lane 2 (Application)   → x = 41%
+       Lane 3 (Kernel)        → x = 62%
+       Lane 4 (Infrastructure)→ x = 82%
+
+     Row y-positions: assign freely starting ~10%.
+     Typical spacing: 6 units per row (e.g. 10, 16, 22, 30, 36...).
+
+     Phase separators: .fg-lane-phase-line + .fg-lane-phase-lbl
+     placed at the top y of each phase band.
+
+     Curve formula:
+       Same lane  → M x,y1  L x,y2
+       Diff lanes → M x1,y1  C x1,ymid  x2,ymid  x2,y2   (ymid=(y1+y2)/2)
+
+     Parallel-edge bend rule (fork from same node, same lane):
+       Branch A (right):  M x,y1 C (x+2),cy1 (x+2),cy2 x,y2
+       Branch B (left):   M x,y1 C (x-3),cy1 (x-3),cy2 x,y2
+       Edge label sits at the apex: --x:(x±offset); --y:((cy1+cy2)/2)
+
+     Arrowhead markers: one <marker> per tone in <defs>.
+     Unique IDs per diagram (suffix with diagram slug to avoid conflicts).
+
+     Min-height: set style="--fg-lane-min-height:900px" on .fgraph-wrap
+     or override via CSS. Scale: ~60px × row_count + 120px.
+     ══════════════════════════════════════════════════════════════════ -->
+
+<div class="fgraph-wrap lane-swim {{WRAP_TONE}}"
+     style="--fg-lane-min-height: 900px;"
+     role="img"
+     aria-label="{{DIAGRAM_ARIA}}">
+
+  <!-- ── LANE HEADER STRIP ─────────────────────────────────────────
+       One .fg-lane-header per lane. style="left:{x}%" centres on lane x.
+  -->
+  <div class="fg-lane-header" aria-hidden="true">
+    <span class="fg-lane-title {{LANE_1_TONE}}" style="left:{{LANE_1_X}}%">{{LANE_1_LABEL}}</span>
+    <span class="fg-lane-title {{LANE_2_TONE}}" style="left:{{LANE_2_X}}%">{{LANE_2_LABEL}}</span>
+    <span class="fg-lane-title {{LANE_3_TONE}}" style="left:{{LANE_3_X}}%">{{LANE_3_LABEL}}</span>
+    <span class="fg-lane-title {{LANE_4_TONE}}" style="left:{{LANE_4_X}}%">{{LANE_4_LABEL}}</span>
+  </div>
+
+  <!-- ── LANE RULES (decorative dashed verticals) ──────────────────
+       One per lane; top starts below header strip (~5%), bottom leaves
+       room for the legend (~96%).
+  -->
+  <div class="fg-lane-rule" style="left:{{LANE_1_X}}%"></div>
+  <div class="fg-lane-rule" style="left:{{LANE_2_X}}%"></div>
+  <div class="fg-lane-rule" style="left:{{LANE_3_X}}%"></div>
+  <div class="fg-lane-rule" style="left:{{LANE_4_X}}%"></div>
+
+  <!-- ── PHASE SEPARATORS (one per phase boundary) ─────────────────
+       .fg-lane-phase-line  — horizontal rule across full width
+       .fg-lane-phase-lbl   — text label at left:2px above the rule
+  -->
+  <div class="fg-lane-phase-lbl" style="top:{{PHASE_1_Y}}%">{{PHASE_1_LABEL}}</div>
+  <div class="fg-lane-phase-line" style="top:{{PHASE_1_Y_LINE}}%"></div>
+
+  <div class="fg-lane-phase-lbl" style="top:{{PHASE_2_Y}}%">{{PHASE_2_LABEL}}</div>
+  <div class="fg-lane-phase-line" style="top:{{PHASE_2_Y_LINE}}%"></div>
+
+  <div class="fg-lane-phase-lbl" style="top:{{PHASE_3_Y}}%">{{PHASE_3_LABEL}}</div>
+  <div class="fg-lane-phase-line" style="top:{{PHASE_3_Y_LINE}}%"></div>
+
+  <div class="fg-lane-phase-lbl" style="top:{{PHASE_4_Y}}%">{{PHASE_4_LABEL}}</div>
+  <div class="fg-lane-phase-line" style="top:{{PHASE_4_Y_LINE}}%"></div>
+
+  <!-- ── SVG EDGE LAYER ────────────────────────────────────────────
+       viewBox="0 0 100 100" preserveAspectRatio="none"
+       Use .fg-lane-curve for strokes.
+       Use .dashed for optional/async edges.
+       Unique marker IDs per diagram (suffix with a slug).
+  -->
+  <svg class="fg-lane-svg" viewBox="0 0 100 100"
+       preserveAspectRatio="none"
+       xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <!-- One arrowhead marker per lane tone — give each a unique id -->
+      <marker id="arr-{{SLUG}}-teal"   viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--teal, #06b6d4)"/>
+      </marker>
+      <marker id="arr-{{SLUG}}-amber"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--amber, #f59e0b)"/>
+      </marker>
+      <marker id="arr-{{SLUG}}-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--accent, #e85d04)"/>
+      </marker>
+      <marker id="arr-{{SLUG}}-green"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--green, #10b981)"/>
+      </marker>
+    </defs>
+
+    <!-- EXAMPLE EDGES — replace with your actual edges
+         ─────────────────────────────────────────────────
+         e01: same-lane vertical (x=22, y=10→16)
+    -->
+    <path class="fg-lane-curve teal"
+          d="M 22,10 L 22,16"
+          marker-end="url(#arr-{{SLUG}}-teal)"/>
+
+    <!-- e02: fork off same lane, right-bulge (parallel-edge bend rule)
+         Router(41,50)→Command(41,56): Branch A bends right, apex x=43
+         ymid_ctrl: cy1=52, cy2=54  →  apex y = (52+54)/2 = 53
+    -->
+    <path class="fg-lane-curve amber"
+          d="M 41,50 C 43,52 43,54 41,56"
+          marker-end="url(#arr-{{SLUG}}-amber)"/>
+
+    <!-- e03: fork off same lane, left-bulge (parallel-edge bend rule)
+         Router(41,50)→LLM(41,62): Branch B bends left, apex x=38
+         ymid_ctrl: cy1=54, cy2=58  →  apex y = (54+58)/2 = 56
+    -->
+    <path class="fg-lane-curve amber"
+          d="M 41,50 C 38,54 38,58 41,62"
+          marker-end="url(#arr-{{SLUG}}-amber)"/>
+
+    <!-- e04: cross-lane S-curve (diff lanes)
+         Normalize(22,16)→Guards(62,30): ymid=(16+30)/2=23
+    -->
+    <path class="fg-lane-curve teal"
+          d="M 22,16 C 22,23 62,23 62,30"
+          marker-end="url(#arr-{{SLUG}}-accent)"/>
+
+    <!-- {{EDGES}} — add your edges here -->
+  </svg>
+
+  <!-- ── NODES AND LABELS (one pair per row) ────────────────────────
+       .fg-lane-node   — the circle, positioned via left+top
+       .fg-lane-label  — text block, positioned via left=calc(lane-x% + 12px) + top
+       ALWAYS keep node and label top% in sync.
+
+       Node circle:
+         <div class="fg-lane-node {tone} [optional]" style="left:{x}%; top:{y}%">
+
+       Label:
+         <div class="fg-lane-label" style="left:calc({x}% + 12px); top:{y}%">
+           <div class="fg-lane-title {tone}">
+             NodeName <span class="fg-lane-tag [pure|opt]">tag</span>
+           </div>
+           <div class="fg-lane-sig">sig text</div>
+         </div>
+  -->
+
+  <!-- ROW 1 — example node A (Presentation lane) -->
+  <div class="fg-lane-node {{LANE_1_TONE}}"
+       style="left:{{LANE_1_X}}%; top:10%;"
+       title="{{NODE_A_NAME}}"></div>
+  <div class="fg-lane-label" style="left:calc({{LANE_1_X}}% + 12px); top:10%;">
+    <div class="fg-lane-title {{LANE_1_TONE}}">
+      {{NODE_A_NAME}} <span class="fg-lane-tag">{{NODE_A_TAG}}</span>
+    </div>
+    <div class="fg-lane-sig">{{NODE_A_SIG}}</div>
+  </div>
+
+  <!-- ROW 2 — example node B (Presentation lane, optional) -->
+  <div class="fg-lane-node {{LANE_1_TONE}} optional"
+       style="left:{{LANE_1_X}}%; top:16%;"
+       title="{{NODE_B_NAME}} (optional)"></div>
+  <div class="fg-lane-label" style="left:calc({{LANE_1_X}}% + 12px); top:16%;">
+    <div class="fg-lane-title {{LANE_1_TONE}}">
+      {{NODE_B_NAME}} <span class="fg-lane-tag opt">{{NODE_B_TAG}}</span>
+    </div>
+    <div class="fg-lane-sig">{{NODE_B_SIG}}</div>
+  </div>
+
+  <!-- ROW 3 — example node C (Application lane) -->
+  <div class="fg-lane-node {{LANE_2_TONE}}"
+       style="left:{{LANE_2_X}}%; top:30%;"
+       title="{{NODE_C_NAME}}"></div>
+  <div class="fg-lane-label" style="left:calc({{LANE_2_X}}% + 12px); top:30%;">
+    <div class="fg-lane-title {{LANE_2_TONE}}">
+      {{NODE_C_NAME}} <span class="fg-lane-tag">{{NODE_C_TAG}}</span>
+    </div>
+    <div class="fg-lane-sig">{{NODE_C_SIG}}</div>
+  </div>
+
+  <!-- ROW 4 — example node D (Kernel lane, pure) -->
+  <div class="fg-lane-node {{LANE_3_TONE}}"
+       style="left:{{LANE_3_X}}%; top:50%;"
+       title="{{NODE_D_NAME}}"></div>
+  <div class="fg-lane-label" style="left:calc({{LANE_3_X}}% + 12px); top:50%;">
+    <div class="fg-lane-title {{LANE_3_TONE}}">
+      {{NODE_D_NAME}} <span class="fg-lane-tag pure">{{NODE_D_TAG}}</span>
+    </div>
+    <div class="fg-lane-sig">{{NODE_D_SIG}}</div>
+  </div>
+
+  <!-- ROW 5 — example node E (Infrastructure lane) -->
+  <div class="fg-lane-node {{LANE_4_TONE}}"
+       style="left:{{LANE_4_X}}%; top:70%;"
+       title="{{NODE_E_NAME}}"></div>
+  <div class="fg-lane-label" style="left:calc({{LANE_4_X}}% + 12px); top:70%;">
+    <div class="fg-lane-title {{LANE_4_TONE}}">
+      {{NODE_E_NAME}} <span class="fg-lane-tag">{{NODE_E_TAG}}</span>
+    </div>
+    <div class="fg-lane-sig">{{NODE_E_SIG}}</div>
+  </div>
+  <!-- {{NODES}} — replace examples above with your actual rows -->
+
+  <!-- ── EDGE LABELS (chip-on-a-wire pills) ────────────────────────
+       Place at the bulge APEX of each curve, not the straight-line
+       midpoint between endpoints (see LABEL-ON-BULGE-APEX RULE in
+       the header comment above).
+
+       For M x1,y1 C cx,cy1 cx,cy2 x2,y2:
+         label --x = cx
+         label --y = (cy1 + cy2) / 2
+  -->
+  <!-- EXAMPLE: Router→LLM left-bulge  apex=(38,56) -->
+  <div class="fg-edge-lbl {{LANE_2_TONE}}" style="--x:38; --y:56">{{EDGE_LBL_A}}</div>
+  <!-- {{EDGE_LABELS}} — add your edge labels here -->
+
+  <div class="fgraph-legend">{{LEGEND}}</div>
+</div>
+
+</main>
+
+</body>
+</html>

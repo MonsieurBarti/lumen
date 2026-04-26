@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- diagram-meta:start -->
+<meta name="diagram:title"     content="{{TITLE}}">
+<meta name="diagram:date"      content="{{DATE}}">
+<meta name="diagram:category"  content="{{CATEGORY}}">
+<meta name="diagram:cat-label" content="{{CAT_LABEL}}">
+<meta name="diagram:color"     content="{{COLOR}}">
+<!-- diagram-meta:end -->
+<title>{{TITLE}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* {{BASE_STYLES}} — inline reset.css + layout.css + typography.css + components.css + explainer-base.css */
+/* {{AESTHETIC_STYLES}} — inline the chosen aesthetic (lyra.css / roxabi.css / blueprint.css / ...) */
+
+/* ══════════════════════════════════════════════════════════════════
+   fgraph primitives — inlined from references/graph-templates/fgraph-base.css
+   ══════════════════════════════════════════════════════════════════ */
+/* {{FGRAPH_BASE}} — inline fgraph-base.css here */
+
+.fgraph-wrap.state { aspect-ratio: 16 / 10; max-width: 820px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-eyebrow">{{CATEGORY_LABEL}}</div>
+  <h1>{{TITLE_PLAIN}} <span class="accent">{{TITLE_ACCENT}}</span></h1>
+  <p class="header-subtitle">{{SUBTITLE}}</p>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     CUSTOMISE — this is the authoring surface.
+
+     Layout: N state nodes positioned in a 0..100 % space; transitions
+     are SVG edge paths labelled with event/guard text. Semantic edge
+     classes (.fg-edge.control / .feedback / .async) carry the meaning.
+
+     Shape conventions:
+       .fgraph-node.circle   — start / end / normal state
+       .fgraph-node.diamond  — conditional / guard / decision state
+       .fgraph-node.pill     — named waiting state / external
+
+     Keep state graphs to ≤ 6 states. Larger state machines belong in
+     a flowchart (see Shape picker).
+     ══════════════════════════════════════════════════════════════════ -->
+
+<div class="fgraph-wrap state green" role="img" aria-label="{{DIAGRAM_ARIA_LABEL}}">
+
+  <!-- ── EDGE LAYER ─────────────────────────────────────────── -->
+  <svg class="fgraph-edges" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="fg-arr-amber"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-amber"/></marker>
+      <marker id="fg-arr-cyan"   viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-cyan"/></marker>
+      <marker id="fg-arr-green"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-green"/></marker>
+      <marker id="fg-arr-red"    viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mk-red"/></marker>
+    </defs>
+
+    <!-- start → state 1 -->
+    <path class="fg-edge green control" d="M 10,50 L 22,50" marker-end="url(#fg-arr-green)"/>
+    <!-- state 1 → state 2 -->
+    <path class="fg-edge amber control" d="M 34,50 L 48,50" marker-end="url(#fg-arr-amber)"/>
+    <!-- state 2 → decision -->
+    <path class="fg-edge amber control" d="M 52,40 L 52,28" marker-end="url(#fg-arr-amber)"/>
+    <!-- decision (yes) → state 3 -->
+    <path class="fg-edge cyan control" d="M 60,20 L 72,30" marker-end="url(#fg-arr-cyan)"/>
+    <!-- decision (no) → state 2 (self-loop via curve) -->
+    <path class="fg-edge red feedback" d="M 44,20 Q 28,20 28,40" marker-end="url(#fg-arr-red)" fill="none"/>
+    <!-- state 3 → end -->
+    <path class="fg-edge green control" d="M 86,50 L 94,50" marker-end="url(#fg-arr-green)"/>
+  </svg>
+
+  <!-- ── EDGE LABELS ────────────────────────────────────────── -->
+  <div class="fgraph-lbl green" style="--x:16;--y:46;">{{TRANS_1_EVENT}}</div>
+  <div class="fgraph-lbl amber" style="--x:41;--y:46;">{{TRANS_2_EVENT}}</div>
+  <div class="fgraph-lbl amber" style="--x:54;--y:34;">{{TRANS_3_EVENT}}</div>
+  <div class="fgraph-lbl cyan"  style="--x:66;--y:24;">{{TRANS_4_EVENT}}<span class="dim">yes</span></div>
+  <div class="fgraph-lbl red"   style="--x:30;--y:28;">{{TRANS_5_EVENT}}<span class="dim">no</span></div>
+
+  <!-- ── STATE NODES ────────────────────────────────────────── -->
+  <div class="fgraph-node green circle" style="--x:6;--y:50;--w:6%;">●</div>
+
+  <div class="fgraph-node amber" style="--x:28;--y:50;">
+    <div class="fgraph-title amber">{{STATE_1_NAME}}</div>
+    <div class="fgraph-sub">{{STATE_1_SUB}}</div>
+  </div>
+
+  <div class="fgraph-node amber" style="--x:52;--y:50;">
+    <div class="fgraph-title amber">{{STATE_2_NAME}}</div>
+    <div class="fgraph-sub">{{STATE_2_SUB}}</div>
+  </div>
+
+  <div class="fgraph-node amber diamond" style="--x:52;--y:22;--w:12%;">
+    <div class="fgraph-title amber">{{DECISION_NAME}}</div>
+  </div>
+
+  <div class="fgraph-node cyan" style="--x:80;--y:34;">
+    <div class="fgraph-title cyan">{{STATE_3_NAME}}</div>
+    <div class="fgraph-sub">{{STATE_3_SUB}}</div>
+  </div>
+
+  <div class="fgraph-node green circle" style="--x:96;--y:50;--w:6%;">◉</div>
+
+  <div class="fgraph-legend">{{LEGEND}}</div>
+</div>
+
+</main>
+
+</body>
+</html>
