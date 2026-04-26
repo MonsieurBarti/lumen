@@ -110,9 +110,39 @@ Each file defines `[data-theme="dark"]` and `[data-theme="light"]` tokens. Set `
 
 Open any in a browser. Use the closest-match as a starting point when authoring a new diagram.
 
-## PI extension route (v0.1.x)
+## PI extension route (v0.2)
 
-The `lumen-generate_visual` PI tool currently wires only mermaid types. For LLM-authored fgraph diagrams, follow this skill's pipeline directly. Architecture deterministic renderer ships as a library export `generateArchitectureTemplate(...)` from `@the-forge-flow/lumen` for direct programmatic use; type: "diagram" tool route lands in v0.2 (pending JSON-Schema validation).
+The `lumen-generate_visual` PI tool wires `type: "diagram"` for **4 of the 15 topologies**: `sequence`, `layered`, `linear-flow`, `radial-hub` — these cover every recipe in `templates/ai-patterns.md` (RAG, Agentic RAG, Mem0, Multi-Agent). The other 11 topologies remain LLM-authored via this skill's pipeline; they land as patch-series extensions.
+
+**Coordinate philosophy for the PI route**: callers describe topology semantically (lane indices, layer indices, compass positions, stage chains) and the renderer computes absolute `--x/--y`. Free-form topologies (`system-architecture`, `dual-cluster`) keep the LLM-authored path because they genuinely need pixel coords.
+
+**Call shape:**
+
+```js
+generateVisual({
+  type: "diagram",
+  title: "RAG pipeline",
+  aesthetic: "dark-professional",  // any of the 5 fgraph aesthetics
+  content: {
+    topology: "linear-flow",
+    stages: [
+      { name: "Query" },
+      { name: "Embed", shape: "hexagon", tone: "cyan" },
+      { name: "VectorSearch", shape: "cylinder", tone: "purple" },
+      { name: "LLM", shape: "hexagon", tone: "amber" },
+      { name: "Response" },
+    ],
+    edges: [{ from: 1, to: 2, semantic: "async", label: "embedding" }],
+  },
+});
+```
+
+Full `FgraphContent` shape and per-topology field requirements: `src/templates/diagram/schemas.ts`.
+
+**Library exports** (for direct programmatic use without the PI tool):
+- `generateDiagramTemplate(input)` — returns the single-file HTML string
+- `parseFgraphContent(unknown)` — schema validator with precise error paths
+- `generateArchitectureTemplate(...)` — visual-explainer text-card layout (separate from fgraph)
 
 ## Sources
 

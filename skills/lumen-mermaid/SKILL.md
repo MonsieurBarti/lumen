@@ -61,7 +61,7 @@ Lumen-specific aesthetics (`dark-professional` ADG palette, roxabi `lyra` / `edi
 
 ## PI extension route
 
-`lumen-generate_visual({type, content, title, aesthetic?, theme?})` where `type ∈ {flowchart, sequence, er, state, mermaid_custom}` → renderer at `src/templates/mermaid.ts` (lifted verbatim from visual-explainer).
+`lumen-generate_visual({type, content, title, aesthetic?, theme?})` where `type ∈ {flowchart, sequence, er, state, mermaid_custom}` → renderer at `src/templates/mermaid.ts` (lifted verbatim from visual-explainer). Note that `type: "sequence"` here means a **mermaid** sequence diagram (text source); the fgraph deterministic sequence renderer is reached via `type: "diagram"` with `content.topology: "sequence"` (see `lumen-diagram/SKILL.md`).
 
 ## Sources (do not re-create)
 

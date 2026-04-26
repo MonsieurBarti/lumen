@@ -9,6 +9,7 @@
 
 export type VisualType =
 	| "architecture"
+	| "diagram"
 	| "flowchart"
 	| "sequence"
 	| "er"
@@ -31,13 +32,24 @@ export type Aesthetic =
 	| "solarized"
 	| "gruvbox";
 
+/**
+ * Aesthetic palettes for fgraph (lumen-diagram) renderers. Loaded from
+ * skills/lumen-diagram/templates/aesthetics/{name}.css at render time.
+ * Distinct from `Aesthetic` (which drives mermaid rendering through PALETTES
+ * in src/templates/shared.ts).
+ */
+export type FgraphAesthetic = "blueprint" | "dark-professional" | "editorial" | "lyra" | "terminal";
+
+/** Union accepted at the tool-param level; renderers narrow internally. */
+export type AnyAesthetic = Aesthetic | FgraphAesthetic;
+
 export type Theme = "light" | "dark" | "auto";
 
 export interface GenerateVisualParams {
 	type: VisualType;
-	content: string | Record<string, unknown>[];
+	content: string | Record<string, unknown>[] | Record<string, unknown>;
 	title: string;
-	aesthetic?: Aesthetic;
+	aesthetic?: AnyAesthetic;
 	theme?: Theme;
 	filename?: string;
 }
