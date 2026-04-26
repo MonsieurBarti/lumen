@@ -86,11 +86,11 @@ Skills are organized in three tiers (inspired by Shiv Sakhuja's [Skill Graphs 2.
 
 | Skill | What it does | Triggers |
 |---|---|---|
-| `lumen-diagram` | Architecture / flow / sequence / ER / state / mindmap / network / AI-pattern diagrams | `draw`, `diagram`, `visualize`, `sketch`, `architecture of X` |
+| `lumen-diagram` | Architecture / flow / sequence / ER / state / gantt / network / dependency-graph / AI-pattern diagrams | `draw`, `diagram`, `visualize`, `sketch`, `architecture of X` |
 | `lumen-chart` | Bar / pie / line / area / scatter / radar / funnel / bubble / table | `chart`, `graph`, `plot`, `trend`, `comparison` |
 | `lumen-mermaid` | Mermaid with zoom / pan / fit / new-tab export | `mermaid diagram`, raw mermaid source |
 | `lumen-slides` | Magazine-quality scroll-snap deck, 10 slide patterns | `create deck`, `slides`, `pitch`, `presentation` |
-| `lumen-gallery` | Image / audio comparison gallery, 5 templates, dynamic filters | `gallery`, `showcase`, `compare visually`, `side by side` |
+| `lumen-gallery` | Image / audio comparison gallery, 5 templates, dynamic filters (standalone — not chained from any composite) | `gallery`, `showcase`, `compare visually`, `side by side` |
 | `lumen-guide` | Multi-tab HTML doc with component library | `write a guide`, `architecture doc`, `multi-tab doc` |
 | `lumen-recap` | Project state recap (state + recent + debt + next) | `recap`, `where are we`, `summarize the project` |
 | `lumen-fact-check` | Verify a doc against the codebase, propose corrections | `fact-check`, `verify this doc`, `is this still accurate` |
@@ -148,7 +148,7 @@ v0.1.6
 bun install
 
 # Run tests
-bun test
+bun run test
 
 # Lint & format
 bun run lint
