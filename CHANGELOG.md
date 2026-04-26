@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.2...lumen-v0.1.3) (2026-04-26)
+
+
+### Features
+
+* **pi:** wire type:"diagram" route with 4 fgraph topologies ([389711e](https://github.com/MonsieurBarti/lumen/commit/389711efeee0b4b498e209b8b05e7939f88d331f))
+* **pi:** wire type:"diagram" route with 4 fgraph topologies ([fc1c6c9](https://github.com/MonsieurBarti/lumen/commit/fc1c6c9d0fe8bf634a4540a236525e0d49698589))
+
 ## [0.1.2](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.1...lumen-v0.1.2) (2026-04-26)
 
 

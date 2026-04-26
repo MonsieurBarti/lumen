@@ -1,7 +1,7 @@
 ---
 name: lumen-chart
 description: Generate single-file HTML+SVG data chart (bar, pie, line, area, scatter, radar, funnel, bubble, table). Invoke when user provides numeric data and asks for chart, graph, plot, trend, distribution, proportion, or comparison.
-version: 0.1.2 # x-release-please-version
+version: 0.1.3 # x-release-please-version
 ---
 
 # lumen-chart
