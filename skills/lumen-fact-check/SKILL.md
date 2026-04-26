@@ -1,7 +1,7 @@
 ---
 name: lumen-fact-check
 description: Verify factual accuracy of a document against the actual codebase, then propose or apply in-place corrections. Invoke when user asks to fact-check, verify this doc, is this still accurate, audit this doc, or supplies a doc that may have drifted from code.
-version: 0.1.4 # x-release-please-version
+version: 0.1.5 # x-release-please-version
 ---
 
 # lumen-fact-check
