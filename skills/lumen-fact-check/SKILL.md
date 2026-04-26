@@ -8,6 +8,8 @@ version: 0.1.3 # x-release-please-version
 
 Read a document → extract every verifiable claim → check each against code + git → correct in place → append a verification summary.
 
+📄 Rendered example: [`docs/examples/fact-check/`](../../docs/examples/fact-check/) (before/after pair, 11 cited corrections)
+
 ## When to invoke
 
 Triggers: `fact-check`, `verify this doc`, `is this still accurate`, `check this against the codebase`, `does this README match the code`, `audit this doc`.

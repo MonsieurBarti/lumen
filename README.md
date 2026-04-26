@@ -89,6 +89,8 @@ Then reload PI with `/reload`.
 
 Each skill ships with a full `SKILL.md` describing triggers, pipeline, output spec, quality checks, and PI extension route.
 
+📄 **See what each skill produces:** [`docs/examples/`](./docs/examples/) — rendered examples for slides, gallery, guide, recap, and fact-check.
+
 ## 🚀 Usage
 
 In Claude Code or PI, ask naturally:

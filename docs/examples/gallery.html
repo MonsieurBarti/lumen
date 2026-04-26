@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumen aesthetics — gallery example</title>
+<meta name="diagram:title"     content="Lumen aesthetics — gallery example">
+<meta name="diagram:date"      content="2026-04-26">
+<meta name="diagram:category"  content="example">
+<meta name="diagram:cat-label" content="Lumen example">
+<meta name="diagram:color"     content="amber">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Tokens (lifted from gallery-base.css) ── */
+:root {
+  --bg:#0d1117; --surface:#13191f; --surface2:#161b22; --card:#1e2133;
+  --border:rgba(255,255,255,0.07); --border2:#30363d;
+  --text:#f0ede6; --text-dim:#9ca3af; --text-xdim:#6b7280;
+  --accent:#f0b429;
+  --accent-dim:rgba(240,180,41,0.12);
+  --orange:#fb923c;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+[data-theme="light"] {
+  --bg:#f5f2ec; --surface:#ede9e0; --surface2:#e5e0d5; --card:#faf8f4;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.15);
+  --text:#1a1d2b; --text-dim:#5a6070; --text-xdim:#9aa0ae;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s}
+
+/* ── Header ── */
+.header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.header-left h1{font-size:1.3rem;font-weight:700;letter-spacing:-0.01em}
+.header-left h1 span{color:var(--accent)}
+.header-left .sub{font-size:.72rem;color:var(--text-dim);margin-top:3px;line-height:1.4}
+.theme-btn{background:var(--surface);border:1px solid var(--border2);border-radius:6px;color:var(--text-dim);cursor:pointer;font-size:.85rem;padding:5px 10px;flex-shrink:0}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
+.toolbar:last-of-type{margin-bottom:12px}
+.ctrl{display:flex;align-items:center;gap:4px}
+.ctrl-label{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-xdim);font-family:var(--mono)}
+.segs{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:5px;overflow:hidden}
+.seg{background:none;border:none;border-right:1px solid var(--border);color:var(--text-dim);cursor:pointer;font-family:var(--font);font-size:.65rem;font-weight:500;padding:4px 8px;transition:background .1s,color .1s;white-space:nowrap}
+.seg:last-child{border-right:none}
+.seg:hover{background:var(--surface2);color:var(--text)}
+.seg.on{background:var(--accent-dim);color:var(--accent);font-weight:600}
+.check-group{display:flex;gap:3px;flex-wrap:wrap}
+.check-btn{background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text-dim);cursor:pointer;font-size:.6rem;padding:3px 6px;font-family:var(--mono);transition:all .1s}
+.check-btn.on{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+.check-btn:hover{border-color:var(--accent)}
+.size-btn{background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text-dim);cursor:pointer;font-size:.85rem;font-weight:700;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-family:var(--mono)}
+.size-btn:hover{border-color:var(--accent);color:var(--accent)}
+.size-label{font-size:.6rem;color:var(--text-xdim);font-family:var(--mono);min-width:24px;text-align:center}
+.filter-input{background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:.65rem;padding:4px 8px;outline:none}
+.filter-input:focus{border-color:var(--accent)}
+.search-input{width:140px}
+.stats{font-family:var(--mono);font-size:.6rem;color:var(--text-xdim);margin-left:auto}
+.empty{text-align:center;padding:64px 24px;color:var(--text-xdim);font-size:.84rem}
+
+/* ── Layout ── */
+.layout{max-width:100%;margin:0 auto;padding:20px 20px 64px}
+
+/* ── Batch bar ── */
+.batch-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.batch-btn{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text-dim);cursor:pointer;font-family:var(--mono);font-size:.65rem;font-weight:500;padding:5px 12px;transition:all .15s;white-space:nowrap}
+.batch-btn:hover{border-color:var(--border2);color:var(--text)}
+.batch-btn.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);font-weight:600}
+
+/* ── Image grid ── */
+.grid{display:grid;gap:6px}
+.img-card{position:relative;border-radius:5px;overflow:hidden;border:1px solid var(--border);transition:border-color .15s,transform .12s;background:var(--surface)}
+.img-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.img-card.hidden{display:none}
+.img-card img{width:100%;aspect-ratio:1;object-fit:cover;display:block;cursor:zoom-in;background:var(--surface)}
+.img-card .badge-top{position:absolute;top:5px;left:5px;font-family:var(--mono);font-size:.5rem;font-weight:600;padding:2px 5px;border-radius:3px;background:rgba(0,0,0,.7);color:var(--accent);border:1px solid var(--accent-dim);letter-spacing:.04em}
+.img-card .badge-batch{position:absolute;top:5px;right:5px;font-family:var(--mono);font-size:.5rem;padding:1px 4px;border-radius:2px;background:rgba(0,0,0,.7);color:var(--text-dim)}
+.img-card.starred{border-color:var(--orange)}
+.img-card.starred::after{content:'★';position:absolute;bottom:5px;right:5px;color:var(--orange);font-size:13px;text-shadow:0 0 6px rgba(251,146,60,.5)}
+.img-card .info{padding:6px 8px 8px}
+.img-card .info .num{font-size:.55rem;color:var(--accent);font-family:var(--mono);margin-bottom:2px}
+.img-card .info .lbl{font-size:.68rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
+.img-card .info .tags{display:flex;gap:3px;flex-wrap:wrap}
+.img-tag{font-size:.52rem;font-family:var(--mono);padding:1px 4px;border-radius:2px;background:var(--surface2);color:var(--text-xdim);border:1px solid var(--border)}
+.star-btn{position:absolute;bottom:6px;right:6px;background:transparent;border:none;cursor:pointer;font-size:15px;color:var(--text-xdim);transition:color .15s;line-height:1;padding:2px;z-index:2}
+.star-btn:hover{color:var(--orange)}
+.img-card.starred .star-btn{color:var(--orange)}
+
+/* ── Lightbox ── */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:100;flex-direction:column;justify-content:center;align-items:center}
+.lb.open{display:flex}
+.lb-img{max-width:70vmin;max-height:70vmin;border-radius:10px;object-fit:contain;display:block}
+.lb-meta{margin-top:16px;text-align:center;max-width:480px}
+.lb-title{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:6px}
+.lb-tags{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:6px}
+.lb-caption{font-family:var(--mono);font-size:.65rem;color:var(--text-xdim)}
+.lb-btn{position:absolute;top:50%;transform:translateY(-50%);font-size:36px;color:var(--text-xdim);cursor:pointer;padding:16px 20px;user-select:none;transition:color .15s}
+.lb-btn:hover{color:var(--accent)}
+.lb-prev{left:8px}.lb-next{right:8px}
+.lb-close{position:absolute;top:16px;right:20px;font-size:18px;color:var(--text-xdim);cursor:pointer;transition:color .15s}
+.lb-close:hover{color:var(--text)}
+
+@media(max-width:860px){.ctrl-label{display:none}}
+@media(max-width:600px){.toolbar{gap:4px}.seg{font-size:.58rem;padding:3px 5px}.search-input{width:100px}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<div class="header">
+  <div class="header-left">
+    <h1>Lumen aesthetics — <span>gallery example</span></h1>
+    <div class="sub" id="subtitle">12 palette studies · v1: mermaid · v2: diagram</div>
+  </div>
+  <button class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+</div>
+
+<div class="batch-bar" id="batchBar"></div>
+
+<div class="toolbar">
+  <div class="ctrl"><span class="ctrl-label">Sort</span>
+    <div class="segs" id="sortSegs">
+      <button class="seg on" data-v="default">Default</button>
+      <button class="seg" data-v="name">Name</button>
+    </div>
+  </div>
+  <div class="ctrl"><span class="ctrl-label">Size</span>
+    <button class="size-btn" onclick="resizeThumb(-20)">−</button>
+    <span class="size-label" id="sizeLabel">160</span>
+    <button class="size-btn" onclick="resizeThumb(+20)">+</button>
+  </div>
+  <span class="stats" id="stats"></span>
+</div>
+
+<div class="toolbar" id="filterBar">
+  <div class="ctrl"><span class="ctrl-label">Search</span>
+    <input class="filter-input search-input" id="searchInput" type="text" placeholder="filter..." oninput="render()">
+  </div>
+</div>
+
+<div id="gallery"></div>
+</div>
+
+<div class="lb" id="lb" onclick="closeLbOutside(event)">
+  <span class="lb-close" onclick="closeLb()">✕</span>
+  <span class="lb-btn lb-prev" onclick="lbNav(-1,event)">‹</span>
+  <img class="lb-img" id="lbImg" src="" alt="">
+  <div class="lb-meta">
+    <div class="lb-title"  id="lbTitle"></div>
+    <div class="lb-tags"   id="lbTags"></div>
+    <div class="lb-caption" id="lbCaption"></div>
+  </div>
+  <span class="lb-btn lb-next" onclick="lbNav(1,event)">›</span>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   Self-contained example — replaces gallery-base.js discovery flow
+   with a hardcoded allItems array. Production galleries fetch from
+   img-manifest.json or /api/list/; this example demonstrates UX only.
+   ══════════════════════════════════════════════════════════════════ */
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* Generate a 200x200 SVG palette swatch as a data URI */
+function paletteSwatch(bg, c1, c2, c3, c4, label) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <rect width="200" height="200" fill="${bg}"/>
+    <rect x="20" y="20" width="70" height="70" fill="${c1}"/>
+    <rect x="110" y="20" width="70" height="70" fill="${c2}"/>
+    <rect x="20" y="110" width="70" height="70" fill="${c3}"/>
+    <rect x="110" y="110" width="70" height="70" fill="${c4}"/>
+    <text x="100" y="195" text-anchor="middle" font-family="monospace" font-size="11" fill="${c1}">${label}</text>
+  </svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Items — 12 palette swatches across 2 batches.
+   Real galleries load these from img-manifest.json + a catalogue.
+   ══════════════════════════════════════════════════════════════════ */
+
+const allItems = [
+  /* v1 — Mermaid aesthetics */
+  { batch:'v1', stem:'01-blueprint',  label:'Blueprint',  tags:['cool','light','technical'],
+    img: paletteSwatch('#f8fafc','#dc2626','#0f172a','#64748b','#cbd5e1','BLUEPRINT') },
+  { batch:'v1', stem:'02-editorial',  label:'Editorial',  tags:['warm','light','reading'],
+    img: paletteSwatch('#fbf7f0','#a04a1a','#1c1917','#78716c','#e7e0d3','EDITORIAL') },
+  { batch:'v1', stem:'03-paper',      label:'Paper',      tags:['neutral','light','minimal'],
+    img: paletteSwatch('#fafaf9','#404040','#0a0a0a','#737373','#d4d4d4','PAPER') },
+  { batch:'v1', stem:'04-terminal',   label:'Terminal',   tags:['cool','dark','technical'],
+    img: paletteSwatch('#0a0a0a','#22c55e','#86efac','#16a34a','#1a1a1a','TERMINAL') },
+  { batch:'v1', stem:'05-dracula',    label:'Dracula',    tags:['cool','dark','vibrant'],
+    img: paletteSwatch('#282a36','#bd93f9','#ff79c6','#50fa7b','#44475a','DRACULA') },
+  { batch:'v1', stem:'06-nord',       label:'Nord',       tags:['cool','dark','calm'],
+    img: paletteSwatch('#2e3440','#88c0d0','#81a1c1','#5e81ac','#3b4252','NORD') },
+
+  /* v2 — Diagram aesthetics */
+  { batch:'v2', stem:'07-solarized',         label:'Solarized',          tags:['warm','light','calm'],
+    img: paletteSwatch('#fdf6e3','#cb4b16','#268bd2','#859900','#eee8d5','SOLARIZED') },
+  { batch:'v2', stem:'08-gruvbox',           label:'Gruvbox',            tags:['warm','dark','earthy'],
+    img: paletteSwatch('#282828','#fb4934','#b8bb26','#fabd2f','#3c3836','GRUVBOX') },
+  { batch:'v2', stem:'09-dark-professional', label:'Dark Professional',  tags:['cool','dark','calm'],
+    img: paletteSwatch('#0e1521','#22d3ee','#3b82f6','#94a3b8','#1e293b','DARK-PRO') },
+  { batch:'v2', stem:'10-lyra',              label:'Lyra',               tags:['warm','dark','vibrant'],
+    img: paletteSwatch('#0f0a1a','#e85d04','#22d3ee','#f472b6','#1e1530','LYRA') },
+  { batch:'v2', stem:'11-blueprint-night',   label:'Blueprint (night)',  tags:['cool','dark','technical'],
+    img: paletteSwatch('#0a1628','#f87171','#60a5fa','#94a3b8','#1e3a5f','BP-NIGHT') },
+  { batch:'v2', stem:'12-editorial-night',   label:'Editorial (night)',  tags:['warm','dark','reading'],
+    img: paletteSwatch('#1c1614','#f59e0b','#fef3c7','#a8a29e','#2d2622','ED-NIGHT') },
+];
+
+const BATCHES = [
+  { id:'v1', label:'Mermaid' },
+  { id:'v2', label:'Diagram' },
+];
+
+const DIMS = {
+  tone: {
+    label:'Tone',
+    fn: it => it.tags.find(t => ['warm','cool','neutral'].includes(t)) || 'other',
+    order:['warm','cool','neutral'],
+  },
+  mood: {
+    label:'Mood',
+    fn: it => it.tags.find(t => ['light','dark'].includes(t)) || 'other',
+    order:['light','dark'],
+  },
+  use: {
+    label:'Use',
+    fn: it => it.tags.find(t => ['technical','reading','minimal','vibrant','calm','earthy'].includes(t)) || 'other',
+  },
+};
+
+const STORE_KEY = 'lumen-gallery-example';
+
+/* ── State ── */
+const filters = {};
+let visibleItems = [];
+let lbIndex = 0;
+let sortMode = 'default';
+let currentBatch = 'all';
+window.thumbSize = 160;
+window.THUMB_MIN = 80;
+window.THUMB_MAX = 320;
+
+/* ── Theme ── */
+function initTheme() {
+  const stored = localStorage.getItem(`${STORE_KEY}-theme`) || 'dark';
+  function apply(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('themeBtn').textContent = t === 'dark' ? '🌙' : '☀️';
+    localStorage.setItem(`${STORE_KEY}-theme`, t);
+  }
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    apply(cur === 'dark' ? 'light' : 'dark');
+  });
+  apply(stored);
+}
+
+/* ── Starring ── */
+const starredKey = STORE_KEY + '-starred';
+const starredSet = new Set(JSON.parse(localStorage.getItem(starredKey) || '[]'));
+function toggleStar(stem) {
+  if (starredSet.has(stem)) starredSet.delete(stem); else starredSet.add(stem);
+  localStorage.setItem(starredKey, JSON.stringify([...starredSet]));
+  return starredSet.has(stem);
+}
+
+/* ── Filters ── */
+function buildDimFilters() {
+  const bar = document.getElementById('filterBar');
+  for (const [key, dim] of Object.entries(DIMS)) {
+    const counts = {};
+    allItems.forEach(item => {
+      const v = dim.fn(item);
+      counts[v] = (counts[v] || 0) + 1;
+    });
+    const values = Object.keys(counts).sort((a, b) => {
+      if (dim.order) {
+        const ia = dim.order.indexOf(a), ib = dim.order.indexOf(b);
+        if (ia >= 0 && ib >= 0) return ia - ib;
+        if (ia >= 0) return -1;
+        if (ib >= 0) return 1;
+      }
+      return a.localeCompare(b);
+    });
+    if (values.length < 2) continue;
+    filters[key] = new Set();
+    const ctrl = document.createElement('div');
+    ctrl.className = 'ctrl';
+    ctrl.innerHTML = `<span class="ctrl-label">${escHtml(dim.label)}</span>`;
+    const group = document.createElement('div');
+    group.className = 'check-group';
+    for (const v of values) {
+      const btn = document.createElement('button');
+      btn.className = 'check-btn';
+      btn.textContent = `${v} (${counts[v]})`;
+      btn.onclick = () => {
+        btn.classList.toggle('on');
+        if (btn.classList.contains('on')) filters[key].add(v);
+        else filters[key].delete(v);
+        render();
+      };
+      group.appendChild(btn);
+    }
+    ctrl.appendChild(group);
+    bar.insertBefore(ctrl, bar.firstChild);
+  }
+}
+
+function getFiltered() {
+  let items = allItems.filter(it => currentBatch === 'all' || it.batch === currentBatch);
+  for (const [dim, activeSet] of Object.entries(filters)) {
+    if (activeSet.size === 0) continue;
+    const fn = DIMS[dim]?.fn;
+    if (fn) items = items.filter(it => activeSet.has(fn(it)));
+  }
+  const q = (document.getElementById('searchInput').value || '').toLowerCase();
+  if (q) items = items.filter(it =>
+    it.label.toLowerCase().includes(q) ||
+    it.stem.toLowerCase().includes(q) ||
+    it.tags.join(' ').toLowerCase().includes(q));
+  return items;
+}
+
+function sortItems(items) {
+  if (sortMode === 'name') return [...items].sort((a, b) => a.label.localeCompare(b.label));
+  return items;
+}
+
+/* ── Rendering ── */
+function render() {
+  const el = document.getElementById('gallery');
+  const filtered = sortItems(getFiltered());
+  visibleItems = filtered;
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty">No items match the current filters.</div>';
+    document.getElementById('stats').textContent = '0 / ' + allItems.length;
+    return;
+  }
+  const cols = Math.max(2, Math.floor((window.innerWidth - 48) / (window.thumbSize + 8)));
+  el.innerHTML = '<div class="grid" style="grid-template-columns:repeat(' + cols + ',1fr)">' +
+    filtered.map((item, i) => mkCard(item, i)).join('') +
+  '</div>';
+  document.getElementById('stats').textContent = filtered.length + ' / ' + allItems.length;
+  el.querySelectorAll('.star-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('.img-card');
+      const stem = card.dataset.stem;
+      const isNow = toggleStar(stem);
+      card.classList.toggle('starred', isNow);
+      btn.textContent = isNow ? '★' : '☆';
+    });
+  });
+  el.querySelectorAll('.img-card img').forEach(img => {
+    img.addEventListener('click', () => {
+      const card = img.closest('.img-card');
+      const idx = parseInt(card.dataset.idx, 10);
+      openLb(idx);
+    });
+  });
+}
+
+function mkCard(item, idx) {
+  const isStarred = starredSet.has(item.stem);
+  const num = item.stem.split('-')[0];
+  return `<div class="img-card${isStarred ? ' starred' : ''}" data-stem="${escHtml(item.stem)}" data-idx="${idx}">
+    <span class="badge-top">${escHtml(item.tags[0].toUpperCase())}</span>
+    <span class="badge-batch">${escHtml(item.batch.toUpperCase())}</span>
+    <img src="${item.img}" alt="${escHtml(item.label)}" loading="lazy" style="height:${window.thumbSize}px;min-height:${window.thumbSize}px">
+    <div class="info">
+      <div class="num">${escHtml(num)}</div>
+      <div class="lbl">${escHtml(item.label)}</div>
+      <div class="tags">${item.tags.map(t => `<span class="img-tag">${escHtml(t)}</span>`).join('')}</div>
+    </div>
+    <button class="star-btn" title="Star">${isStarred ? '★' : '☆'}</button>
+  </div>`;
+}
+
+/* ── Batch bar ── */
+function buildBatchBar() {
+  const bar = document.getElementById('batchBar');
+  bar.innerHTML = '';
+  const counts = {};
+  allItems.forEach(it => { counts[it.batch] = (counts[it.batch] || 0) + 1; });
+  const allBtn = document.createElement('button');
+  allBtn.className = 'batch-btn active';
+  allBtn.textContent = `ALL (${allItems.length})`;
+  allBtn.onclick = () => selectBatch(allBtn, 'all');
+  bar.appendChild(allBtn);
+  for (const b of BATCHES) {
+    if (!counts[b.id]) continue;
+    const btn = document.createElement('button');
+    btn.className = 'batch-btn';
+    btn.textContent = `${b.id.toUpperCase()} — ${b.label} (${counts[b.id]})`;
+    btn.onclick = () => selectBatch(btn, b.id);
+    bar.appendChild(btn);
+  }
+}
+function selectBatch(btn, id) {
+  document.querySelectorAll('.batch-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentBatch = id;
+  render();
+}
+
+/* ── Sort ── */
+document.querySelectorAll('#sortSegs .seg').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('#sortSegs .seg').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    sortMode = btn.dataset.v;
+    render();
+  };
+});
+
+/* ── Lightbox ── */
+function openLb(idx) { lbIndex = idx; renderLb(); document.getElementById('lb').classList.add('open'); }
+function renderLb() {
+  const item = visibleItems[lbIndex];
+  if (!item) return;
+  document.getElementById('lbImg').src = item.img;
+  document.getElementById('lbImg').alt = item.label;
+  document.getElementById('lbTitle').textContent = item.label;
+  const tagsEl = document.getElementById('lbTags');
+  tagsEl.innerHTML = '';
+  item.tags.forEach(t => {
+    const span = document.createElement('span');
+    span.className = 'img-tag';
+    span.textContent = t;
+    tagsEl.appendChild(span);
+  });
+  document.getElementById('lbCaption').textContent = item.stem;
+}
+function lbNav(dir, e) {
+  if (e) e.stopPropagation();
+  if (!visibleItems.length) return;
+  lbIndex = (lbIndex + dir + visibleItems.length) % visibleItems.length;
+  renderLb();
+}
+function closeLb() { document.getElementById('lb').classList.remove('open'); }
+function closeLbOutside(e) { if (e.target === document.getElementById('lb')) closeLb(); }
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lb');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'ArrowLeft') lbNav(-1);
+  else if (e.key === 'ArrowRight') lbNav(1);
+  else if (e.key === 'Escape') closeLb();
+});
+
+/* ── Resize ── */
+function resizeThumb(d) {
+  window.thumbSize = Math.max(window.THUMB_MIN, Math.min(window.THUMB_MAX, window.thumbSize + d));
+  document.getElementById('sizeLabel').textContent = window.thumbSize;
+  render();
+}
+
+/* ── Boot ── */
+initTheme();
+buildBatchBar();
+buildDimFilters();
+render();
+</script>
+</body>
+</html>

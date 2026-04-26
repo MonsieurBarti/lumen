@@ -8,6 +8,8 @@ version: 0.1.3 # x-release-please-version
 
 Single-file HTML recap. Hero image (optional) + architecture diagram + activity narrative + decision log + state KPIs + mental model + debt hotspots + next steps.
 
+📄 Rendered example: [`docs/examples/recap.html`](../../docs/examples/recap.html) (a real recap of this repo)
+
 ## When to invoke
 
 Triggers: `recap`, `summarize the project`, `where are we`, `rebuild mental model`, `project state`, `coming back to this project`, `what changed since last week`.
