@@ -1,7 +1,7 @@
 ---
 name: lumen-slides
 description: Generate magazine-quality scroll-snap presentation deck as single HTML file. 10 slide patterns with reveal animations, keyboard + touch navigation, prefers-reduced-motion support. 4+ aesthetic presets. Invoke when user asks for deck, slides, pitch, presentation, slides from issue #N.
-version: 0.1.6 # x-release-please-version
+version: 0.1.7 # x-release-please-version
 ---
 
 # lumen-slides

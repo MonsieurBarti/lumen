@@ -1,7 +1,7 @@
 ---
 name: lumen-document-this-project
 description: Generate a complete documentation set for a project by orchestrating multiple lumen composites (architecture-doc + readme-pack). Higher-altitude than a single composite — produces 2+ HTML artifacts that together rebuild a reader's mental model of the project. Invoke for "document this project", "full docs pack", "doc dump for X".
-version: 0.1.6 # x-release-please-version
+version: 0.1.7 # x-release-please-version
 ---
 
 # lumen-document-this-project

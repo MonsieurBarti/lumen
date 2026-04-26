@@ -1,7 +1,7 @@
 ---
 name: lumen-readme-pack
 description: Produce a multi-tab HTML "project page" combining a project recap, an architecture diagram, 1–2 key-metrics charts, and a narrative guide. Use to showcase a project's current state, architecture, and metrics in one shareable artifact.
-version: 0.1.6 # x-release-please-version
+version: 0.1.7 # x-release-please-version
 ---
 
 # lumen-readme-pack
