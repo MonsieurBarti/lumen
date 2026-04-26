@@ -234,7 +234,6 @@ describe("lumen-diagram templates", () => {
 			"fgraph-base.css",
 			"NOTICE.md",
 			"ai-patterns.md",
-			"aesthetics",
 		]);
 		const actual = new Set(readdirSync(TEMPLATES_DIR));
 		const unexpected = [...actual].filter((f) => !expected.has(f));
@@ -252,8 +251,8 @@ describe("lumen-diagram templates", () => {
 	});
 });
 
-describe("lumen-diagram aesthetics", () => {
-	const AESTHETICS_DIR = join(SKILLS_DIR, "lumen-diagram", "templates", "aesthetics");
+describe("shared aesthetics (skills/_shared/aesthetics/)", () => {
+	const AESTHETICS_DIR = join(SKILLS_DIR, "_shared", "aesthetics");
 
 	const expectedAesthetics = ["dark-professional", "editorial", "blueprint", "terminal", "lyra"];
 
@@ -268,6 +267,14 @@ describe("lumen-diagram aesthetics", () => {
 			expect(css).toMatch(/--text\s*:/);
 		});
 	}
+
+	it("ships a NOTICE.md with attribution", () => {
+		const path = join(AESTHETICS_DIR, "NOTICE.md");
+		expect(existsSync(path)).toBe(true);
+		const body = readFileSync(path, "utf8");
+		expect(body).toContain("roxabi-forge");
+		expect(body).toContain("architecture-diagram-generator");
+	});
 });
 
 describe("lumen-diagram examples", () => {

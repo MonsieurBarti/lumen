@@ -17,14 +17,7 @@ Files copied verbatim:
 
 ## Aesthetics
 
-In `aesthetics/`. Four files lifted verbatim from [Roxabi/roxabi-forge](https://github.com/Roxabi/roxabi-forge) — `plugins/forge/references/aesthetics/`:
-
-- `editorial.css` — warm technical document
-- `blueprint.css` — clean technical, monospace
-- `terminal.css` — retro CLI, high contrast
-- `lyra.css` — warm amber, narrative tone
-
-`dark-professional.css` is authored fresh by lumen, but its semantic palette (cyan-frontend / emerald-backend / violet-database / amber-cloud / rose-security / orange-bus / slate-external) is derived from [Cocoon-AI/architecture-diagram-generator](https://github.com/Cocoon-AI/architecture-diagram-generator) (MIT). Token names follow the roxabi-forge fgraph-base.css convention so it's interchangeable with the other aesthetics.
+Moved to `skills/_shared/aesthetics/` in v0.2 (consumed by diagram + chart + guide + slides + gallery). See that directory's `NOTICE.md` for attribution.
 
 ## AI pattern recipes (`ai-patterns.md`)
 

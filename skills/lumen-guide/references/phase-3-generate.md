@@ -13,7 +13,7 @@ Read `shells/split.html` → substitute placeholders. The shell contains all str
 
 **Shell HTML:** diagram-meta block, Google Fonts link, single `css/{SLUG}.css` link, header, nav with tab buttons + theme toggle, panel placeholders, two inline `<script>` blocks (`{THEME_TOGGLE_JS}` then `{TAB_LOADER_JS}`).
 
-**CSS file:** concatenate base sheets (`reset.css` + `typography.css` + `layout.css` + `components.css`) + chosen aesthetic from `lumen-diagram/templates/aesthetics/*.css` + any guide-specific styles. Write to `{ROOT}/css/{SLUG}.css`.
+**CSS file:** concatenate base sheets (`reset.css` + `typography.css` + `layout.css` + `components.css`) + chosen aesthetic from `skills/_shared/aesthetics/*.css` + any guide-specific styles. Write to `{ROOT}/css/{SLUG}.css`.
 
 **JS:** there is no separate JS file. `theme-toggle.js` and `tab-loader.js` are inlined into the shell via the `{THEME_TOGGLE_JS}` / `{TAB_LOADER_JS}` placeholders, with `{NAME}` substituted to match `{SLUG}` (so `tab-loader.js` fetches `tabs/{SLUG}/tab-{ID}.html`). Add Mermaid init or any other one-off scripts via `{EXTRA_SCRIPTS}`.
 

@@ -34,9 +34,10 @@ export type Aesthetic =
 
 /**
  * Aesthetic palettes for fgraph (lumen-diagram) renderers. Loaded from
- * skills/lumen-diagram/templates/aesthetics/{name}.css at render time.
- * Distinct from `Aesthetic` (which drives mermaid rendering through PALETTES
- * in src/templates/shared.ts).
+ * skills/_shared/aesthetics/{name}.css at render time. Shared across every
+ * lumen renderer that produces fgraph / chart / guide / slide / gallery
+ * output. Distinct from `Aesthetic` (which drives mermaid rendering through
+ * PALETTES in src/templates/shared.ts).
  */
 export type FgraphAesthetic = "blueprint" | "dark-professional" | "editorial" | "lyra" | "terminal";
 

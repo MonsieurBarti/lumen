@@ -41,7 +41,7 @@ Apply this once per axis. For dual-axis charts (bubble, scatter) run it on each 
 
 Pick by intent:
 
-- **Categorical** (independent series, max 8 hues): `#22d3ee #34d399 #a78bfa #fbbf24 #fb7185 #fb923c #94a3b8 #c084fc`. Tied to the `dark-professional` palette in `lumen-diagram/templates/aesthetics/dark-professional.css`.
+- **Categorical** (independent series, max 8 hues): `#22d3ee #34d399 #a78bfa #fbbf24 #fb7185 #fb923c #94a3b8 #c084fc`. Tied to the `dark-professional` palette in `skills/_shared/aesthetics/dark-professional.css`.
 - **Sequential** (low → high values, single hue ramp): `#cffafe → #06b6d4 → #0e7490` (cyan ramp); or `#fef3c7 → #f59e0b → #b45309` (amber ramp).
 - **Diverging** (centered around zero, two hues + neutral midpoint): `#dc2626 → #f3f4f6 → #16a34a` (red-gray-green) or `#7c3aed → #f3f4f6 → #f59e0b` (violet-gray-amber).
 

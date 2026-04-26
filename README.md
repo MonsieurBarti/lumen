@@ -134,7 +134,7 @@ lumen/
 │   ├── plugin.json              # CC plugin manifest
 │   └── marketplace.json         # CC marketplace listing
 ├── skills/                      # Source of truth (read by both CC and PI)
-│   ├── _shared/                 # Cross-cutting assets (lands in v0.2)
+│   ├── _shared/aesthetics/      # 5 cross-cutting palettes
 │   ├── lumen-diagram/SKILL.md
 │   ├── lumen-chart/SKILL.md
 │   ├── lumen-mermaid/SKILL.md
@@ -143,9 +143,9 @@ lumen/
 │   ├── lumen-guide/SKILL.md
 │   ├── lumen-recap/SKILL.md
 │   └── lumen-fact-check/SKILL.md
-├── src/                         # PI extension TypeScript (lands in v0.2)
+├── src/                         # PI extension TypeScript
 │   ├── index.ts                 # Tool registration + lifecycle
-│   ├── templates/               # JSON → HTML renderers
+│   ├── templates/               # Deterministic HTML renderers (mermaid, diagram, …)
 │   └── utils/                   # validators, file-writer, browser-open
 ├── docs/                        # Research briefs from each upstream
 │   ├── architecture-diagram-generator.md
@@ -153,8 +153,7 @@ lumen/
 │   ├── visual-explainer.md
 │   ├── gmdiagram.md
 │   └── roxabi-forge.md
-├── tests/
-└── PLAN.md                      # Integration plan
+└── tests/
 ```
 
 ## 🤝 Contributing

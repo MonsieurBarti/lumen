@@ -26,7 +26,7 @@ Triggers: `write a guide`, `create a guide`, `multi-tab doc`, `architecture doc`
 | API reference | Quick start / Endpoints / Auth / Errors / Examples |
 | Roadmap | Now / Next / Later / Maybe |
 
-3. **Style** — pick aesthetic from `lumen-diagram/templates/aesthetics/` (default `editorial.css` for guides). Apply component variants from `components/components.css`. Token system documented in `references/tokens.md`. Two-track aesthetic detection (branded `forge.yml` vs exploration) per `references/design-phase-two-track.md`.
+3. **Style** — pick aesthetic from `skills/_shared/aesthetics/` (default `editorial.css` for guides). Apply component variants from `components/components.css`. Token system documented in `references/tokens.md`. Two-track aesthetic detection (branded `forge.yml` vs exploration) per `references/design-phase-two-track.md`.
 
 4. **Deliver** — pick output mode:
    - **Single-file** (`shells/single.html`): all CSS/JS inlined in `<style>` and `<script>`. Best for share-by-attachment.
@@ -105,4 +105,4 @@ Not wired through `lumen-generate_visual` PI tool. Guides need multi-step author
 - [`Roxabi/roxabi-forge/plugins/forge/references/`](https://github.com/Roxabi/roxabi-forge) (MIT) — `tokens.md`, `output-ux.md`, `frame-phase.md`, `design-phase-two-track.md`, `anti-patterns.md`
 - [`Roxabi/roxabi-forge/plugins/forge/references/shells/`](https://github.com/Roxabi/roxabi-forge) (MIT) — `single.html` + `split.html`
 - [`nicobailon/visual-explainer/plugins/visual-explainer/references/css-patterns.md`](https://github.com/nicobailon/visual-explainer) (MIT) — KPI cards, mermaid zoom controls, overflow protection
-- `lumen-diagram/templates/aesthetics/` (this package) — 5 aesthetics shared with diagrams
+- `skills/_shared/aesthetics/` (this package) — 5 aesthetics shared with diagrams

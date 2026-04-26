@@ -58,7 +58,7 @@ Galleries link `gallery-base.{css,js}` rather than inline (galleries can be many
    - audio → `audio-gallery`
    - multi-dataset → `multi-mode-gallery`
 3. Inject items + DIMS schema into template.
-4. Pick aesthetic (reuse `lumen-diagram/templates/aesthetics/*.css`; default `editorial.css` for galleries).
+4. Pick aesthetic (reuse `_shared/aesthetics/*.css`; default `editorial.css` for galleries).
 5. Write file.
 
 ## Fixtures
@@ -97,4 +97,4 @@ Not wired through `lumen-generate_visual` PI tool. Galleries depend on user-prov
 
 - [`Roxabi/roxabi-forge/plugins/forge/references/gallery-templates/`](https://github.com/Roxabi/roxabi-forge) (MIT) — 5 templates + `gallery-base.css` + `gallery-base.js` + per-template walkthrough README
 - [`Roxabi/roxabi-forge/plugins/forge/skills/forge-gallery/fixtures/`](https://github.com/Roxabi/roxabi-forge) (MIT) — 4 input-shape fixtures
-- `lumen-diagram/templates/aesthetics/` (this package) — 5 aesthetics shared with diagrams + guides
+- `skills/_shared/aesthetics/` (this package) — 5 aesthetics shared with diagrams + guides
