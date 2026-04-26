@@ -1,7 +1,7 @@
 ---
 name: lumen-diagram
 description: Generate single-file HTML diagram (architecture, flow, sequence, ER, state, gantt, network, dependency graph, AI pattern). Invoke when user asks to draw, diagram, visualize, sketch architecture, show flow, or describes system / pipeline / topology to illustrate.
-version: 0.1.0
+version: 0.1.2 # x-release-please-version
 ---
 
 # lumen-diagram
@@ -18,7 +18,7 @@ Triggers: `draw`, `diagram`, `visualize`, `sketch`, `map`, `show the flow`, `arc
 2. **Set node coordinates** in 0–100 space via CSS custom props on each node: `style="--x:20; --y:30; --w:18; --h:12"`. CSS does the layout math; LLM does not.
 3. **Pick node shape** per semantic class (table 2 below).
 4. **Pick edge class** per semantic role (table 3 below).
-5. **Inline `templates/fgraph-base.css`** into a `<style>` block. Keep the file single, offline-safe.
+5. **Inline only the CSS subset your topology uses** into a `<style>` block — never the whole 1300-line `templates/fgraph-base.css`. Each `examples/*.html` shows the right subset for its topology (typically 60–120 lines: container + chosen primitives + arrow markers). Inlining the full base would 10× the output size for no semantic gain. Keep the file single, offline-safe.
 
 ## Topology selection (1)
 
@@ -73,11 +73,11 @@ For RAG / Mem0 / Multi-Agent / Tool-Call / Agent-Memory: compose existing topolo
 - R4 arrows straight (no diagonal through nodes)
 - R5 edge color matches semantic class
 - R6 solid component fills cover edges (z-order: arrows first in DOM, nodes last)
-- R7 ≤20-char labels; longer goes in `title` tooltip
+- R7 ≤20-char node labels; longer goes in `title` tooltip. Sequence message labels (`.fg-seq-msg-lbl`) are exempt — call signatures and return shapes commonly run 30–50 chars and read fine on the wire.
 
 ## Output
 
-Single HTML file. `templates/fgraph-base.css` inlined in `<style>`. SVG inlined. No external deps. Opens via `file://`.
+Single HTML file. The CSS subset of `templates/fgraph-base.css` your topology uses is inlined in `<style>` (see Pipeline step 5). SVG inlined. No external deps. Opens via `file://`.
 
 ## Aesthetics
 

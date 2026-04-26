@@ -1,7 +1,7 @@
 ---
 name: lumen-guide
 description: Generate multi-tab HTML document (shell + CSS + JS + per-tab fragments) for guides, architecture overviews, comparison matrices, recaps, roadmaps. Single-file or split-file mode. Invoke when user asks for guide, doc, architecture overview, multi-tab doc, comparison, or content with multiple sections that should be tabbed.
-version: 0.1.0
+version: 0.1.2 # x-release-please-version
 ---
 
 # lumen-guide
@@ -30,7 +30,7 @@ Triggers: `write a guide`, `create a guide`, `multi-tab doc`, `architecture doc`
 
 4. **Deliver** — pick output mode:
    - **Single-file** (`shells/single.html`): all CSS/JS inlined in `<style>` and `<script>`. Best for share-by-attachment.
-   - **Split-file** (`shells/split.html`): shell links `components/components.css` + `tab-loader.js`. Best for in-repo docs that get edited often.
+   - **Split-file** (`shells/split.html`): shell inlines `theme-toggle.js` + `tab-loader.js`, links a single `css/{SLUG}.css`, and lazy-fetches per-tab fragments from `tabs/{SLUG}/tab-{ID}.html`. Full file layout + placeholder substitution rules in `references/phase-3-generate.md` — read it before authoring split-file output.
 
 ## Component library (`components/components.css`)
 
@@ -92,7 +92,7 @@ See `references/anti-patterns.md`. Highlights: never `display: flex` on `<li>`, 
 ## Output
 
 - Single-file mode: one `.html` written to `~/.agent/lumen/<slug>.html`. Open in browser.
-- Split-file mode: directory `~/.agent/lumen/<slug>/` with `index.html` + `<slug>.css` + `<slug>.js` + per-tab `tab-N.html`.
+- Split-file mode: directory `~/.agent/lumen/<slug>/` with `<slug>.html` (shell, JS inlined) + `css/<slug>.css` + `tabs/<slug>/tab-<id>.html` (one fragment per tab, lazy-fetched). See `references/phase-3-generate.md`.
 
 ## PI extension route (v0.1.x)
 

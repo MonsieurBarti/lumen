@@ -8,19 +8,12 @@
       "type": "string",
       "enum": [
         "dark-professional",
-        "hand-drawn",
-        "light-corporate",
-        "cyberpunk-neon",
         "blueprint",
-        "warm-cozy",
-        "minimalist",
-        "terminal-retro",
-        "pastel-dream",
-        "notion",
-        "material",
-        "glassmorphism"
+        "editorial",
+        "terminal",
+        "lyra"
       ],
-      "description": "Visual style preset names."
+      "description": "Visual style preset name. Matches the 5 fgraph aesthetics in lumen-diagram/templates/aesthetics/ so charts embedded in diagrams/guides/recaps stay consistent. Additional palettes (hand-drawn, glassmorphism, cyberpunk-neon, light-corporate, warm-cozy, minimalist, pastel-dream, notion, material) were inherited from gmdiagram's enum but have no renderer in lumen v0.1.x — land in v0.2 alongside _shared/aesthetics/."
     },
     "formatEnum": {
       "type": "string",

@@ -33,7 +33,7 @@ Single-file HTML/SVG outputs that work offline. Bundles and unifies capabilities
 ## ✨ Features
 
 - **🎨 8 skills** — diagram, chart, mermaid, slides, gallery, guide, recap, fact-check
-- **🖌️ 15 aesthetics** — dark-professional, blueprint, editorial, terminal, glassmorphism, hand-drawn, and more
+- **🖌️ 13 aesthetics** — 8 mermaid palettes (`blueprint`, `editorial`, `paper`, `terminal`, `dracula`, `nord`, `solarized`, `gruvbox`) + 5 fgraph aesthetics (`dark-professional`, `blueprint`, `editorial`, `terminal`, `lyra`); `glassmorphism` / `cyberpunk-neon` / `hand-drawn` land in v0.2
 - **📄 Single-file HTML** — embedded CSS/JS/SVG, opens in any browser, works offline (`file://`)
 - **🤖 Dual distribution** — Claude Code plugin AND PI extension from the same repo
 - **🪜 Frame → Structure → Style → Deliver** — disciplined methodology baked into every skill
@@ -67,8 +67,10 @@ pi install git:github.com/MonsieurBarti/lumen
 **Pin a version:**
 
 ```bash
-pi install npm:@the-forge-flow/lumen@0.1.0
+pi install npm:@the-forge-flow/lumen@<version>
 ```
+
+Replace `<version>` with the [latest release](https://www.npmjs.com/package/@the-forge-flow/lumen) or any tag from the [CHANGELOG](./CHANGELOG.md).
 
 Then reload PI with `/reload`.
 
@@ -103,7 +105,7 @@ Skills are auto-routed by trigger phrases. Output is a single HTML file you can 
 
 ## 🪶 Status
 
-`v0.1.0` — scaffolding complete. Each skill has a production-ready `SKILL.md`; shared assets (`skills/_shared/`) and TypeScript renderers land in `v0.2.0`. See [PLAN.md](./PLAN.md) for the integration plan.
+<!-- x-release-please-start-version -->`v0.1.2`<!-- x-release-please-end --> — 8 skills shipped with production-ready `SKILL.md`, examples, and templates. PI tool route currently wires only mermaid types; `architecture` ships as a library export (`generateArchitectureTemplate`). Shared assets (`skills/_shared/`) and the `type:"diagram"` / `type:"chart"` deterministic PI tool routes land in `v0.2.0`.
 
 ## 🧪 Development
 

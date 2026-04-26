@@ -1,7 +1,7 @@
 ---
 name: lumen-gallery
 description: Generate image or audio comparison gallery as HTML with pivot grouping, dynamic filters, search, lightbox, starring. 5 templates (pivot matrix, simple batches, comparison cards, audio players, multi-mode). Invoke when user asks to compare visually, showcase, gallery, side by side, show iterations, multi-mode gallery, audio comparison.
-version: 0.1.0
+version: 0.1.2 # x-release-please-version
 ---
 
 # lumen-gallery
