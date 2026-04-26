@@ -8,6 +8,8 @@ version: 0.1.3 # x-release-please-version
 
 Multi-tab HTML guide. Two output modes: single-file (everything inlined) or split-file (shell + per-tab fragments + linked CSS/JS).
 
+📄 Rendered example: [`docs/examples/guide.html`](../../docs/examples/guide.html)
+
 ## When to invoke
 
 Triggers: `write a guide`, `create a guide`, `multi-tab doc`, `architecture doc`, `create a doc`, `make a recap`, `illustrate architecture`, `comparison matrix`, `roadmap`, `explain visually`, `document with forge`.

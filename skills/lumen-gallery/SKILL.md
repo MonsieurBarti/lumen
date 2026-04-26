@@ -8,6 +8,8 @@ version: 0.1.3 # x-release-please-version
 
 Multi-mode gallery. Auto-discovered filters. Lightbox + starring + lazy load + search.
 
+📄 Rendered example: [`docs/examples/gallery.html`](../../docs/examples/gallery.html)
+
 ## When to invoke
 
 Triggers: `gallery`, `showcase`, `compare visually`, `sprite gallery`, `side by side`, `create a gallery`, `show iterations`, `multi-mode gallery`, `audio comparison`, `voice cloning A/B`.

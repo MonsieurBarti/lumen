@@ -8,6 +8,8 @@ version: 0.1.3 # x-release-please-version
 
 Single-file scroll-snap deck. Inlined CSS + JS. Offline-playable. Magazine-quality typography, compositional variety, narrative arc.
 
+📄 Rendered example: [`docs/examples/slides.html`](../../docs/examples/slides.html)
+
 ## When to invoke
 
 **Slides are always opt-in.** Only generate when this skill is explicitly invoked or the user asks for a slide deck.

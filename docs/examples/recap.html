@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumen — recap (2 weeks)</title>
+<meta name="diagram:title"     content="Lumen — recap (2 weeks)">
+<meta name="diagram:date"      content="2026-04-26">
+<meta name="diagram:category"  content="example">
+<meta name="diagram:cat-label" content="Lumen example">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1a1614;
+  --surface: #221c19;
+  --surface2: #2a2320;
+  --surface3: #332a26;
+  --border: rgba(245, 220, 180, 0.10);
+  --border-bright: rgba(245, 220, 180, 0.20);
+  --text: #f0e6d6;
+  --text-muted: #c4b599;
+  --text-dim: #8a7d68;
+  --accent: #e8a030;
+  --accent-bright: #f7c060;
+  --accent-dim: rgba(232, 160, 48, 0.16);
+  --good: #4ade80;     --good-dim: rgba(74,222,128,0.14);
+  --info: #60a5fa;     --info-dim: rgba(96,165,250,0.14);
+  --warn: #f59e0b;     --warn-dim: rgba(245,158,11,0.14);
+  --bad: #f87171;      --bad-dim: rgba(248,113,113,0.14);
+  --arch-pi:    #60a5fa;
+  --arch-cc:    #c084fc;
+  --arch-tmpl:  #4ade80;
+  --arch-share: #e8a030;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; min-width: 0; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-body); background: var(--bg); color: var(--text);
+  line-height: 1.55; min-height: 100vh; overflow-wrap: break-word;
+}
+.shell { max-width: 1100px; margin: 0 auto; padding: 32px 28px 80px; }
+
+/* ── Header ── */
+.header { padding-bottom: 22px; border-bottom: 1px solid var(--border); margin-bottom: 36px; }
+.header__eyebrow {
+  font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent);
+  letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 10px;
+}
+.header__title {
+  font-family: var(--font-display); font-size: 2.4rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 12px;
+}
+.header__title em { font-style: italic; color: var(--accent); }
+.header__sub {
+  font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-dim);
+}
+
+/* ── Section heading ── */
+.s-head {
+  font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
+  color: var(--text-dim); letter-spacing: 0.14em; text-transform: uppercase;
+  margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.s-head__count {
+  color: var(--accent); font-weight: 700; font-size: 0.65rem;
+}
+
+/* ── Identity (hero) ── */
+.identity {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  border: 1px solid var(--border); border-left: 3px solid var(--accent);
+  padding: 28px 32px; border-radius: 4px;
+}
+.identity__pitch {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+  line-height: 1.3; letter-spacing: -0.01em; margin-bottom: 14px;
+}
+.identity__pitch em { color: var(--accent-bright); font-style: italic; }
+.identity__meta {
+  display: flex; flex-wrap: wrap; gap: 18px;
+  font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-dim);
+}
+.identity__meta span strong { color: var(--accent); font-weight: 600; }
+
+/* ── Architecture diagram ── */
+.arch-wrap {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface2) 100%);
+  border: 1px solid var(--border-bright); border-radius: 6px;
+  padding: 32px 28px; margin: 8px 0;
+}
+.arch-wrap svg { display: block; width: 100%; height: auto; max-width: 1000px; margin: 0 auto; }
+
+/* ── KPI grid ── */
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+.kpi {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 22px 24px; border-radius: 4px;
+}
+.kpi--good { border-left: 3px solid var(--good); }
+.kpi--info { border-left: 3px solid var(--info); }
+.kpi--warn { border-left: 3px solid var(--warn); }
+.kpi--bad  { border-left: 3px solid var(--bad);  }
+.kpi__num {
+  font-family: var(--font-display); font-size: 2.6rem; font-weight: 700;
+  line-height: 1; letter-spacing: -0.02em; margin-bottom: 8px;
+}
+.kpi--good .kpi__num { color: var(--good); }
+.kpi--info .kpi__num { color: var(--info); }
+.kpi--warn .kpi__num { color: var(--warn); }
+.kpi--bad  .kpi__num { color: var(--bad);  }
+.kpi__lbl {
+  font-family: var(--font-mono); font-size: 0.66rem; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;
+}
+.kpi__sub { font-size: 0.78rem; color: var(--text-muted); }
+
+/* ── Activity narrative ── */
+.activity {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 24px 28px; border-radius: 4px;
+}
+.activity p { margin-bottom: 12px; color: var(--text-muted); }
+.activity p:last-child { margin-bottom: 0; }
+.activity strong { color: var(--text); font-weight: 600; }
+.activity .pr {
+  font-family: var(--font-mono); font-size: 0.92em; color: var(--accent-bright);
+  background: var(--surface3); padding: 1px 7px; border-radius: 3px;
+  font-weight: 500;
+}
+
+/* ── Decision log ── */
+.dec {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 3px solid var(--info);
+  padding: 18px 22px; border-radius: 4px; margin-bottom: 12px;
+}
+.dec__head {
+  font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+  color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em;
+}
+.dec__body {
+  font-size: 0.88rem; color: var(--text-muted); line-height: 1.55;
+}
+.dec__row {
+  display: grid; grid-template-columns: 90px 1fr; gap: 10px;
+  margin-top: 8px; font-size: 0.84rem;
+}
+.dec__lbl {
+  font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600;
+  color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase;
+  padding-top: 2px;
+}
+.dec__val { color: var(--text-muted); }
+
+/* ── Mental model list ── */
+.mm {
+  display: grid; grid-template-columns: 1fr; gap: 0;
+  border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+}
+.mm__item {
+  padding: 14px 22px; border-bottom: 1px solid var(--border);
+  display: grid; grid-template-columns: 24px 1fr; gap: 14px;
+  align-items: start;
+}
+.mm__item:last-child { border-bottom: none; }
+.mm__num {
+  font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.04em; padding-top: 3px;
+}
+.mm__text { font-size: 0.86rem; color: var(--text-muted); line-height: 1.55; }
+.mm__text strong { color: var(--text); font-weight: 600; }
+
+/* ── Debt hotspots ── */
+.debt {
+  background: var(--surface); padding: 18px 22px;
+  border: 1px solid var(--border); border-radius: 4px; margin-bottom: 12px;
+  display: grid; grid-template-columns: auto 1fr; gap: 16px;
+}
+.debt--high {   border-left: 3px solid var(--bad);  }
+.debt--medium { border-left: 3px solid var(--warn); }
+.debt--low {    border-left: 3px solid var(--info); }
+.debt__sev {
+  font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700;
+  padding: 4px 8px; border-radius: 3px; letter-spacing: 0.1em;
+  text-transform: uppercase; align-self: flex-start;
+}
+.debt--high   .debt__sev { background: var(--bad-dim);  color: var(--bad);  }
+.debt--medium .debt__sev { background: var(--warn-dim); color: var(--warn); }
+.debt--low    .debt__sev { background: var(--info-dim); color: var(--info); }
+.debt__title {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 600;
+  color: var(--text); margin-bottom: 6px;
+}
+.debt__body { font-size: 0.84rem; color: var(--text-muted); line-height: 1.55; }
+.debt__suggest {
+  margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border);
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-bright);
+}
+
+/* ── Next steps ── */
+.next {
+  display: grid; grid-template-columns: 1fr; gap: 8px;
+}
+.next__item {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 14px 20px; border-radius: 4px;
+  display: grid; grid-template-columns: 24px 1fr auto; gap: 14px;
+  align-items: center;
+}
+.next__arrow { color: var(--accent); font-family: var(--font-mono); font-weight: 700; }
+.next__text { font-size: 0.86rem; color: var(--text-muted); }
+.next__text strong { color: var(--text); font-weight: 600; }
+.next__size {
+  font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim);
+  background: var(--surface3); padding: 3px 8px; border-radius: 3px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+code {
+  font-family: var(--font-mono); font-size: 0.84em;
+  background: var(--surface3); padding: 1px 6px; border-radius: 3px;
+  color: var(--accent-bright);
+}
+
+@media (max-width: 640px) {
+  .shell { padding: 22px 16px 60px; }
+  .header__title { font-size: 1.7rem; }
+  .identity { padding: 20px 22px; }
+  .identity__pitch { font-size: 1.15rem; }
+  .kpi__num { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<header class="header">
+  <div class="header__eyebrow">Project recap · last 14 days</div>
+  <h1 class="header__title">Lumen — <em>two weeks in</em></h1>
+  <div class="header__sub">@the-forge-flow/lumen · v0.1.3 · 2026-04-26 · main is clean</div>
+</header>
+
+<!-- ════════ 1 · Identity ════════ -->
+<div class="s-head">Identity <span class="s-head__count">v0.1.3</span></div>
+<div class="identity">
+  <p class="identity__pitch">A skill bundle that <em>ships the renderer next to the recipe</em> — eight skills for generating single-file HTML visuals, three of them wired through a deterministic PI tool.</p>
+  <div class="identity__meta">
+    <span><strong>8</strong> skills</span>
+    <span><strong>3</strong> wired routes</span>
+    <span><strong>10</strong> aesthetics</span>
+    <span><strong>9</strong> test files · <strong>183</strong> tests</span>
+    <span><strong>2</strong> distribution channels (CC plugin · PI extension)</span>
+  </div>
+</div>
+
+<!-- ════════ 2 · Architecture snapshot ════════ -->
+<div class="s-head">Architecture snapshot</div>
+<div class="arch-wrap">
+  <svg viewBox="0 0 980 420" xmlns="http://www.w3.org/2000/svg" style="font-family:var(--font-mono);">
+    <defs>
+      <marker id="arrR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0 0 L10 5 L0 10 z" fill="#e8a030"/>
+      </marker>
+    </defs>
+
+    <!-- Top: PI tool -->
+    <g font-size="12" fill="#f0e6d6" text-anchor="middle">
+      <rect x="370" y="20" width="240" height="56" rx="4" fill="#1d2538" stroke="#60a5fa" stroke-width="1.5"/>
+      <text x="490" y="44" font-weight="600" fill="#60a5fa">PI tool</text>
+      <text x="490" y="62" font-size="10" fill="#9ca3af">lumen-generate_visual</text>
+    </g>
+
+    <!-- Router -->
+    <g font-size="12" fill="#f0e6d6" text-anchor="middle">
+      <rect x="370" y="120" width="240" height="56" rx="4" fill="#221c19" stroke="#e8a030" stroke-width="1.5"/>
+      <text x="490" y="144" font-weight="600">router</text>
+      <text x="490" y="162" font-size="10" fill="#c4b599">src/index.ts · generateVisual()</text>
+    </g>
+    <line x1="490" y1="76" x2="490" y2="118" stroke="#e8a030" stroke-width="1.5" marker-end="url(#arrR)"/>
+
+    <!-- Three wired renderers -->
+    <g font-size="11" fill="#f0e6d6" text-anchor="middle">
+      <rect x="60"  y="220" width="200" height="60" rx="4" fill="#1f2818" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="160" y="245" font-weight="600" fill="#4ade80">renderMermaid</text>
+      <text x="160" y="262" font-size="10" fill="#9ca3af">5 mermaid types</text>
+
+      <rect x="290" y="220" width="200" height="60" rx="4" fill="#1f2818" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="390" y="245" font-weight="600" fill="#4ade80">renderDiagram</text>
+      <text x="390" y="262" font-size="10" fill="#9ca3af">4 fgraph topologies</text>
+
+      <rect x="520" y="220" width="200" height="60" rx="4" fill="#1f2818" stroke="#4ade80" stroke-width="1.5"/>
+      <text x="620" y="245" font-weight="600" fill="#4ade80">renderChart</text>
+      <text x="620" y="262" font-size="10" fill="#9ca3af">4 chart types</text>
+
+      <rect x="750" y="220" width="180" height="60" rx="4" fill="#2a1d2e" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="840" y="245" font-weight="600" fill="#c084fc">5 LLM-authored</text>
+      <text x="840" y="262" font-size="10" fill="#9ca3af">slides · gallery · guide …</text>
+    </g>
+    <g stroke="#e8a030" stroke-width="1.5" fill="none" marker-end="url(#arrR)">
+      <line x1="420" y1="176" x2="200" y2="218"/>
+      <line x1="490" y1="176" x2="390" y2="218"/>
+      <line x1="560" y1="176" x2="620" y2="218"/>
+    </g>
+
+    <!-- Shared aesthetics -->
+    <g font-size="11" fill="#f0e6d6" text-anchor="middle">
+      <rect x="290" y="340" width="430" height="56" rx="4" fill="#2a2320" stroke="#e8a030" stroke-width="1.5"/>
+      <text x="505" y="364" font-weight="600" fill="#e8a030">skills/_shared/aesthetics/</text>
+      <text x="505" y="382" font-size="10" fill="#c4b599">10 palettes · consumed by every visual skill</text>
+    </g>
+    <g stroke="#e8a030" stroke-width="1" fill="none" stroke-dasharray="3 3" opacity="0.55">
+      <line x1="160" y1="280" x2="380" y2="338"/>
+      <line x1="390" y1="280" x2="450" y2="338"/>
+      <line x1="620" y1="280" x2="540" y2="338"/>
+      <line x1="840" y1="280" x2="650" y2="338"/>
+    </g>
+  </svg>
+</div>
+
+<!-- ════════ 3 · State ════════ -->
+<div class="s-head">State KPIs</div>
+<div class="kpi-grid">
+  <div class="kpi kpi--good">
+    <div class="kpi__num">8 / 8</div>
+    <div class="kpi__lbl">Skills present</div>
+    <div class="kpi__sub">all SKILL.md, all in CI loop</div>
+  </div>
+  <div class="kpi kpi--info">
+    <div class="kpi__num">3 / 8</div>
+    <div class="kpi__lbl">Wired through PI</div>
+    <div class="kpi__sub">mermaid · diagram · chart</div>
+  </div>
+  <div class="kpi kpi--good">
+    <div class="kpi__num">183</div>
+    <div class="kpi__lbl">Tests passing</div>
+    <div class="kpi__sub">9 spec files · 0 failing</div>
+  </div>
+  <div class="kpi kpi--info">
+    <div class="kpi__num">11</div>
+    <div class="kpi__lbl">PRs merged total</div>
+    <div class="kpi__sub">5 in this 14-day window · 1 release PR open (#11)</div>
+  </div>
+</div>
+
+<!-- ════════ 4 · Recent activity ════════ -->
+<div class="s-head">Recent activity <span class="s-head__count">5 PRs</span></div>
+<div class="activity">
+  <p>The window opened with the v0.1 baseline already shipped — mermaid wired and seven LLM-authored skills present. Activity since has been a focused push on the <strong>v0.2 deterministic-renderer track</strong>: two new wired routes plus one structural cleanup, then a forced peer-dep migration.</p>
+  <p><span class="pr">#7</span> wired the diagram route — four fgraph topologies (sequence, layered, linear-flow, radial-hub) shipped behind <code>type:"diagram"</code>. The renderer takes a structured object and emits HTML with computed coordinates, so the LLM no longer has to draw boxes itself.</p>
+  <p><span class="pr">#9</span> promoted the aesthetic CSS files from per-skill copies into <code>skills/_shared/aesthetics/</code>. Five palettes (blueprint, editorial, terminal, dark-professional, lyra) — one source of truth, consumed by every visual skill. CI's skill-presence loop was taught to skip <code>_shared</code>.</p>
+  <p><span class="pr">#10</span> wired the chart route — bar (grouped/stacked), pie (with donut), line (linear/smooth), table (with verdict pills). The biggest PR of the window at <strong>2,658 lines added across 17 files</strong>, including a Nice-Numbers utility for axis ticks and aesthetic-loader infrastructure.</p>
+  <p><span class="pr">#12</span> bumped <code>@mariozechner/pi-*</code> from <code>^0.66</code> to <code>^0.70.2</code>. The interesting half wasn't the version bump — it was that pi 0.70 dropped <code>@sinclair/typebox</code> 0.34 in favor of the unscoped <code>typebox</code> 1.x package (rename plus major bump). Three lines changed in our code.</p>
+</div>
+
+<!-- ════════ 5 · Decision log ════════ -->
+<div class="s-head">Decision log <span class="s-head__count">4 entries</span></div>
+
+<div class="dec">
+  <div class="dec__head">Wire chart as a deterministic renderer rather than another LLM-authored skill</div>
+  <div class="dec__body">Charts have well-defined geometry — bars, slices, lines, axes. Spending tokens to redraw the same axis math every call is waste. A renderer takes a structured spec and emits the same HTML deterministically.</div>
+  <div class="dec__row"><span class="dec__lbl">Considered</span><span class="dec__val">LLM-authored chart skill (rejected: non-reproducible, expensive); leaning on Chart.js as a runtime dep (rejected: would break offline <code>file://</code> playback).</span></div>
+  <div class="dec__row"><span class="dec__lbl">PR</span><span class="dec__val"><span class="pr">#10</span></span></div>
+</div>
+
+<div class="dec">
+  <div class="dec__head">One PI tool, many <code>type</code>s — not one tool per visual kind</div>
+  <div class="dec__body">Earlier sketches had separate tools per visual. That bloats PI's tool surface and forces every new visual type to ship as a new tool. A single <code>lumen-generate_visual</code> with a discriminator extends by adding an enum value and a renderer.</div>
+  <div class="dec__row"><span class="dec__lbl">Considered</span><span class="dec__val">One tool per type (rejected: surface area + churn); a single <code>generate</code> with mode-detection from content shape (rejected: ambiguous, harder to validate).</span></div>
+  <div class="dec__row"><span class="dec__lbl">Source</span><span class="dec__val">Established at v0.1 lift; reaffirmed in <span class="pr">#7</span> and <span class="pr">#10</span>.</span></div>
+</div>
+
+<div class="dec">
+  <div class="dec__head">Promote aesthetics out of per-skill templates</div>
+  <div class="dec__body">v0.1.x kept palette CSS inside each skill's <code>templates/</code> dir. Five copies of the editorial palette drifted within a release cycle. Moving them to <code>skills/_shared/aesthetics/</code> gives one source of truth.</div>
+  <div class="dec__row"><span class="dec__lbl">Considered</span><span class="dec__val">Inline tokens in each renderer (rejected: same drift); a single mega-stylesheet (rejected: makes per-aesthetic A/B harder).</span></div>
+  <div class="dec__row"><span class="dec__lbl">PR</span><span class="dec__val"><span class="pr">#9</span></span></div>
+</div>
+
+<div class="dec">
+  <div class="dec__head">Follow upstream from <code>@sinclair/typebox</code> to unscoped <code>typebox</code></div>
+  <div class="dec__body">Not lumen's choice. pi-coding-agent 0.70 dropped <code>@sinclair/typebox</code> 0.34 and adopted the unscoped <code>typebox</code> 1.x package — same library, republished under a new name with a major bump. Bumping pi peers required matching.</div>
+  <div class="dec__row"><span class="dec__lbl">Considered</span><span class="dec__val">Pinning to pi 0.66 indefinitely (rejected: would diverge from active pi development).</span></div>
+  <div class="dec__row"><span class="dec__lbl">PR</span><span class="dec__val"><span class="pr">#12</span></span></div>
+</div>
+
+<!-- ════════ 6 · Mental model essentials ════════ -->
+<div class="s-head">Mental model essentials <span class="s-head__count">7 invariants</span></div>
+<div class="mm">
+  <div class="mm__item"><div class="mm__num">01</div><div class="mm__text"><strong>Single-file output</strong>. Every skill emits one self-contained HTML. No CDN deps, no external assets at render time — the file plays offline via <code>file://</code>.</div></div>
+  <div class="mm__item"><div class="mm__num">02</div><div class="mm__text"><strong>Deterministic vs. LLM-authored is a per-skill choice.</strong> Skills with well-defined geometry get a renderer (mermaid, diagram, chart). Skills that need compositional judgment stay LLM-authored (slides, guides, recaps, gallery, fact-check).</div></div>
+  <div class="mm__item"><div class="mm__num">03</div><div class="mm__text"><strong>Aesthetics live in <code>skills/_shared/aesthetics/</code></strong>. Never re-author palette CSS inside a skill — import from there.</div></div>
+  <div class="mm__item"><div class="mm__num">04</div><div class="mm__text"><strong>Versioning is release-please-driven.</strong> Never edit version strings by hand — wire files into <code>release-please-config.json</code> and let CI bump them via <code>x-release-please-version</code> markers.</div></div>
+  <div class="mm__item"><div class="mm__num">05</div><div class="mm__text"><strong>Tests run with <code>bun run test</code></strong> — never <code>bun test</code> (bun's built-in runner ignores vitest config and picks up <code>upstreams/</code>).</div></div>
+  <div class="mm__item"><div class="mm__num">06</div><div class="mm__text"><strong>The same <code>skills/</code> tree ships to two channels.</strong> CC consumes it via the plugin manifest; PI consumes it via <code>dist/skills/</code> after the <code>prebuild</code> script copies it across.</div></div>
+  <div class="mm__item"><div class="mm__num">07</div><div class="mm__text"><strong>Peer deps use <code>"*"</code></strong>. We're a plugin/extension — the host pins versions. We pin in devDeps for our own builds.</div></div>
+</div>
+
+<!-- ════════ 7 · Cognitive debt hotspots ════════ -->
+<div class="s-head">Cognitive debt hotspots <span class="s-head__count">3 active</span></div>
+
+<div class="debt debt--medium">
+  <span class="debt__sev">medium</span>
+  <div>
+    <div class="debt__title">Five LLM-authored skills lack rendered examples</div>
+    <div class="debt__body">slides, gallery, guide, recap, fact-check — a user (or an agent) has to read SKILL.md and infer what the output looks like. The faster path is "open this file, see what you'd get."</div>
+    <div class="debt__suggest">→ being addressed in the current branch (<code>docs/rendered-examples</code>) — bundles all 5 in one PR.</div>
+  </div>
+</div>
+
+<div class="debt debt--medium">
+  <span class="debt__sev">medium</span>
+  <div>
+    <div class="debt__title">No PNG / PDF export from the visual skills</div>
+    <div class="debt__body">Every output is HTML. Sharing a chart in a Slack thread or a slide in a PDF deck requires a screenshot. Rendering server-side via <code>@resvg/resvg-js</code> would close the gap, but adds a native dep + bundle weight.</div>
+    <div class="debt__suggest">→ tracked as a follow-up PR; tradeoff worth deciding in isolation.</div>
+  </div>
+</div>
+
+<div class="debt debt--low">
+  <span class="debt__sev">low</span>
+  <div>
+    <div class="debt__title">Vendored <code>upstreams/</code> snapshots aren't refreshed on a schedule</div>
+    <div class="debt__body">The <code>upstreams/</code> tree pins snapshots of visual-explainer and roxabi-forge at lift time. Drift is invisible until somebody compares manually.</div>
+    <div class="debt__suggest">→ acceptable for now (skills carry their own copies and <code>NOTICE.md</code>); revisit if upstreams add features lumen wants to lift.</div>
+  </div>
+</div>
+
+<!-- ════════ 8 · Next steps ════════ -->
+<div class="s-head">Next steps <span class="s-head__count">3 queued</span></div>
+<div class="next">
+  <div class="next__item">
+    <span class="next__arrow">→</span>
+    <span class="next__text"><strong>Ship the rendered-examples PR</strong> — current branch, bundles five examples + cross-links from each SKILL.md and the root README.</span>
+    <span class="next__size">in flight</span>
+  </div>
+  <div class="next__item">
+    <span class="next__arrow">→</span>
+    <span class="next__text"><strong>PNG / PDF export via <code>@resvg/resvg-js</code></strong> — own PR; deps + bundle-weight tradeoff worth reviewing in isolation.</span>
+    <span class="next__size">queued</span>
+  </div>
+  <div class="next__item">
+    <span class="next__arrow">→</span>
+    <span class="next__text"><strong>Loosen <code>pi-*</code> + <code>typebox</code> devDeps to <code>"*"</code></strong> — small follow-up to PR #12 to mirror the peerDep constraint.</span>
+    <span class="next__size">rolled in</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
