@@ -34,8 +34,10 @@ jobs:
       - name: Test
         run: bun run test
 
-      - name: Coverage (main only)
-        if: github.ref == 'refs/heads/main'
+      # Coverage runs on every PR (not just main) so threshold regressions
+      # surface before merge. The artifact upload stays main-only — we don't
+      # need to retain coverage reports for transient PR builds.
+      - name: Coverage
         run: bun run test:coverage
 
       - name: Upload coverage
