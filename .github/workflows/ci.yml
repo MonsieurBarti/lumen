@@ -69,7 +69,12 @@ jobs:
 
       - name: Verify skills shipped
         run: |
+          # skills/_shared/ holds cross-cutting assets (no SKILL.md by design);
+          # skip it. Every other skills/<name>/ MUST ship a SKILL.md.
           for d in skills/*/; do
             name=$(basename "$d")
+            if [ "$name" = "_shared" ]; then continue; fi
             test -f "dist/skills/$name/SKILL.md" || { echo "Missing dist/skills/$name/SKILL.md"; exit 1; }
           done
+          # And the shared aesthetics dir must be in the dist mirror.
+          test -d "dist/skills/_shared/aesthetics" || { echo "Missing dist/skills/_shared/aesthetics/"; exit 1; }
