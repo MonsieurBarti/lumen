@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+build/
 
 # IDE
 .idea/
@@ -34,5 +35,10 @@ yarn-error.log*
 
 # Worktrees
 .worktrees/
+
+# tff-cc local state
+.tff-cc
 .tff-cc/
-build/
+
+# Upstream reference clones (Phase 1 only; do not commit)
+upstreams/
