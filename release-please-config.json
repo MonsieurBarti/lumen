@@ -12,7 +12,17 @@
 					"type": "json",
 					"path": ".claude-plugin/plugin.json",
 					"jsonpath": "$.version"
-				}
+				},
+				"src/index.ts",
+				"README.md",
+				"skills/lumen-diagram/SKILL.md",
+				"skills/lumen-chart/SKILL.md",
+				"skills/lumen-mermaid/SKILL.md",
+				"skills/lumen-slides/SKILL.md",
+				"skills/lumen-gallery/SKILL.md",
+				"skills/lumen-guide/SKILL.md",
+				"skills/lumen-recap/SKILL.md",
+				"skills/lumen-fact-check/SKILL.md"
 			]
 		}
 	}

@@ -23,7 +23,9 @@ import { openInBrowser } from "./utils/browser-open.js";
 import { createInitialState, writeHtmlFile } from "./utils/file-writer.js";
 import { generateDefaultFilename, sanitizeFilename, validateParams } from "./utils/validators.js";
 
-export const LUMEN_VERSION = "0.1.0";
+// x-release-please-start-version
+export const LUMEN_VERSION = "0.1.2";
+// x-release-please-end
 
 export const LUMEN_SKILLS = [
 	"lumen-diagram",

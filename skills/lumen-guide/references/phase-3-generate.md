@@ -1,22 +1,21 @@
-# Phase 3 — Generate (forge-guide)
+# Phase 3 — Generate (lumen-guide)
 
-> **Self-check:** if you are reading this file, the `Read ${CLAUDE_PLUGIN_ROOT}/skills/forge-guide/references/phase-3-generate.md` directive from `SKILL.md:Phase 3` resolved. If you are building a `forge-guide` output and have not seen this header, abort and report the unresolved path — Phase 3 body is mandatory for correct generation.
+> **Self-check:** if you are reading this file, the `Read ${CLAUDE_PLUGIN_ROOT}/skills/lumen-guide/references/phase-3-generate.md` directive from `SKILL.md:Pipeline · Deliver` resolved. If you are building a lumen-guide split-file output and have not seen this header, abort and report the unresolved path — this body is mandatory for split-file generation.
 
 **File paths:**
 ```
-{ROOT}/{SLUG}.html
-{ROOT}/css/{SLUG}.css
-{ROOT}/js/{SLUG}.js
-{ROOT}/tabs/{SLUG}/tab-{ID}.html    ← one per tab
+{ROOT}/{SLUG}.html                  ← shell (CSS linked, JS inlined)
+{ROOT}/css/{SLUG}.css               ← single linked stylesheet
+{ROOT}/tabs/{SLUG}/tab-{ID}.html    ← one fragment per tab (lazy-fetched)
 ```
 
 Read `shells/split.html` → substitute placeholders. The shell contains all structure.
 
-**Shell HTML:** diagram-meta block, Google Fonts link, CSS link, nav with tab buttons + theme toggle, panel placeholders, JS script.
+**Shell HTML:** diagram-meta block, Google Fonts link, single `css/{SLUG}.css` link, header, nav with tab buttons + theme toggle, panel placeholders, two inline `<script>` blocks (`{THEME_TOGGLE_JS}` then `{TAB_LOADER_JS}`).
 
-**CSS file:** write `{BASE_STYLES}` (concatenated base CSS) + `{AESTHETIC_STYLES}` (aesthetic CSS) + any guide-specific styles to `{ROOT}/css/{SLUG}.css`.
+**CSS file:** concatenate base sheets (`reset.css` + `typography.css` + `layout.css` + `components.css`) + chosen aesthetic from `lumen-diagram/templates/aesthetics/*.css` + any guide-specific styles. Write to `{ROOT}/css/{SLUG}.css`.
 
-**JS file:** write `{TAB_LOADER_JS}` (tab-loader.js with `{NAME}` substituted) + Mermaid init (if needed) to `{ROOT}/js/{SLUG}.js`.
+**JS:** there is no separate JS file. `theme-toggle.js` and `tab-loader.js` are inlined into the shell via the `{THEME_TOGGLE_JS}` / `{TAB_LOADER_JS}` placeholders, with `{NAME}` substituted to match `{SLUG}` (so `tab-loader.js` fetches `tabs/{SLUG}/tab-{ID}.html`). Add Mermaid init or any other one-off scripts via `{EXTRA_SCRIPTS}`.
 
 ### Header (REQUIRED for multi-tab)
 
@@ -119,15 +118,12 @@ Severity levels: `finding--high` (red), `finding--medium` (amber), `finding--low
 </div>
 ```
 
-### fgraph diagrams (multi-tab docs — Mode B)
+### fgraph diagrams (split-file mode)
 
-Multi-tab docs link `fgraph-base.css` from the shell `<head>` (per CLAUDE.md § Distribution rule, multi-tab profile) and inline only the template body per tab:
+Inline the CSS subset your topology uses (see `lumen-diagram/SKILL.md` Pipeline step 5) into the per-tab `tab-N.html` fragment, OR concatenate it into `{ROOT}/css/{SLUG}.css` once and reference shared classes per tab:
 
 ```html
-<!-- in the shell <head> -->
-<link rel="stylesheet" href="../../_shared/fgraph-base.css">
-
-<!-- in tabs/{TAB_ID}.html -->
+<!-- in tabs/tab-N.html -->
 <section class="diagram">
   <div class="fgraph-wrap">
     <svg class="fgraph-edges" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -141,7 +137,7 @@ Multi-tab docs link `fgraph-base.css` from the shell `<head>` (per CLAUDE.md § 
 
 No runtime JS. Coord space is 0..100 for both `--x/--y` node positions and SVG path coords (`viewBox="0 0 100 100" preserveAspectRatio="none"` + `vector-effect: non-scaling-stroke`).
 
-Template picker: see `${CLAUDE_PLUGIN_ROOT}/references/graph-templates/README.md` for the decision matrix (11 shapes: radial-hub, radial-ring, linear-flow, dual-cluster, layered, deployment-tiers, machine-clusters, gantt, pie, er, sequence, state, dep-graph).
+Template picker: see `lumen-diagram/SKILL.md` Topology selection table (15 shapes: `radial-hub`, `radial-ring`, `linear-flow`, `lane-swim`, `layered`, `deployment-tiers`, `machine-clusters`, `sequence`, `state`, `gantt`, `pie`, `er`, `dep-graph`, `dual-cluster`, `system-architecture`).
 
 ### Tab fragments — content patterns by tab type:
 
