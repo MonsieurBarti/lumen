@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.1...lumen-v0.1.2) (2026-04-26)
+
+
+### Bug Fixes
+
+* **plugin:** correct cc plugin manifest schema and bump to 0.1.1 ([d90fb73](https://github.com/MonsieurBarti/lumen/commit/d90fb73a61d1b7660a54a427f4804738b3f330e2))
+* **plugin:** correct cc plugin manifest schema and bump to 0.1.1 ([12553d4](https://github.com/MonsieurBarti/lumen/commit/12553d42670d6fac7456ea681f18ae6a7c54b44f))
+
 ## [0.1.1](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.0...lumen-v0.1.1) (2026-04-26)
 
 
