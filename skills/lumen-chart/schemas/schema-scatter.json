@@ -16,13 +16,13 @@
       "type": "string",
       "maxLength": 200,
       "description": "Chart title, displayed at the top of the rendered page.",
-      "examples": ["学习时间与考试成绩", "Height vs Weight Distribution"]
+      "examples": ["Study Hours vs Exam Score", "Height vs Weight Distribution"]
     },
     "subtitle": {
       "type": "string",
       "maxLength": 300,
       "description": "Optional subtitle shown below the title.",
-      "examples": ["相关性分析", "Sample size: 200"]
+      "examples": ["Correlation analysis", "Sample size: 200"]
     },
     "style": {
       "$ref": "schema-shared.json#/$defs/styleEnum",
@@ -89,7 +89,7 @@
           "$ref": "schema-shared.json#/$defs/sanitizedString",
           "maxLength": 100,
           "description": "Series name displayed in the legend.",
-          "examples": ["A班", "B班", "Group A"]
+          "examples": ["Group A", "Group B", "Group A"]
         },
         "color": {
           "type": "string",

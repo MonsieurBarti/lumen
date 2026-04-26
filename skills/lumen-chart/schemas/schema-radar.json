@@ -16,13 +16,13 @@
       "$ref": "schema-shared.json#/$defs/sanitizedString",
       "maxLength": 200,
       "description": "Chart title, displayed at the top of the rendered page.",
-      "examples": ["Team Skills Comparison", "团队技能对比"]
+      "examples": ["Team Skills Comparison", "Team Skills Comparison (CN)"]
     },
     "subtitle": {
       "$ref": "schema-shared.json#/$defs/sanitizedString",
       "maxLength": 300,
       "description": "Optional subtitle shown below the title.",
-      "examples": ["满分 10 分", "Score out of 10"]
+      "examples": ["Out of 10", "Score out of 10"]
     },
     "style": {
       "$ref": "schema-shared.json#/$defs/styleEnum",

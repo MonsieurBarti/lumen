@@ -16,13 +16,13 @@
       "type": "string",
       "maxLength": 200,
       "description": "Chart title, displayed at the top of the rendered page.",
-      "examples": ["浏览器市场份额", "Revenue by Category"]
+      "examples": ["Browser Market Share", "Revenue by Category"]
     },
     "subtitle": {
       "type": "string",
       "maxLength": 300,
       "description": "Optional subtitle shown below the title, typically describing the scope or time period.",
-      "examples": ["2025年全球数据", "Q1-Q4 Breakdown"]
+      "examples": ["2025 global data", "Q1-Q4 Breakdown"]
     },
     "style": {
       "$ref": "schema-shared.json#/$defs/styleEnum",
@@ -42,7 +42,7 @@
     },
     "data": {
       "type": "array",
-      "description": "Data items. Each has a label, numeric value, and optional color override. 2-12 items allowed; for more than 12, merge smallest items into '其他' or 'Other'.",
+      "description": "Data items. Each has a label, numeric value, and optional color override. 2-12 items allowed; for more than 12, merge smallest items into 'Other'.",
       "items": {
         "type": "object",
         "required": ["label", "value"],
@@ -84,8 +84,8 @@
         "centerText": {
           "$ref": "schema-shared.json#/$defs/sanitizedString",
           "maxLength": 50,
-          "description": "Text displayed in the center of the donut (e.g., '总计', 'Total').",
-          "examples": ["总计", "Total"]
+          "description": "Text displayed in the center of the donut (e.g., 'Total', 'Total').",
+          "examples": ["Total", "Total"]
         },
         "centerValue": {
           "$ref": "schema-shared.json#/$defs/sanitizedString",

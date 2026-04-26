@@ -16,13 +16,13 @@
       "type": "string",
       "maxLength": 200,
       "description": "Chart title, displayed at the top of the rendered page.",
-      "examples": ["2025年各季度营收", "Monthly Active Users Comparison"]
+      "examples": ["Quarterly Revenue 2025", "Monthly Active Users Comparison"]
     },
     "subtitle": {
       "type": "string",
       "maxLength": 300,
       "description": "Optional subtitle shown below the title, typically describing the unit or scope.",
-      "examples": ["单位：万元", "Comparison across product lines"]
+      "examples": ["In tens of thousands (CNY)", "Comparison across product lines"]
     },
     "style": {
       "$ref": "schema-shared.json#/$defs/styleEnum",
@@ -100,7 +100,7 @@
           "$ref": "schema-shared.json#/$defs/sanitizedString",
           "maxLength": 100,
           "description": "Series name displayed in the legend.",
-          "examples": ["营收", "Users", "Revenue"]
+          "examples": ["Revenue", "Users", "Revenue"]
         },
         "color": {
           "type": "string",

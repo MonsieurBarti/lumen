@@ -16,13 +16,13 @@
       "$ref": "schema-shared.json#/$defs/sanitizedString",
       "maxLength": 200,
       "description": "Table title, displayed at the top of the rendered page.",
-      "examples": ["Team Performance Q1 2025", "2025年团队绩效"]
+      "examples": ["Team Performance Q1 2025", "Team Performance 2025"]
     },
     "subtitle": {
       "$ref": "schema-shared.json#/$defs/sanitizedString",
       "maxLength": 300,
       "description": "Optional subtitle shown below the title.",
-      "examples": ["Revenue in thousands (USD)", "单位：千元"]
+      "examples": ["Revenue in thousands (USD)", "In thousands (CNY)"]
     },
     "style": {
       "$ref": "schema-shared.json#/$defs/styleEnum",

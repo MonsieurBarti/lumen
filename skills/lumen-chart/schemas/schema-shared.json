@@ -113,7 +113,7 @@
           "type": "string",
           "maxLength": 50,
           "description": "Axis title text displayed along the axis.",
-          "examples": ["季度", "万元", "月份", "Users"]
+          "examples": ["Quarter", "10K (CNY)", "Month", "Users"]
         },
         "visible": {
           "type": "boolean",

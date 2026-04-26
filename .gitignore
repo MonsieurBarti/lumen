@@ -42,3 +42,6 @@ yarn-error.log*
 
 # Upstream reference clones (Phase 1 only; do not commit)
 upstreams/
+
+# Local-only planning docs
+PLAN.md

@@ -16,13 +16,13 @@
       "type": "string",
       "maxLength": 200,
       "description": "Chart title, displayed at the top of the rendered page.",
-      "examples": ["月度活跃用户", "Monthly Active Users Trend"]
+      "examples": ["Monthly Active Users", "Monthly Active Users Trend"]
     },
     "subtitle": {
       "type": "string",
       "maxLength": 300,
       "description": "Optional subtitle shown below the title, typically describing the unit or scope.",
-      "examples": ["单位：万人", "Trend over 6 months"]
+      "examples": ["In tens of thousands of people", "Trend over 6 months"]
     },
     "style": {
       "$ref": "schema-shared.json#/$defs/styleEnum",
@@ -57,7 +57,7 @@
             "$ref": "schema-shared.json#/$defs/sanitizedString",
             "maxLength": 100,
             "description": "Series name displayed in the legend.",
-            "examples": ["用户数", "Users", "Revenue"]
+            "examples": ["Users", "Users", "Revenue"]
           },
           "color": {
             "type": "string",

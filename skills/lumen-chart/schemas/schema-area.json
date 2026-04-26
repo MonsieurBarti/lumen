@@ -16,13 +16,13 @@
       "type": "string",
       "maxLength": 200,
       "description": "Chart title, displayed at the top of the rendered page.",
-      "examples": ["网站流量趋势", "Monthly Revenue Trend"]
+      "examples": ["Website Traffic Trend", "Monthly Revenue Trend"]
     },
     "subtitle": {
       "type": "string",
       "maxLength": 300,
       "description": "Optional subtitle shown below the title, typically describing the unit or scope.",
-      "examples": ["单位：万次访问", "In thousands of USD"]
+      "examples": ["In tens of thousands of visits", "In thousands of USD"]
     },
     "style": {
       "$ref": "schema-shared.json#/$defs/styleEnum",
@@ -71,7 +71,7 @@
             "$ref": "schema-shared.json#/$defs/sanitizedString",
             "maxLength": 100,
             "description": "Series name displayed in the legend.",
-            "examples": ["直接访问", "Social Media", "Revenue"]
+            "examples": ["Direct", "Social Media", "Revenue"]
           },
           "color": {
             "type": "string",

@@ -15,52 +15,31 @@ Triggers: `chart`, `graph`, `plot`, `bar chart`, `pie chart`, `line chart`, `sca
 ## Pipeline (two-step, never skip Step 1)
 
 1. **Extract JSON values** conforming to `schemas/schema-<type>.json`. Common axis + legend config in `schemas/schema-shared.json`.
-2. **Render** following the per-type recipe in `references/render-<type>.md`. Compute axis ticks via Nice Numbers (see below).
+2. **Render** following `references/chart-recipes.md` — covers per-type guidance, the Nice Numbers algorithm, and color palette guidance.
 
-## Chart type → schema + recipe
+## Chart type → schema
 
-| Need | Schema | Recipe |
-|---|---|---|
-| categorical magnitude | `schema-bar.json` | `render-bar.md` (vertical / horizontal / grouped / stacked) |
-| proportion of whole | `schema-pie.json` | `render-pie.md` (donut via inner radius) |
-| time-series single/multi | `schema-line.json` | `render-line.md` (smooth / linear) |
-| stacked time-series | `schema-area.json` | `render-area.md` |
-| x,y correlation | `schema-scatter.json` | `render-scatter.md` (with optional trend line) |
-| multi-dim profile | `schema-radar.json` | `render-radar.md` |
-| pipeline conversion | `schema-funnel.json` | `render-funnel.md` |
-| x,y,size triplets | `schema-bubble.json` | `render-bubble.md` |
-| structured comparison | `schema-table.json` | `render-table.md` (min/max highlighting) |
-
-## Nice Numbers (axis ticks)
-
-Pre-compute ticks before rendering. Avoids floating-point math in render phase. Full spec in `references/axis-and-grid.md`.
-
-**Inputs:** `min`, `max`, `desiredTickCount` (5–10).
-**Outputs:** `ticks[]`, `niceMin`, `niceMax`.
-
-**Algorithm:** `range = max − min`; `unitSpacing = range / (desiredTickCount − 1)`; pick magnitude 10ᵏ closest to `unitSpacing`; `niceSpacing = ceil(unitSpacing / magnitude) × magnitude`; emit ticks from `niceMin` in `niceSpacing` steps.
-
-## Color palettes
-
-`references/color-palettes.md` lists tested categorical + sequential + diverging palettes. Pick by intent:
-
-- categorical (independent series) → categorical-N (max 8 hues)
-- ordered (low → high values) → sequential
-- centered around zero → diverging
+| Need | Schema |
+|---|---|
+| categorical magnitude | `schema-bar.json` (vertical / horizontal / grouped / stacked) |
+| proportion of whole | `schema-pie.json` (donut via inner radius) |
+| time-series single/multi | `schema-line.json` (smooth / linear) |
+| stacked time-series | `schema-area.json` |
+| x,y correlation | `schema-scatter.json` (with optional trend line) |
+| multi-dim profile | `schema-radar.json` |
+| pipeline conversion | `schema-funnel.json` |
+| x,y,size triplets | `schema-bubble.json` |
+| structured comparison | `schema-table.json` (min/max highlighting) |
 
 ## Examples
 
-9 paired `(name).html` + `(name).json` files in `examples/`:
+3 paired `(name).html` + `(name).json` files in `examples/`:
 
-| Use case | Files |
-|---|---|
-| trend bar chart | `quarterly-revenue` |
-| line chart | `monthly-active-users`, `website-traffic` |
-| pie / donut | `browser-market-share` |
-| funnel | `sales-pipeline` |
-| scatter + trend | `study-hours-scores` |
-| radar | `team-skills` |
-| comparison table | `product-comparison`, `team-performance` |
+| Use case | Files | Type |
+|---|---|---|
+| feature comparison matrix | `product-comparison` | table |
+| team performance grid | `team-performance` | table |
+| skills radar | `team-skills` | radar |
 
 Open any HTML in browser; the JSON shows the input shape.
 
@@ -83,5 +62,6 @@ The `lumen-generate_visual` PI tool currently wires only mermaid types. For char
 
 ## Sources
 
-- [`gmdiagram/gm-data-chart`](https://github.com/ZeroZ-lab/gmdiagram) (MIT) → schemas + render recipes + axis-and-grid + color palettes + 9 examples (see `NOTICE.md`)
-- `roxabi-forge` → aesthetic system to apply when embedding charts in guides/recaps (lands in `_shared/aesthetics/` once a second skill consumes them)
+- [`gmdiagram/gm-data-chart`](https://github.com/ZeroZ-lab/gmdiagram) (MIT) — chart-type schemas. The original Chinese-language reference docs were dropped; their algorithms are restated in English in `references/chart-recipes.md`.
+- 3 English-only example pairs from gmdiagram's example set (`product-comparison`, `team-performance`, `team-skills`)
+- `lumen-diagram/templates/aesthetics/` (this package) — 5 aesthetics shared with diagrams when embedding charts in guides/recaps

@@ -42,26 +42,19 @@ describe("lumen-chart assets", () => {
 		expect(existsSync(join(DIR, "schemas", "schema-shared.json"))).toBe(true);
 	});
 
-	it("ships 9 render recipes + axis-and-grid + color-palettes", () => {
-		for (const t of types) {
-			expect(existsSync(join(DIR, "references", `render-${t}.md`))).toBe(true);
+	it("ships chart-recipes.md (English-only replacement for the Chinese gmdiagram refs)", () => {
+		const path = join(DIR, "references", "chart-recipes.md");
+		expect(existsSync(path)).toBe(true);
+		const body = readFileSync(path, "utf8");
+		expect(body).toContain("Nice Numbers");
+		// Per-type recipe sections
+		for (const t of ["Bar", "Line", "Pie", "Scatter", "Radar", "Funnel", "Bubble", "Table"]) {
+			expect(body).toContain(`### ${t}`);
 		}
-		expect(existsSync(join(DIR, "references", "axis-and-grid.md"))).toBe(true);
-		expect(existsSync(join(DIR, "references", "color-palettes.md"))).toBe(true);
 	});
 
-	it("ships 9 example HTML+JSON pairs", () => {
-		const examples = [
-			"browser-market-share",
-			"monthly-active-users",
-			"product-comparison",
-			"quarterly-revenue",
-			"sales-pipeline",
-			"study-hours-scores",
-			"team-performance",
-			"team-skills",
-			"website-traffic",
-		];
+	it("ships 3 English-only example HTML+JSON pairs", () => {
+		const examples = ["product-comparison", "team-performance", "team-skills"];
 		for (const e of examples) {
 			expect(existsSync(join(DIR, "examples", `${e}.html`))).toBe(true);
 			expect(existsSync(join(DIR, "examples", `${e}.json`))).toBe(true);

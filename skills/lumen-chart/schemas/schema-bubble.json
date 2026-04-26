@@ -16,13 +16,13 @@
       "type": "string",
       "maxLength": 200,
       "description": "Chart title, displayed at the top of the rendered page.",
-      "examples": ["产品竞争力分析", "Product Comparison by Price, Satisfaction & Market Share"]
+      "examples": ["Product Competitiveness", "Product Comparison by Price, Satisfaction & Market Share"]
     },
     "subtitle": {
       "type": "string",
       "maxLength": 300,
       "description": "Optional subtitle shown below the title.",
-      "examples": ["气泡大小代表市场份额", "Bubble size = market share"]
+      "examples": ["Bubble size = market share", "Bubble size = market share"]
     },
     "style": {
       "$ref": "schema-shared.json#/$defs/styleEnum",
@@ -104,7 +104,7 @@
           "$ref": "schema-shared.json#/$defs/sanitizedString",
           "maxLength": 100,
           "description": "Series name displayed in the legend.",
-          "examples": ["产品", "Products", "Region A"]
+          "examples": ["Products", "Products", "Region A"]
         },
         "color": {
           "type": "string",
@@ -150,7 +150,7 @@
           "$ref": "schema-shared.json#/$defs/sanitizedString",
           "maxLength": 50,
           "description": "Optional label displayed near the bubble.",
-          "examples": ["Product A", "产品甲"]
+          "examples": ["Product A", "Product B"]
         }
       }
     }
