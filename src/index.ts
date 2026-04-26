@@ -52,7 +52,12 @@ export const LUMEN_CAPABILITIES = [
 	"lumen-fact-check",
 ] as const;
 
-export const LUMEN_COMPOSITES = [] as const;
+export const LUMEN_COMPOSITES = [
+	"lumen-architecture-doc",
+	"lumen-readme-pack",
+	"lumen-launch-deck",
+	"lumen-postmortem",
+] as const;
 
 export const LUMEN_PLAYBOOKS = [] as const;
 

@@ -97,7 +97,12 @@ Skills are organized in three tiers (inspired by Shiv Sakhuja's [Skill Graphs 2.
 
 ### Composites (`composites/`)
 
-_Empty in v0.1 — composites land in v0.2._
+| Skill | Chain | Triggers |
+|---|---|---|
+| `lumen-architecture-doc` | `lumen-diagram` → `lumen-guide` → `lumen-fact-check` | `architecture doc`, `design doc`, `document this architecture` |
+| `lumen-readme-pack` | `lumen-recap` → `lumen-diagram` → `lumen-chart` → `lumen-guide` | `readme pack`, `project page`, `landing doc`, `visual readme` |
+| `lumen-launch-deck` | `lumen-recap` → `lumen-chart` → `lumen-diagram` → `lumen-slides` | `launch deck`, `release deck`, `announcement deck` |
+| `lumen-postmortem` | `lumen-recap` → `lumen-mermaid` → `lumen-chart` → `lumen-guide` | `postmortem`, `incident review`, `RCA document` |
 
 ### Playbooks (`playbooks/`)
 

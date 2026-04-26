@@ -27,8 +27,13 @@ describe("lumen package", () => {
 		]);
 	});
 
-	it("declares composites (molecular skills) that orchestrate capabilities; empty until v0.2", () => {
-		expect(LUMEN_COMPOSITES).toEqual([]);
+	it("declares composites (molecular skills) that orchestrate capabilities", () => {
+		expect(LUMEN_COMPOSITES).toEqual([
+			"lumen-architecture-doc",
+			"lumen-readme-pack",
+			"lumen-launch-deck",
+			"lumen-postmortem",
+		]);
 	});
 
 	it("declares playbooks (compound skills) that orchestrate composites; empty until v0.2", () => {
