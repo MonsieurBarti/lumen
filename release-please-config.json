@@ -26,7 +26,9 @@
 				"composites/lumen-architecture-doc/SKILL.md",
 				"composites/lumen-readme-pack/SKILL.md",
 				"composites/lumen-launch-deck/SKILL.md",
-				"composites/lumen-postmortem/SKILL.md"
+				"composites/lumen-postmortem/SKILL.md",
+				"playbooks/lumen-document-this-project/SKILL.md",
+				"playbooks/lumen-release-pack/SKILL.md"
 			]
 		}
 	}

@@ -106,7 +106,12 @@ Skills are organized in three tiers (inspired by Shiv Sakhuja's [Skill Graphs 2.
 
 ### Playbooks (`playbooks/`)
 
-_Empty in v0.1 — playbooks land in v0.2._
+| Skill | Orchestrates | Triggers |
+|---|---|---|
+| `lumen-document-this-project` | `lumen-readme-pack` + `lumen-architecture-doc` (+ conditional) | `document this project`, `full docs pack`, `bootstrap project docs` |
+| `lumen-release-pack` | `lumen-launch-deck` + `lumen-readme-pack` (+ conditional) | `release pack`, `package the release`, `release artifacts` |
+
+> Playbooks are **human-in-the-loop**: they pause for scope confirmation before executing. Don't run them from CI or cron.
 
 Each skill ships with a full `SKILL.md` describing triggers, pipeline, output spec, quality checks, and PI extension route.
 

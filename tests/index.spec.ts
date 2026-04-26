@@ -36,8 +36,8 @@ describe("lumen package", () => {
 		]);
 	});
 
-	it("declares playbooks (compound skills) that orchestrate composites; empty until v0.2", () => {
-		expect(LUMEN_PLAYBOOKS).toEqual([]);
+	it("declares playbooks (compound skills) that orchestrate composites", () => {
+		expect(LUMEN_PLAYBOOKS).toEqual(["lumen-document-this-project", "lumen-release-pack"]);
 	});
 
 	it("LUMEN_SKILLS is the union of all tiers", () => {

@@ -59,7 +59,7 @@ export const LUMEN_COMPOSITES = [
 	"lumen-postmortem",
 ] as const;
 
-export const LUMEN_PLAYBOOKS = [] as const;
+export const LUMEN_PLAYBOOKS = ["lumen-document-this-project", "lumen-release-pack"] as const;
 
 export const LUMEN_SKILLS = [
 	...LUMEN_CAPABILITIES,
