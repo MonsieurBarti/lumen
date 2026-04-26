@@ -91,6 +91,8 @@ Each skill ships with a full `SKILL.md` describing triggers, pipeline, output sp
 
 📄 **See what each skill produces:** [`docs/examples/`](./docs/examples/) — rendered examples for slides, gallery, guide, recap, and fact-check.
 
+🖨️ **Need PNG / PDF?** See [`docs/export.md`](./docs/export.md) — per-skill recipes using your browser's print-to-PDF and OS screenshot tools (no extra install required).
+
 ## 🚀 Usage
 
 In Claude Code or PI, ask naturally:
