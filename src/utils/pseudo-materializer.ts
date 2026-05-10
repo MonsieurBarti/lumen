@@ -23,8 +23,8 @@ export async function materializePseudoElements(page: Page): Promise<void> {
 					const pseudoEl = document.createElement("span");
 					pseudoEl.classList.add(`pseudo-${pseudoName.slice(2)}`);
 
-					for (let i = 0; i < computed.length; i++) {
-						const prop = computed.item(i);
+					for (let p = 0; p < computed.length; p++) {
+						const prop = computed.item(p);
 						if (prop === "content") continue;
 						const value = computed.getPropertyValue(prop);
 						const priority = computed.getPropertyPriority(prop);
