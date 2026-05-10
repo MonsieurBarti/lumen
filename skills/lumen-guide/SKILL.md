@@ -100,7 +100,7 @@ See `references/anti-patterns.md`. Highlights: never `display: flex` on `<li>`, 
 
 ## PI extension route (v0.1.x)
 
-Not wired through `lumen-generate_visual` PI tool. Guides need multi-step authoring with conditional structure; LLM-authored CC path is the right fit. Deterministic guide renderer is not planned.
+Not wired through `lumen-generate_visual` PI tool. A deterministic schema (tab array with markdown-like content + component references) is feasible but not yet implemented. The LLM-authored CC path remains the right fit for guides that need conditional structure and rich free-form text.
 
 ## Sources
 

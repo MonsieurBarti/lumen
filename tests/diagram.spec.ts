@@ -24,7 +24,7 @@ describe("parseFgraphContent", () => {
 		expect(() => parseFgraphContent({})).toThrow(/topology/);
 	});
 
-	it("lists the 4 supported topologies in error", () => {
+	it("lists all supported topologies in error", () => {
 		try {
 			parseFgraphContent({ topology: "spaghetti" });
 		} catch (e) {
@@ -246,6 +246,344 @@ describe("parseFgraphContent", () => {
 		});
 	});
 
+	describe("radial-ring", () => {
+		const valid: FgraphContent = {
+			topology: "radial-ring",
+			nodes: [{ name: "A" }, { name: "B" }, { name: "C" }],
+			edges: [{ from: 0, to: 1 }],
+		};
+
+		it("accepts a minimal valid radial-ring", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("radial-ring");
+		});
+
+		it("rejects fewer than 2 nodes", () => {
+			expect(() =>
+				parseFgraphContent({ topology: "radial-ring", nodes: [{ name: "Solo" }] }),
+			).toThrow(/at least 2/);
+		});
+
+		it("rejects edge with out-of-range index", () => {
+			expect(() => parseFgraphContent({ ...valid, edges: [{ from: 0, to: 99 }] })).toThrow(/index/);
+		});
+	});
+
+	describe("lane-swim", () => {
+		const valid: FgraphContent = {
+			topology: "lane-swim",
+			lanes: [
+				{ label: "L1", nodes: [{ name: "A" }] },
+				{ label: "L2", nodes: [{ name: "B" }] },
+			],
+		};
+
+		it("accepts a minimal valid lane-swim", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("lane-swim");
+		});
+
+		it("rejects fewer than 2 lanes", () => {
+			expect(() =>
+				parseFgraphContent({
+					topology: "lane-swim",
+					lanes: [{ label: "Solo", nodes: [{ name: "X" }] }],
+				}),
+			).toThrow(/at least 2/);
+		});
+
+		it("rejects more than 4 nodes per lane", () => {
+			const nodes = Array.from({ length: 5 }, (_, i) => ({ name: `N${i}` }));
+			expect(() =>
+				parseFgraphContent({
+					topology: "lane-swim",
+					lanes: [
+						{ label: "Crowded", nodes },
+						{ label: "Other", nodes: [{ name: "Y" }] },
+					],
+				}),
+			).toThrow(/at most 4/);
+		});
+	});
+
+	describe("deployment-tiers", () => {
+		const valid: FgraphContent = {
+			topology: "deployment-tiers",
+			tiers: [
+				{ label: "Web", nodes: [{ name: "Nginx" }] },
+				{ label: "App", nodes: [{ name: "API" }] },
+			],
+		};
+
+		it("accepts a minimal valid deployment-tiers", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("deployment-tiers");
+		});
+
+		it("rejects fewer than 2 tiers", () => {
+			expect(() =>
+				parseFgraphContent({
+					topology: "deployment-tiers",
+					tiers: [{ label: "Solo", nodes: [{ name: "X" }] }],
+				}),
+			).toThrow(/at least 2/);
+		});
+
+		it("rejects edge with out-of-range layer index", () => {
+			expect(() =>
+				parseFgraphContent({ ...valid, edges: [{ fromLayer: 0, toLayer: 99 }] }),
+			).toThrow(/index/);
+		});
+	});
+
+	describe("machine-clusters", () => {
+		const valid: FgraphContent = {
+			topology: "machine-clusters",
+			hosts: [
+				{ name: "Host-A", nodes: [{ name: "Svc1" }] },
+				{ name: "Host-B", nodes: [{ name: "Svc2" }] },
+			],
+		};
+
+		it("accepts a minimal valid machine-clusters", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("machine-clusters");
+		});
+
+		it("rejects fewer than 2 hosts", () => {
+			expect(() =>
+				parseFgraphContent({
+					topology: "machine-clusters",
+					hosts: [{ name: "Solo", nodes: [{ name: "X" }] }],
+				}),
+			).toThrow(/at least 2/);
+		});
+	});
+
+	describe("state", () => {
+		const valid: FgraphContent = {
+			topology: "state",
+			states: [{ name: "Idle", initial: true }, { name: "Running" }, { name: "Done", final: true }],
+			transitions: [
+				{ from: 0, to: 1, label: "start" },
+				{ from: 1, to: 2, label: "finish" },
+			],
+		};
+
+		it("accepts a minimal valid state", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("state");
+		});
+
+		it("rejects fewer than 2 states", () => {
+			expect(() =>
+				parseFgraphContent({
+					topology: "state",
+					states: [{ name: "Solo" }],
+					transitions: [{ from: 0, to: 0, label: "x" }],
+				}),
+			).toThrow(/at least 2/);
+		});
+
+		it("rejects transition with out-of-range index", () => {
+			expect(() =>
+				parseFgraphContent({ ...valid, transitions: [{ from: 0, to: 99, label: "x" }] }),
+			).toThrow(/index/);
+		});
+	});
+
+	describe("gantt", () => {
+		const valid: FgraphContent = {
+			topology: "gantt",
+			tasks: [
+				{ name: "Design", start: 0, duration: 5 },
+				{ name: "Build", start: 5, duration: 10 },
+			],
+		};
+
+		it("accepts a minimal valid gantt", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("gantt");
+		});
+
+		it("rejects negative start", () => {
+			expect(() =>
+				parseFgraphContent({
+					topology: "gantt",
+					tasks: [{ name: "Bad", start: -1, duration: 1 }],
+				}),
+			).toThrow(/start/);
+		});
+
+		it("rejects zero duration", () => {
+			expect(() =>
+				parseFgraphContent({
+					topology: "gantt",
+					tasks: [{ name: "Bad", start: 0, duration: 0 }],
+				}),
+			).toThrow(/duration/);
+		});
+	});
+
+	describe("pie", () => {
+		const valid: FgraphContent = {
+			topology: "pie",
+			slices: [
+				{ name: "A", value: 30 },
+				{ name: "B", value: 70 },
+			],
+		};
+
+		it("accepts a minimal valid pie", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("pie");
+		});
+
+		it("rejects fewer than 2 slices", () => {
+			expect(() =>
+				parseFgraphContent({ topology: "pie", slices: [{ name: "Solo", value: 1 }] }),
+			).toThrow(/at least 2/);
+		});
+
+		it("rejects non-positive value", () => {
+			expect(() =>
+				parseFgraphContent({
+					topology: "pie",
+					slices: [
+						{ name: "A", value: 1 },
+						{ name: "B", value: 0 },
+					],
+				}),
+			).toThrow(/value/);
+		});
+	});
+
+	describe("er", () => {
+		const valid: FgraphContent = {
+			topology: "er",
+			entities: [
+				{
+					name: "User",
+					attributes: [{ name: "id", type: "int", key: true }],
+				},
+				{
+					name: "Post",
+					attributes: [{ name: "userId", type: "int" }],
+				},
+			],
+			relationships: [{ from: 0, to: 1, type: "1:N" }],
+		};
+
+		it("accepts a minimal valid er", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("er");
+		});
+
+		it("rejects fewer than 2 entities", () => {
+			expect(() =>
+				parseFgraphContent({
+					topology: "er",
+					entities: [{ name: "Solo", attributes: [] }],
+					relationships: [],
+				}),
+			).toThrow(/at least 2/);
+		});
+
+		it("rejects relationship with out-of-range index", () => {
+			expect(() => parseFgraphContent({ ...valid, relationships: [{ from: 0, to: 99 }] })).toThrow(
+				/index/,
+			);
+		});
+	});
+
+	describe("dep-graph", () => {
+		const valid: FgraphContent = {
+			topology: "dep-graph",
+			nodes: [{ name: "A" }, { name: "B" }],
+			edges: [{ from: 0, to: 1 }],
+		};
+
+		it("accepts a minimal valid dep-graph", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("dep-graph");
+		});
+
+		it("rejects fewer than 2 nodes", () => {
+			expect(() =>
+				parseFgraphContent({ topology: "dep-graph", nodes: [{ name: "Solo" }], edges: [] }),
+			).toThrow(/at least 2/);
+		});
+
+		it("rejects edge with out-of-range index", () => {
+			expect(() => parseFgraphContent({ ...valid, edges: [{ from: 0, to: 99 }] })).toThrow(/index/);
+		});
+	});
+
+	describe("dual-cluster", () => {
+		const valid: FgraphContent = {
+			topology: "dual-cluster",
+			clusterA: { label: "Before", nodes: [{ name: "A1" }] },
+			clusterB: { label: "After", nodes: [{ name: "B1" }] },
+			edges: [{ fromCluster: "A", fromIdx: 0, toCluster: "B", toIdx: 0 }],
+		};
+
+		it("accepts a minimal valid dual-cluster", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("dual-cluster");
+		});
+
+		it("rejects out-of-range fromIdx", () => {
+			expect(() =>
+				parseFgraphContent({
+					...valid,
+					edges: [{ fromCluster: "A", fromIdx: 5, toCluster: "B", toIdx: 0 }],
+				}),
+			).toThrow(/fromIdx/);
+		});
+
+		it("rejects invalid cluster id", () => {
+			expect(() =>
+				parseFgraphContent({
+					...valid,
+					edges: [{ fromCluster: "C", fromIdx: 0, toCluster: "B", toIdx: 0 }],
+				}),
+			).toThrow(/fromCluster/);
+		});
+	});
+
+	describe("system-architecture", () => {
+		const valid: FgraphContent = {
+			topology: "system-architecture",
+			zones: [
+				{ label: "Z1", nodes: [{ name: "A" }] },
+				{ label: "Z2", nodes: [{ name: "B" }] },
+				{ label: "Z3", nodes: [{ name: "C" }] },
+			],
+			edges: [{ from: 0, to: 1 }],
+		};
+
+		it("accepts a minimal valid system-architecture", () => {
+			const parsed = parseFgraphContent(valid);
+			expect(parsed.topology).toBe("system-architecture");
+		});
+
+		it("rejects fewer than 3 zones", () => {
+			expect(() =>
+				parseFgraphContent({
+					topology: "system-architecture",
+					zones: [
+						{ label: "Z1", nodes: [{ name: "A" }] },
+						{ label: "Z2", nodes: [{ name: "B" }] },
+					],
+				}),
+			).toThrow(/at least 3/);
+		});
+
+		it("rejects edge with out-of-range global node index", () => {
+			expect(() => parseFgraphContent({ ...valid, edges: [{ from: 0, to: 99 }] })).toThrow(/index/);
+		});
+	});
+
 	describe("shared field validation", () => {
 		it("rejects bad tone in node", () => {
 			expect(() =>
@@ -289,8 +627,6 @@ describe("generateDiagramTemplate", () => {
 		expect(html).toContain("--bg:");
 		// Base diagram CSS was inlined.
 		expect(html).toContain(".fgraph-edges");
-		// SVG arrow markers present.
-		expect(html).toContain("fg-arr-cyan");
 		// Single-file: no external <link> tags except google fonts preconnect.
 		const linkTags = html.match(/<link [^>]*>/g) ?? [];
 		for (const tag of linkTags) {
@@ -396,6 +732,18 @@ describe("generateDiagramTemplate", () => {
 		expect(html).toContain("fg-arr-cyan-bi");
 	});
 
+	it("includes SVG arrow markers when edges are present", () => {
+		const html = generateDiagramTemplate({
+			title: "Edges",
+			content: {
+				topology: "linear-flow",
+				stages: [{ name: "A" }, { name: "B" }],
+			},
+			aesthetic: "dark-professional",
+		});
+		expect(html).toContain("fg-arr-cyan");
+	});
+
 	it("escapes HTML entities in titles and labels", () => {
 		const html = generateDiagramTemplate({
 			title: '<script>alert("xss")</script>',
@@ -425,5 +773,179 @@ describe("generateDiagramTemplate", () => {
 			// All aesthetics define at least the --bg token.
 			expect(html).toMatch(/--bg:\s*#/);
 		}
+	});
+
+	it("renders radial-ring into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "Peers",
+			content: {
+				topology: "radial-ring",
+				nodes: [{ name: "A" }, { name: "B" }, { name: "C" }],
+				edges: [{ from: 0, to: 1 }],
+			},
+			aesthetic: "dark-professional",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("Peers");
+		expect(html).toContain("ring-node");
+	});
+
+	it("renders lane-swim into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "Swim",
+			content: {
+				topology: "lane-swim",
+				lanes: [
+					{ label: "L1", nodes: [{ name: "A" }] },
+					{ label: "L2", nodes: [{ name: "B" }] },
+				],
+			},
+			aesthetic: "blueprint",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("lane-frame");
+	});
+
+	it("renders deployment-tiers into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "Deploy",
+			content: {
+				topology: "deployment-tiers",
+				tiers: [
+					{ label: "Edge", nodes: [{ name: "CDN" }], replicas: 3 },
+					{ label: "App", nodes: [{ name: "API" }] },
+				],
+			},
+			aesthetic: "editorial",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("replica-badge");
+	});
+
+	it("renders machine-clusters into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "Cluster",
+			content: {
+				topology: "machine-clusters",
+				hosts: [
+					{ name: "Host-A", nodes: [{ name: "Svc1" }] },
+					{ name: "Host-B", nodes: [{ name: "Svc2" }] },
+				],
+			},
+			aesthetic: "lyra",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("host-frame");
+	});
+
+	it("renders state machine into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "FSM",
+			content: {
+				topology: "state",
+				states: [{ name: "Idle", initial: true }, { name: "Run" }, { name: "Done", final: true }],
+				transitions: [{ from: 0, to: 1, label: "start" }],
+			},
+			aesthetic: "terminal",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("state-node");
+		expect(html).toContain("initial");
+		expect(html).toContain("final");
+	});
+
+	it("renders gantt into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "Roadmap",
+			content: {
+				topology: "gantt",
+				tasks: [
+					{ name: "Design", start: 0, duration: 5 },
+					{ name: "Build", start: 5, duration: 10 },
+				],
+			},
+			aesthetic: "dark-professional",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("gantt-bar");
+	});
+
+	it("renders pie into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "Share",
+			content: {
+				topology: "pie",
+				slices: [
+					{ name: "A", value: 30 },
+					{ name: "B", value: 70 },
+				],
+			},
+			aesthetic: "blueprint",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("<path");
+	});
+
+	it("renders er into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "Schema",
+			content: {
+				topology: "er",
+				entities: [
+					{ name: "User", attributes: [{ name: "id", type: "int", key: true }] },
+					{ name: "Post", attributes: [{ name: "title" }] },
+				],
+				relationships: [{ from: 0, to: 1, type: "1:N" }],
+			},
+			aesthetic: "editorial",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("er-entity");
+	});
+
+	it("renders dep-graph into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "Deps",
+			content: {
+				topology: "dep-graph",
+				nodes: [{ name: "A" }, { name: "B" }],
+				edges: [{ from: 0, to: 1 }],
+			},
+			aesthetic: "lyra",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("dep-node");
+	});
+
+	it("renders dual-cluster into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "Compare",
+			content: {
+				topology: "dual-cluster",
+				clusterA: { label: "Before", nodes: [{ name: "A1" }] },
+				clusterB: { label: "After", nodes: [{ name: "B1" }] },
+				edges: [{ fromCluster: "A", fromIdx: 0, toCluster: "B", toIdx: 0 }],
+			},
+			aesthetic: "terminal",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("cluster-frame");
+	});
+
+	it("renders system-architecture into HTML", () => {
+		const html = generateDiagramTemplate({
+			title: "System",
+			content: {
+				topology: "system-architecture",
+				zones: [
+					{ label: "Edge", nodes: [{ name: "CDN" }] },
+					{ label: "App", nodes: [{ name: "API" }] },
+					{ label: "Data", nodes: [{ name: "DB" }] },
+				],
+			},
+			aesthetic: "dark-professional",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("sys-zone-frame");
 	});
 });

@@ -77,7 +77,7 @@ Single HTML written to `~/.agent/lumen/`. Open in browser.
 
 ## PI extension route (v0.1.x)
 
-Not wired through the `lumen-generate_visual` PI tool. Recap is a multi-step CC skill that needs `Read` / `Grep` / `Bash` (`git log`) tool access, which the LLM-authored path already provides. Deterministic recap renderer is not planned.
+Permanently skill-path only by design. `lumen-recap` is a multi-step CC skill that needs `Read` / `Grep` / `Bash` (`git log`) tool access to introspect project state. A deterministic PI tool cannot gather this data without the caller serializing the entire project into `content`, which defeats the skill's purpose.
 
 ## Sources
 

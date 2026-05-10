@@ -124,13 +124,130 @@ export interface RadialHubContent {
 	legend?: string;
 }
 
-export type FgraphContent = SequenceContent | LayeredContent | LinearFlowContent | RadialHubContent;
+export interface RadialRingContent {
+	topology: "radial-ring";
+	nodes: FgraphNode[];
+	edges?: FgraphEdge[];
+	legend?: string;
+}
+
+export interface LaneSwimContent {
+	topology: "lane-swim";
+	lanes: { label: string; nodes: FgraphNode[] }[];
+	edges?: FgraphEdge[];
+	legend?: string;
+}
+
+export interface DeploymentTiersContent {
+	topology: "deployment-tiers";
+	tiers: { label: string; nodes: FgraphNode[]; replicas?: number }[];
+	edges?: LayeredEdge[];
+	legend?: string;
+}
+
+export interface MachineClustersContent {
+	topology: "machine-clusters";
+	hosts: { name: string; nodes: FgraphNode[] }[];
+	edges?: FgraphEdge[];
+	legend?: string;
+}
+
+export interface StateContent {
+	topology: "state";
+	states: {
+		name: string;
+		tone?: FgraphTone;
+		shape?: FgraphShape;
+		initial?: boolean;
+		final?: boolean;
+		sub?: string;
+	}[];
+	transitions: { from: number; to: number; label?: string; tone?: FgraphTone }[];
+	legend?: string;
+}
+
+export interface GanttContent {
+	topology: "gantt";
+	tasks: { name: string; start: number; duration: number; tone?: FgraphTone; row?: number }[];
+	timeUnit?: string;
+	legend?: string;
+}
+
+export interface PieContent {
+	topology: "pie";
+	slices: { name: string; value: number; tone?: FgraphTone }[];
+	legend?: string;
+}
+
+export interface ErContent {
+	topology: "er";
+	entities: { name: string; attributes: { name: string; type?: string; key?: boolean }[] }[];
+	relationships: { from: number; to: number; type?: string; label?: string }[];
+	legend?: string;
+}
+
+export interface DepGraphContent {
+	topology: "dep-graph";
+	nodes: FgraphNode[];
+	edges: { from: number; to: number; label?: string; tone?: FgraphTone }[];
+	legend?: string;
+}
+
+export interface DualClusterContent {
+	topology: "dual-cluster";
+	clusterA: { label: string; nodes: FgraphNode[] };
+	clusterB: { label: string; nodes: FgraphNode[] };
+	edges?: {
+		fromCluster: "A" | "B";
+		fromIdx: number;
+		toCluster: "A" | "B";
+		toIdx: number;
+		label?: string;
+		tone?: FgraphTone;
+	}[];
+	legend?: string;
+}
+
+export interface SystemArchitectureContent {
+	topology: "system-architecture";
+	zones: { label: string; nodes: FgraphNode[] }[];
+	edges?: FgraphEdge[];
+	legend?: string;
+}
+
+export type FgraphContent =
+	| SequenceContent
+	| LayeredContent
+	| LinearFlowContent
+	| RadialHubContent
+	| RadialRingContent
+	| LaneSwimContent
+	| DeploymentTiersContent
+	| MachineClustersContent
+	| StateContent
+	| GanttContent
+	| PieContent
+	| ErContent
+	| DepGraphContent
+	| DualClusterContent
+	| SystemArchitectureContent;
 
 export const SUPPORTED_TOPOLOGIES = [
 	"sequence",
 	"layered",
 	"linear-flow",
 	"radial-hub",
+	"radial-ring",
+	"lane-swim",
+	"deployment-tiers",
+	"machine-clusters",
+	"state",
+	"gantt",
+	"pie",
+	"er",
+	"dep-graph",
+	"dual-cluster",
+	"system-architecture",
 ] as const satisfies readonly FgraphContent["topology"][];
 
 export type SupportedTopology = (typeof SUPPORTED_TOPOLOGIES)[number];
@@ -493,7 +610,7 @@ export function parseFgraphContent(raw: unknown): FgraphContent {
 		throw new Error(
 			`content.topology must be one of: ${SUPPORTED_TOPOLOGIES.join(
 				", ",
-			)} (got ${String(topology)}). The other 11 fgraph topologies land in v0.2.x patches; use the lumen-diagram skill directly until then.`,
+			)} (got ${String(topology)}).`,
 		);
 	}
 	switch (topology as SupportedTopology) {
@@ -505,5 +622,496 @@ export function parseFgraphContent(raw: unknown): FgraphContent {
 			return parseLinearFlowContent(obj);
 		case "radial-hub":
 			return parseRadialHubContent(obj);
+		case "radial-ring":
+			return parseRadialRingContent(obj);
+		case "lane-swim":
+			return parseLaneSwimContent(obj);
+		case "deployment-tiers":
+			return parseDeploymentTiersContent(obj);
+		case "machine-clusters":
+			return parseMachineClustersContent(obj);
+		case "state":
+			return parseStateContent(obj);
+		case "gantt":
+			return parseGanttContent(obj);
+		case "pie":
+			return parsePieContent(obj);
+		case "er":
+			return parseErContent(obj);
+		case "dep-graph":
+			return parseDepGraphContent(obj);
+		case "dual-cluster":
+			return parseDualClusterContent(obj);
+		case "system-architecture":
+			return parseSystemArchitectureContent(obj);
 	}
+}
+
+function parseRadialRingContent(raw: object): RadialRingContent {
+	const nodes = asArray(
+		Reflect.get(raw, "nodes"),
+		"content.nodes",
+		(item, p) => parseFgraphNode(item, p),
+		{ min: 2, max: 8 },
+	);
+	const edgesRaw = Reflect.get(raw, "edges");
+	const edges =
+		edgesRaw === undefined
+			? undefined
+			: asArray(edgesRaw, "content.edges", (item, p) => {
+					const edge = parseFgraphEdge(item, p);
+					if (edge.from >= nodes.length || edge.to >= nodes.length) {
+						throw new Error(`${p} references node index >= ${nodes.length}`);
+					}
+					return edge;
+				});
+	const result: RadialRingContent = { topology: "radial-ring", nodes };
+	if (edges !== undefined) result.edges = edges;
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parseLaneSwimContent(raw: object): LaneSwimContent {
+	const lanes = asArray(
+		Reflect.get(raw, "lanes"),
+		"content.lanes",
+		(item, p) => {
+			const label = asString(Reflect.get(item, "label"), `${p}.label`);
+			const nodes = asArray(
+				Reflect.get(item, "nodes"),
+				`${p}.nodes`,
+				(n, np) => parseFgraphNode(n, np),
+				{ min: 1, max: 4 },
+			);
+			return { label, nodes };
+		},
+		{ min: 2, max: 5 },
+	);
+	const edgesRaw = Reflect.get(raw, "edges");
+	const edges =
+		edgesRaw === undefined
+			? undefined
+			: asArray(edgesRaw, "content.edges", (item, p) => parseFgraphEdge(item, p));
+	const result: LaneSwimContent = { topology: "lane-swim", lanes };
+	if (edges !== undefined) result.edges = edges;
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parseDeploymentTiersContent(raw: object): DeploymentTiersContent {
+	const tiers = asArray(
+		Reflect.get(raw, "tiers"),
+		"content.tiers",
+		(item, p) => {
+			const label = asString(Reflect.get(item, "label"), `${p}.label`);
+			const nodes = asArray(
+				Reflect.get(item, "nodes"),
+				`${p}.nodes`,
+				(n, np) => parseFgraphNode(n, np),
+				{ min: 1, max: 4 },
+			);
+			const replicasRaw = Reflect.get(item, "replicas");
+			const replicas =
+				replicasRaw === undefined
+					? undefined
+					: (() => {
+							if (
+								typeof replicasRaw !== "number" ||
+								!Number.isInteger(replicasRaw) ||
+								replicasRaw < 1
+							) {
+								throw new Error(
+									`${p}.replicas must be a positive integer (got ${String(replicasRaw)})`,
+								);
+							}
+							return replicasRaw;
+						})();
+			const tier: { label: string; nodes: FgraphNode[]; replicas?: number } = { label, nodes };
+			if (replicas !== undefined) tier.replicas = replicas;
+			return tier;
+		},
+		{ min: 2, max: 5 },
+	);
+	const edgesRaw = Reflect.get(raw, "edges");
+	const edges =
+		edgesRaw === undefined
+			? undefined
+			: asArray(edgesRaw, "content.edges", (item, p) => {
+					const fromLayer = asInt(Reflect.get(item, "fromLayer"), `${p}.fromLayer`);
+					const toLayer = asInt(Reflect.get(item, "toLayer"), `${p}.toLayer`);
+					if (fromLayer >= tiers.length || toLayer >= tiers.length) {
+						throw new Error(`${p} references tier index >= ${tiers.length}`);
+					}
+					const edge: LayeredEdge = { fromLayer, toLayer };
+					const semantic = asSemantic(Reflect.get(item, "semantic"), `${p}.semantic`);
+					if (semantic !== undefined) edge.semantic = semantic;
+					const style = asEdgeStyle(Reflect.get(item, "style"), `${p}.style`);
+					if (style !== undefined) edge.style = style;
+					const label = asOptionalString(Reflect.get(item, "label"), `${p}.label`);
+					if (label !== undefined) edge.label = label;
+					return edge;
+				});
+	const result: DeploymentTiersContent = { topology: "deployment-tiers", tiers };
+	if (edges !== undefined) result.edges = edges;
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parseMachineClustersContent(raw: object): MachineClustersContent {
+	const hosts = asArray(
+		Reflect.get(raw, "hosts"),
+		"content.hosts",
+		(item, p) => {
+			const name = asString(Reflect.get(item, "name"), `${p}.name`);
+			const nodes = asArray(
+				Reflect.get(item, "nodes"),
+				`${p}.nodes`,
+				(n, np) => parseFgraphNode(n, np),
+				{ min: 1, max: 4 },
+			);
+			return { name, nodes };
+		},
+		{ min: 2, max: 5 },
+	);
+	const edgesRaw = Reflect.get(raw, "edges");
+	const edges =
+		edgesRaw === undefined
+			? undefined
+			: asArray(edgesRaw, "content.edges", (item, p) => parseFgraphEdge(item, p));
+	const result: MachineClustersContent = { topology: "machine-clusters", hosts };
+	if (edges !== undefined) result.edges = edges;
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parseStateContent(raw: object): StateContent {
+	const states = asArray(
+		Reflect.get(raw, "states"),
+		"content.states",
+		(item, p) => {
+			const name = asString(Reflect.get(item, "name"), `${p}.name`);
+			const tone = asTone(Reflect.get(item, "tone"), `${p}.tone`);
+			const shape = asShape(Reflect.get(item, "shape"), `${p}.shape`);
+			const initialRaw = Reflect.get(item, "initial");
+			const initial =
+				initialRaw === undefined
+					? undefined
+					: typeof initialRaw === "boolean"
+						? initialRaw
+						: (() => {
+								throw new Error(`${p}.initial must be boolean`);
+							})();
+			const finalRaw = Reflect.get(item, "final");
+			const final =
+				finalRaw === undefined
+					? undefined
+					: typeof finalRaw === "boolean"
+						? finalRaw
+						: (() => {
+								throw new Error(`${p}.final must be boolean`);
+							})();
+			const state: {
+				name: string;
+				tone?: FgraphTone;
+				shape?: FgraphShape;
+				initial?: boolean;
+				final?: boolean;
+			} = { name };
+			if (tone !== undefined) state.tone = tone;
+			if (shape !== undefined) state.shape = shape;
+			if (initial !== undefined) state.initial = initial;
+			if (final !== undefined) state.final = final;
+			return state;
+		},
+		{ min: 2, max: 8 },
+	);
+	const transitions = asArray(
+		Reflect.get(raw, "transitions"),
+		"content.transitions",
+		(item, p) => {
+			const from = asInt(Reflect.get(item, "from"), `${p}.from`);
+			const to = asInt(Reflect.get(item, "to"), `${p}.to`);
+			if (from >= states.length || to >= states.length) {
+				throw new Error(`${p} references state index >= ${states.length}`);
+			}
+			const transition: { from: number; to: number; label?: string; tone?: FgraphTone } = {
+				from,
+				to,
+			};
+			const label = asOptionalString(Reflect.get(item, "label"), `${p}.label`);
+			if (label !== undefined) transition.label = label;
+			const tone = asTone(Reflect.get(item, "tone"), `${p}.tone`);
+			if (tone !== undefined) transition.tone = tone;
+			return transition;
+		},
+		{ min: 1, max: 20 },
+	);
+	const result: StateContent = { topology: "state", states, transitions };
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parseGanttContent(raw: object): GanttContent {
+	const tasks = asArray(
+		Reflect.get(raw, "tasks"),
+		"content.tasks",
+		(item, p) => {
+			const name = asString(Reflect.get(item, "name"), `${p}.name`);
+			const start = (() => {
+				const v = Reflect.get(item, "start");
+				if (typeof v !== "number" || v < 0)
+					throw new Error(`${p}.start must be a non-negative number`);
+				return v;
+			})();
+			const duration = (() => {
+				const v = Reflect.get(item, "duration");
+				if (typeof v !== "number" || v <= 0)
+					throw new Error(`${p}.duration must be a positive number`);
+				return v;
+			})();
+			const tone = asTone(Reflect.get(item, "tone"), `${p}.tone`);
+			const rowRaw = Reflect.get(item, "row");
+			const row = rowRaw === undefined ? undefined : asInt(rowRaw, `${p}.row`);
+			const task: {
+				name: string;
+				start: number;
+				duration: number;
+				tone?: FgraphTone;
+				row?: number;
+			} = { name, start, duration };
+			if (tone !== undefined) task.tone = tone;
+			if (row !== undefined) task.row = row;
+			return task;
+		},
+		{ min: 1, max: 15 },
+	);
+	const timeUnit = asOptionalString(Reflect.get(raw, "timeUnit"), "content.timeUnit");
+	const result: GanttContent = { topology: "gantt", tasks };
+	if (timeUnit !== undefined) result.timeUnit = timeUnit;
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parsePieContent(raw: object): PieContent {
+	const slices = asArray(
+		Reflect.get(raw, "slices"),
+		"content.slices",
+		(item, p) => {
+			const name = asString(Reflect.get(item, "name"), `${p}.name`);
+			const value = (() => {
+				const v = Reflect.get(item, "value");
+				if (typeof v !== "number" || v <= 0)
+					throw new Error(`${p}.value must be a positive number`);
+				return v;
+			})();
+			const tone = asTone(Reflect.get(item, "tone"), `${p}.tone`);
+			const slice: { name: string; value: number; tone?: FgraphTone } = { name, value };
+			if (tone !== undefined) slice.tone = tone;
+			return slice;
+		},
+		{ min: 2, max: 8 },
+	);
+	const result: PieContent = { topology: "pie", slices };
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parseErContent(raw: object): ErContent {
+	const entities = asArray(
+		Reflect.get(raw, "entities"),
+		"content.entities",
+		(item, p) => {
+			const name = asString(Reflect.get(item, "name"), `${p}.name`);
+			const attributes = asArray(
+				Reflect.get(item, "attributes"),
+				`${p}.attributes`,
+				(attr, ap) => {
+					const attrName = asString(Reflect.get(attr, "name"), `${ap}.name`);
+					const type = asOptionalString(Reflect.get(attr, "type"), `${ap}.type`);
+					const keyRaw = Reflect.get(attr, "key");
+					const key =
+						keyRaw === undefined
+							? undefined
+							: typeof keyRaw === "boolean"
+								? keyRaw
+								: (() => {
+										throw new Error(`${ap}.key must be boolean`);
+									})();
+					const attribute: { name: string; type?: string; key?: boolean } = { name: attrName };
+					if (type !== undefined) attribute.type = type;
+					if (key !== undefined) attribute.key = key;
+					return attribute;
+				},
+				{ min: 0, max: 6 },
+			);
+			return { name, attributes };
+		},
+		{ min: 2, max: 6 },
+	);
+	const relationships = asArray(
+		Reflect.get(raw, "relationships"),
+		"content.relationships",
+		(item, p) => {
+			const from = asInt(Reflect.get(item, "from"), `${p}.from`);
+			const to = asInt(Reflect.get(item, "to"), `${p}.to`);
+			if (from >= entities.length || to >= entities.length) {
+				throw new Error(`${p} references entity index >= ${entities.length}`);
+			}
+			const type = asOptionalString(Reflect.get(item, "type"), `${p}.type`);
+			const label = asOptionalString(Reflect.get(item, "label"), `${p}.label`);
+			const relationship: { from: number; to: number; type?: string; label?: string } = {
+				from,
+				to,
+			};
+			if (type !== undefined) relationship.type = type;
+			if (label !== undefined) relationship.label = label;
+			return relationship;
+		},
+		{ min: 0, max: 12 },
+	);
+	const result: ErContent = { topology: "er", entities, relationships };
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parseDepGraphContent(raw: object): DepGraphContent {
+	const nodes = asArray(
+		Reflect.get(raw, "nodes"),
+		"content.nodes",
+		(item, p) => parseFgraphNode(item, p),
+		{ min: 2, max: 12 },
+	);
+	const edges = asArray(
+		Reflect.get(raw, "edges"),
+		"content.edges",
+		(item, p) => {
+			const from = asInt(Reflect.get(item, "from"), `${p}.from`);
+			const to = asInt(Reflect.get(item, "to"), `${p}.to`);
+			if (from >= nodes.length || to >= nodes.length) {
+				throw new Error(`${p} references node index >= ${nodes.length}`);
+			}
+			const edge: { from: number; to: number; label?: string; tone?: FgraphTone } = { from, to };
+			const label = asOptionalString(Reflect.get(item, "label"), `${p}.label`);
+			if (label !== undefined) edge.label = label;
+			const tone = asTone(Reflect.get(item, "tone"), `${p}.tone`);
+			if (tone !== undefined) edge.tone = tone;
+			return edge;
+		},
+		{ min: 1, max: 20 },
+	);
+	const result: DepGraphContent = { topology: "dep-graph", nodes, edges };
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parseDualClusterContent(raw: object): DualClusterContent {
+	const parseCluster = (
+		rawCluster: unknown,
+		path: string,
+	): { label: string; nodes: FgraphNode[] } => {
+		if (typeof rawCluster !== "object" || rawCluster === null) {
+			throw new Error(`${path} must be an object`);
+		}
+		const label = asString(Reflect.get(rawCluster, "label"), `${path}.label`);
+		const nodes = asArray(
+			Reflect.get(rawCluster, "nodes"),
+			`${path}.nodes`,
+			(n, np) => parseFgraphNode(n, np),
+			{ min: 1, max: 6 },
+		);
+		return { label, nodes };
+	};
+	const clusterA = parseCluster(Reflect.get(raw, "clusterA"), "content.clusterA");
+	const clusterB = parseCluster(Reflect.get(raw, "clusterB"), "content.clusterB");
+	const edgesRaw = Reflect.get(raw, "edges");
+	const edges =
+		edgesRaw === undefined
+			? undefined
+			: asArray(edgesRaw, "content.edges", (item, p) => {
+					const fromClusterRaw = Reflect.get(item, "fromCluster");
+					if (fromClusterRaw !== "A" && fromClusterRaw !== "B") {
+						throw new Error(`${p}.fromCluster must be "A" | "B" (got ${String(fromClusterRaw)})`);
+					}
+					const toClusterRaw = Reflect.get(item, "toCluster");
+					if (toClusterRaw !== "A" && toClusterRaw !== "B") {
+						throw new Error(`${p}.toCluster must be "A" | "B" (got ${String(toClusterRaw)})`);
+					}
+					const fromIdx = asInt(Reflect.get(item, "fromIdx"), `${p}.fromIdx`);
+					const toIdx = asInt(Reflect.get(item, "toIdx"), `${p}.toIdx`);
+					const fromMax = fromClusterRaw === "A" ? clusterA.nodes.length : clusterB.nodes.length;
+					const toMax = toClusterRaw === "A" ? clusterA.nodes.length : clusterB.nodes.length;
+					if (fromIdx >= fromMax) {
+						throw new Error(`${p}.fromIdx >= ${fromMax}`);
+					}
+					if (toIdx >= toMax) {
+						throw new Error(`${p}.toIdx >= ${toMax}`);
+					}
+					const edge: {
+						fromCluster: "A" | "B";
+						fromIdx: number;
+						toCluster: "A" | "B";
+						toIdx: number;
+						label?: string;
+						tone?: FgraphTone;
+					} = {
+						fromCluster: fromClusterRaw,
+						fromIdx,
+						toCluster: toClusterRaw,
+						toIdx,
+					};
+					const label = asOptionalString(Reflect.get(item, "label"), `${p}.label`);
+					if (label !== undefined) edge.label = label;
+					const tone = asTone(Reflect.get(item, "tone"), `${p}.tone`);
+					if (tone !== undefined) edge.tone = tone;
+					return edge;
+				});
+	const result: DualClusterContent = { topology: "dual-cluster", clusterA, clusterB };
+	if (edges !== undefined) result.edges = edges;
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
+}
+
+function parseSystemArchitectureContent(raw: object): SystemArchitectureContent {
+	const zones = asArray(
+		Reflect.get(raw, "zones"),
+		"content.zones",
+		(item, p) => {
+			const label = asString(Reflect.get(item, "label"), `${p}.label`);
+			const nodes = asArray(
+				Reflect.get(item, "nodes"),
+				`${p}.nodes`,
+				(n, np) => parseFgraphNode(n, np),
+				{ min: 1, max: 6 },
+			);
+			return { label, nodes };
+		},
+		{ min: 3, max: 6 },
+	);
+	const edgesRaw = Reflect.get(raw, "edges");
+	const edges =
+		edgesRaw === undefined
+			? undefined
+			: asArray(edgesRaw, "content.edges", (item, p) => {
+					const edge = parseFgraphEdge(item, p);
+					const maxIdx = zones.reduce((acc, z) => acc + z.nodes.length, 0);
+					if (edge.from >= maxIdx || edge.to >= maxIdx) {
+						throw new Error(`${p} references global node index >= ${maxIdx}`);
+					}
+					return edge;
+				});
+	const result: SystemArchitectureContent = { topology: "system-architecture", zones };
+	if (edges !== undefined) result.edges = edges;
+	const legend = asOptionalString(Reflect.get(raw, "legend"), "content.legend");
+	if (legend !== undefined) result.legend = legend;
+	return result;
 }

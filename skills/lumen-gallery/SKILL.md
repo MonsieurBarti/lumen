@@ -95,7 +95,7 @@ Either mode opens via `file://`.
 
 ## PI extension route (v0.1.x)
 
-Not wired through `lumen-generate_visual` PI tool. Galleries depend on user-provided assets (images / audio files); the tool's `content` parameter shape doesn't fit. LLM-authored CC path is the right fit. Deterministic gallery renderer is not planned.
+Not wired through `lumen-generate_visual` PI tool. A deterministic schema (template selector + item array with dims/scores + optional captions) is feasible but not yet implemented. Galleries still depend on user-provided assets (images / audio files), so the LLM-authored CC path remains the right fit when assets are present.
 
 ## Sources
 
