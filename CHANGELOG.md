@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.8](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.7...lumen-v0.1.8) (2026-05-10)
+
+
+### Features
+
+* **m02:** agent-capabilities-v2 milestone ([#33](https://github.com/MonsieurBarti/lumen/issues/33)) ([4ce2c0c](https://github.com/MonsieurBarti/lumen/commit/4ce2c0c1d4ad0a605a1b364aaf965c36e55dd57d))
+* **s01:** pptx export ([#24](https://github.com/MonsieurBarti/lumen/issues/24)) ([6cf91de](https://github.com/MonsieurBarti/lumen/commit/6cf91de464089d826f8e5255289ad9f398f0bb9c))
+
+
+### Bug Fixes
+
+* add dom-to-pptx dependency and install playwright browsers in release workflow ([#36](https://github.com/MonsieurBarti/lumen/issues/36)) ([40d54ab](https://github.com/MonsieurBarti/lumen/commit/40d54ab85e70193447d0303259d97ed6fac09379))
+* add playwright and jszip to devdependencies ([#34](https://github.com/MonsieurBarti/lumen/issues/34)) ([5c33b99](https://github.com/MonsieurBarti/lumen/commit/5c33b99561e6cd887fb81b59634e227f0d96851a))
+* install playwright browsers in ci workflow ([#35](https://github.com/MonsieurBarti/lumen/issues/35)) ([ecb9476](https://github.com/MonsieurBarti/lumen/commit/ecb94762e2f6051c6a9c9aafefcedc942a3b27d3))
+
 ## [0.1.7](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.6...lumen-v0.1.7) (2026-04-26)
 
 
