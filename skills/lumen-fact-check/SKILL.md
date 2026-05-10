@@ -33,7 +33,8 @@ Follow the full recipe in `references/fact-check-recipe.md` (lifted from visual-
    - Re-read every referenced file; check signatures + behavior.
    - For git history claims: re-run `git diff --stat`, `git log`, `git diff --name-status`; compare numbers.
    - For diff-reviews: read both `git show <ref>:file` and working tree to catch before/after swaps.
-   - Classify each: **Confirmed** / **Corrected** / **Unverifiable**.
+   - Classify each claim by outcome: **Confirmed** / **Corrected** / **Unverifiable**.
+   - Assign a confidence level to every checked claim: **High** (primary-source exact match), **Medium** (verified but required interpretation or inference), **Low** (secondary, outdated, or pushes beyond explicit source statement), **Unverifiable** (cannot be checked with available tools).
 5. **Phase 3 — Correct in place** via surgical `Edit` calls.
    - Preserve layout, CSS, structure.
    - For HTML: keep Mermaid diagrams unless a label is factually wrong.
@@ -58,6 +59,9 @@ The corrected document, in place. Plus a verification summary section. The user 
 - Corrections cite source location (`file.ts:LN` or git command).
 - Subjective analysis was untouched.
 - Document structure preserved.
+- Confidence level (High/Medium/Low/Unverifiable) is assigned to every checked claim and surfaced in the verification summary.
+- Uncertainty is transparent: Low and Unverifiable claims include an explanation of why evidence is weak and what would upgrade confidence.
+- Follow `skills/_shared/instructions.md` for evidence rules, citation format, and validation conventions.
 
 ## PI extension route (v0.1.x)
 

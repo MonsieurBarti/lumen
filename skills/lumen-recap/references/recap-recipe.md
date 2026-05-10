@@ -54,6 +54,15 @@ Verify each claim against the code. If something cannot be verified, mark it as 
    - Flag each with a severity and a concrete suggestion (e.g., "add a doc comment to `buildCoordinationInstructions` explaining the 4 coordination levels — this function is called from 3 places and the behavior is non-obvious")
 8. **Next steps** — inferred from recent activity, open TODOs, project trajectory. Not prescriptive — just "here's where the momentum was pointing when you left." Include any explicit next-step notes from progress docs or plan files.
 
+**6-section research template** — when the user asks for research synthesis, competitive analysis, or decision support instead of a project recap, use this condensed structure:
+
+1. **Executive Summary** — one-paragraph TL;DR. State the research question, scope, and bottom-line answer. No new information here; everything below should support this paragraph.
+2. **Key Findings** — 3–7 findings, each a single bullet with a crisp claim (one sentence), an inline citation to the source (`file:line`, URL, or document name + section), and a confidence label (High / Medium / Low / Unverifiable) when the underlying evidence is mixed or incomplete. Minimum 3 distinct sources per major claim. Do not repeat-cite the same source to inflate count.
+3. **Evidence** — detailed excerpts, data tables, or screenshots organized by finding (not by source). Each evidence block points back to the finding it supports. Use neutral language; let the evidence speak.
+4. **Options Considered** — alternatives evaluated. For each: what it is, pros/cons, cost/trade-off notes, and why it was rejected or kept in consideration. Be fair to alternatives — misrepresenting an option you disagree with destroys credibility.
+5. **Recommendation** — the preferred path, with rationale explicitly tied back to specific findings above. State what must be true for the recommendation to hold (assumptions, dependencies).
+6. **Risks & Open Questions** — what could invalidate the recommendation, what remains unverified, and what follow-up research is needed. Flag severity: high (would block the recommendation), medium (would materially weaken it), low (nice-to-know).
+
 Include responsive section navigation. Use a warm, approachable visual language: muted blues and greens for architecture, amber callouts for cognitive debt hotspots, green/blue/amber/red for state-of-things status. Overflow prevention on any side-by-side or grid-based sections: apply `min-width: 0` on all grid/flex children and `overflow-wrap: break-word`. Never use `display: flex` on `<li>` for marker characters — use absolute positioning instead (see css-patterns.md Overflow Protection). Write to `~/.agent/diagrams/` and open in browser.
 
 Ultrathink.
