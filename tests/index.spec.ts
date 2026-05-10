@@ -14,12 +14,13 @@ describe("lumen package", () => {
 		expect(LUMEN_VERSION).toMatch(/^\d+\.\d+\.\d+/);
 	});
 
-	it("declares the eight v0 capabilities (atomic skills)", () => {
+	it("declares the nine v0 capabilities (atomic skills)", () => {
 		expect(LUMEN_CAPABILITIES).toEqual([
 			"lumen-diagram",
 			"lumen-chart",
 			"lumen-mermaid",
 			"lumen-slides",
+			"lumen-slides-export",
 			"lumen-gallery",
 			"lumen-guide",
 			"lumen-recap",
