@@ -948,4 +948,253 @@ describe("generateDiagramTemplate", () => {
 		expectValidHtml(html);
 		expect(html).toContain("sys-zone-frame");
 	});
+
+	it("renders lane-swim with multiple nodes, tones, shapes, and edge labels", () => {
+		const html = generateDiagramTemplate({
+			title: "Swim",
+			content: {
+				topology: "lane-swim",
+				lanes: [
+					{
+						label: "L1",
+						nodes: [
+							{ name: "A", tone: "amber", shape: "hexagon" },
+							{ name: "B", sub: "sub" },
+						],
+					},
+					{
+						label: "L2",
+						nodes: [
+							{ name: "C", tone: "green" },
+							{ name: "D", shape: "cylinder" },
+						],
+					},
+				],
+				edges: [{ from: 0, to: 2, tone: "purple", style: "dashed", label: "flow" }],
+			},
+			aesthetic: "blueprint",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("lane-frame");
+		expect(html).toContain("hexagon");
+		expect(html).toContain("cylinder");
+		expect(html).toContain("flow");
+		expect(html).toContain("dashed");
+	});
+
+	it("renders machine-clusters with multiple nodes and cross-host edge", () => {
+		const html = generateDiagramTemplate({
+			title: "Cluster",
+			content: {
+				topology: "machine-clusters",
+				hosts: [
+					{
+						name: "Host-A",
+						nodes: [
+							{ name: "Svc1", tone: "amber" },
+							{ name: "Svc2", sub: "v2", shape: "hexagon" },
+						],
+					},
+					{ name: "Host-B", nodes: [{ name: "Svc3", tone: "green" }, { name: "Svc4" }] },
+				],
+				edges: [{ from: 1, to: 2, tone: "purple", style: "dashed" }],
+			},
+			aesthetic: "lyra",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("host-frame");
+		expect(html).toContain("dashed");
+	});
+
+	it("renders deployment-tiers with explicit async edges and 4 nodes", () => {
+		const html = generateDiagramTemplate({
+			title: "Deploy",
+			content: {
+				topology: "deployment-tiers",
+				tiers: [
+					{
+						label: "Edge",
+						nodes: [{ name: "CDN" }, { name: "WAF" }, { name: "LB1" }, { name: "LB2" }],
+						replicas: 2,
+					},
+					{ label: "App", nodes: [{ name: "API", subMuted: "v3" }] },
+				],
+				edges: [{ fromLayer: 0, toLayer: 1, semantic: "async", style: "dashed" }],
+			},
+			aesthetic: "editorial",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("replica-badge");
+		expect(html).toContain("dashed");
+		expect(html).toContain("v3");
+	});
+
+	it("renders dual-cluster with multiple nodes and intra-cluster edge", () => {
+		const html = generateDiagramTemplate({
+			title: "Compare",
+			content: {
+				topology: "dual-cluster",
+				clusterA: {
+					label: "Before",
+					nodes: [
+						{ name: "A1", tone: "amber" },
+						{ name: "A2", sub: "old" },
+					],
+				},
+				clusterB: { label: "After", nodes: [{ name: "B1", tone: "green" }, { name: "B2" }] },
+				edges: [
+					{
+						fromCluster: "A",
+						fromIdx: 0,
+						toCluster: "B",
+						toIdx: 0,
+						tone: "cyan",
+						label: "migrated",
+					},
+					{ fromCluster: "A", fromIdx: 0, toCluster: "A", toIdx: 1 },
+				],
+			},
+			aesthetic: "terminal",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("cluster-frame");
+		expect(html).toContain("migrated");
+	});
+
+	it("renders er with 7 entities and non-key attributes", () => {
+		const html = generateDiagramTemplate({
+			title: "Schema",
+			content: {
+				topology: "er",
+				entities: [
+					{ name: "E1", attributes: [{ name: "id", type: "int", key: true }] },
+					{ name: "E2", attributes: [{ name: "a" }] },
+					{ name: "E3", attributes: [{ name: "b", type: "string" }] },
+					{ name: "E4", attributes: [] },
+					{ name: "E5", attributes: [{ name: "c" }] },
+					{ name: "E6", attributes: [{ name: "d" }] },
+					{ name: "E7", attributes: [{ name: "e" }] },
+				],
+				relationships: [{ from: 0, to: 1, label: "has" }],
+			},
+			aesthetic: "editorial",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("er-entity");
+		expect(html).toContain("has");
+	});
+
+	it("renders dep-graph with labeled edge", () => {
+		const html = generateDiagramTemplate({
+			title: "Deps",
+			content: {
+				topology: "dep-graph",
+				nodes: [
+					{ name: "A", tone: "amber" },
+					{ name: "B", sub: "v2" },
+				],
+				edges: [{ from: 0, to: 1, tone: "purple", label: "depends" }],
+			},
+			aesthetic: "lyra",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("dep-node");
+		expect(html).toContain("depends");
+	});
+
+	it("renders gantt with explicit rows", () => {
+		const html = generateDiagramTemplate({
+			title: "Roadmap",
+			content: {
+				topology: "gantt",
+				tasks: [
+					{ name: "Design", start: 0, duration: 5, row: 0 },
+					{ name: "Build", start: 5, duration: 10, row: 1 },
+					{ name: "Test", start: 8, duration: 5, row: 0 },
+				],
+			},
+			aesthetic: "dark-professional",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("gantt-bar");
+	});
+
+	it("renders radial-ring with tones, shapes, and styled edges", () => {
+		const html = generateDiagramTemplate({
+			title: "Peers",
+			content: {
+				topology: "radial-ring",
+				nodes: [
+					{ name: "A", tone: "amber", shape: "hexagon" },
+					{ name: "B", sub: "node-b" },
+					{ name: "C", tone: "green", shape: "cylinder" },
+				],
+				edges: [{ from: 0, to: 1, tone: "purple", style: "dashed" }],
+			},
+			aesthetic: "dark-professional",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("ring-node");
+		expect(html).toContain("dashed");
+	});
+
+	it("renders state machine with 5 states, tones, subs, and unlabeled self-loop", () => {
+		const html = generateDiagramTemplate({
+			title: "FSM",
+			content: {
+				topology: "state",
+				states: [
+					{ name: "Idle", initial: true, tone: "amber", sub: "start" },
+					{ name: "Validate", tone: "cyan" },
+					{ name: "Run", tone: "green", sub: "working" },
+					{ name: "Pause" },
+					{ name: "Done", final: true, tone: "red" },
+				],
+				transitions: [
+					{ from: 0, to: 1, label: "input" },
+					{ from: 1, to: 2 },
+					{ from: 2, to: 3, label: "pause" },
+					{ from: 2, to: 2, tone: "purple" },
+					{ from: 3, to: 2, label: "resume" },
+					{ from: 2, to: 4, label: "finish" },
+				],
+			},
+			aesthetic: "terminal",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("state-node");
+		expect(html).toContain("initial");
+		expect(html).toContain("final");
+	});
+
+	it("renders system-architecture with multiple nodes, tones, and edge labels", () => {
+		const html = generateDiagramTemplate({
+			title: "System",
+			content: {
+				topology: "system-architecture",
+				zones: [
+					{
+						label: "Edge",
+						nodes: [
+							{ name: "CDN", tone: "amber" },
+							{ name: "DNS", sub: "route53" },
+						],
+					},
+					{
+						label: "App",
+						nodes: [
+							{ name: "API", tone: "cyan" },
+							{ name: "Worker", tone: "green" },
+						],
+					},
+					{ label: "Data", nodes: [{ name: "DB", tone: "purple" }, { name: "Cache" }] },
+				],
+				edges: [{ from: 0, to: 2, label: "query", tone: "purple" }],
+			},
+			aesthetic: "dark-professional",
+		});
+		expectValidHtml(html);
+		expect(html).toContain("sys-zone-frame");
+		expect(html).toContain("query");
+	});
 });
