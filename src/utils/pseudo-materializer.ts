@@ -3,6 +3,17 @@ import type { Page } from "playwright";
 
 export async function materializePseudoElements(page: Page): Promise<void> {
 	await page.evaluate(() => {
+		function parseCssStringLiteral(raw: string): string {
+			if (!raw || raw === "none") return "";
+			if (
+				(raw.startsWith('"') && raw.endsWith('"')) ||
+				(raw.startsWith("'") && raw.endsWith("'"))
+			) {
+				return raw.slice(1, -1).replace(/\\(.)/g, "$1");
+			}
+			return raw;
+		}
+
 		const slides = document.querySelectorAll(".slide");
 
 		for (let i = 0; i < slides.length; i++) {
@@ -22,6 +33,9 @@ export async function materializePseudoElements(page: Page): Promise<void> {
 
 					const pseudoEl = document.createElement("span");
 					pseudoEl.classList.add(`pseudo-${pseudoName.slice(2)}`);
+
+					const text = parseCssStringLiteral(content);
+					if (text) pseudoEl.textContent = text;
 
 					for (let p = 0; p < computed.length; p++) {
 						const prop = computed.item(p);

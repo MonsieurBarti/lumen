@@ -80,4 +80,23 @@ describe("pseudo-materializer", () => {
 			await closeBrowser(browser);
 		}
 	}, 15000);
+
+	it("preserves pseudo-element text content in materialized elements", async () => {
+		const { browser, page } = await launchBrowserPage({ width: 1280, height: 720 });
+		try {
+			await loadHtml(page, PSEUDO_HTML);
+			await materializePseudoElements(page);
+			const texts = await page.evaluate(() => {
+				const target = document.querySelector(".target");
+				if (!target) return [];
+				return Array.from(target.querySelectorAll(".pseudo-before, .pseudo-after")).map(
+					(el) => el.textContent,
+				);
+			});
+			expect(texts).toContain("→");
+			expect(texts).toContain("←");
+		} finally {
+			await closeBrowser(browser);
+		}
+	}, 15000);
 });

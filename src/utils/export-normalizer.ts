@@ -34,8 +34,6 @@ export async function normalizeForExport(page: Page): Promise<void> {
 			* {
 				scroll-snap-type: none !important;
 				scroll-behavior: auto !important;
-			}
-			* {
 				animation: none !important;
 				transition: none !important;
 			}
