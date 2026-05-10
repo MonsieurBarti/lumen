@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { chromium } from "playwright";
+import { closeBrowser, launchBrowserPage } from "./playwright-browser.js";
 
 const DEFAULT_VIEWPORT = { width: 1280, height: 720 };
 const BUNDLE_PATH = resolve(
@@ -18,8 +18,7 @@ export interface ExportOptions {
 export async function exportHtmlToPptx(options: ExportOptions): Promise<void> {
 	const { htmlPath, outputPath, viewport = DEFAULT_VIEWPORT } = options;
 
-	const browser = await chromium.launch();
-	const page = await browser.newPage({ viewport });
+	const { browser, page } = await launchBrowserPage(viewport);
 
 	try {
 		await page.goto(`file://${resolve(htmlPath)}`, { waitUntil: "networkidle" });
@@ -28,11 +27,11 @@ export async function exportHtmlToPptx(options: ExportOptions): Promise<void> {
 			const slides = document.querySelectorAll(".slide");
 			for (let i = 0; i < slides.length; i++) {
 				const slide = slides.item(i);
-				if (!slide) continue;
+				if (!slide || !(slide instanceof HTMLElement)) continue;
 				slide.classList.add("visible");
-				(slide as HTMLElement).style.display = "block";
-				(slide as HTMLElement).style.visibility = "visible";
-				(slide as HTMLElement).style.opacity = "1";
+				slide.style.display = "block";
+				slide.style.visibility = "visible";
+				slide.style.opacity = "1";
 			}
 			const style = document.createElement("style");
 			style.textContent =
@@ -40,11 +39,14 @@ export async function exportHtmlToPptx(options: ExportOptions): Promise<void> {
 			document.head.appendChild(style);
 		});
 
-		try {
-			await page.waitForSelector(".mermaid svg", { timeout: 5000 });
-		} catch {
-			// eslint-disable-next-line no-console
-			console.warn("Mermaid SVG rendering timeout — proceeding without vector diagrams.");
+		const hasMermaid = await page.evaluate(() => document.querySelector(".mermaid") !== null);
+		if (hasMermaid) {
+			try {
+				await page.waitForSelector(".mermaid svg", { timeout: 5000 });
+			} catch {
+				// eslint-disable-next-line no-console
+				console.warn("Mermaid SVG rendering timeout — proceeding without vector diagrams.");
+			}
 		}
 
 		await page.addScriptTag({ path: BUNDLE_PATH });
@@ -57,11 +59,11 @@ export async function exportHtmlToPptx(options: ExportOptions): Promise<void> {
 				skipDownload: true,
 				svgAsVector: true,
 			});
-			return Array.from(new Uint8Array(await blob.arrayBuffer()));
+			return new Uint8Array(await blob.arrayBuffer());
 		});
 
 		writeFileSync(outputPath, Buffer.from(pptxBuffer));
 	} finally {
-		await browser.close();
+		await closeBrowser(browser);
 	}
 }
