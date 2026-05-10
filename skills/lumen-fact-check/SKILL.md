@@ -65,7 +65,7 @@ The corrected document, in place. Plus a verification summary section. The user 
 
 ## PI extension route (v0.1.x)
 
-Not wired through the `lumen-generate_visual` PI tool. Fact-check needs `Read` / `Grep` / `Bash` / `Edit` access; the LLM-authored path uses these directly. Deterministic fact-check renderer is not planned.
+Permanently skill-path only by design. `lumen-fact-check` needs `Read` / `Grep` / `Bash` / `Edit` access to verify claims against the actual codebase and apply surgical corrections. A deterministic PI tool cannot perform this agentic verification loop.
 
 ## Sources
 

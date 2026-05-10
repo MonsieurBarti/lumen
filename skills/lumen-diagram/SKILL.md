@@ -114,9 +114,9 @@ Open any in a browser. Use the closest-match as a starting point when authoring 
 
 ## PI extension route (v0.2)
 
-The `lumen-generate_visual` PI tool wires `type: "diagram"` for **4 of the 15 topologies**: `sequence`, `layered`, `linear-flow`, `radial-hub` — these cover every recipe in `templates/ai-patterns.md` (RAG, Agentic RAG, Mem0, Multi-Agent). The other 11 topologies remain LLM-authored via this skill's pipeline; they land as patch-series extensions.
+The `lumen-generate_visual` PI tool wires `type: "diagram"` for **all 15 topologies**. Every topology listed in the table above is callable via the PI tool with a structured `FgraphContent` object.
 
-**Coordinate philosophy for the PI route**: callers describe topology semantically (lane indices, layer indices, compass positions, stage chains) and the renderer computes absolute `--x/--y`. Free-form topologies (`system-architecture`, `dual-cluster`) keep the LLM-authored path because they genuinely need pixel coords.
+**Coordinate philosophy for the PI route**: callers describe topology semantically (lane indices, layer indices, compass positions, stage chains, tier indices, host indices, row indices, entity indices, state indices, task indices) and the renderer computes absolute `--x/--y`. Free-form topologies (`system-architecture`, `dual-cluster`) accept logical zone/cluster labels and node counts; the renderer distributes components automatically.
 
 **Call shape:**
 

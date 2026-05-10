@@ -8,10 +8,21 @@
 
 import type { FgraphAesthetic } from "../../types.js";
 import { loadAestheticCss, renderDocumentShell } from "./_shared.js";
+import { renderDepGraphBody } from "./dep-graph.js";
+import { renderDeploymentTiersBody } from "./deployment-tiers.js";
+import { renderDualClusterBody } from "./dual-cluster.js";
+import { renderErBody } from "./er.js";
+import { renderGanttBody } from "./gantt.js";
+import { renderLaneSwimBody } from "./lane-swim.js";
 import { renderLayeredBody } from "./layered.js";
 import { renderLinearFlowBody } from "./linear-flow.js";
+import { renderMachineClustersBody } from "./machine-clusters.js";
+import { renderPieBody } from "./pie.js";
 import { renderRadialHubBody } from "./radial-hub.js";
+import { renderRadialRingBody } from "./radial-ring.js";
 import { renderSequenceBody } from "./sequence.js";
+import { renderStateBody } from "./state.js";
+import { renderSystemArchitectureBody } from "./system-architecture.js";
 
 export {
 	parseFgraphContent,
@@ -49,6 +60,17 @@ const TOPOLOGY_LABEL: Record<FgraphContent["topology"], string> = {
 	layered: "Layered architecture",
 	"linear-flow": "Linear flow",
 	"radial-hub": "Hub & spokes",
+	"radial-ring": "Peer ring",
+	"lane-swim": "Swimlanes",
+	"deployment-tiers": "Deployment tiers",
+	"machine-clusters": "Machine clusters",
+	state: "State machine",
+	gantt: "Gantt chart",
+	pie: "Pie chart",
+	er: "Entity relationship",
+	"dep-graph": "Dependency graph",
+	"dual-cluster": "Dual cluster",
+	"system-architecture": "System architecture",
 };
 
 /**
@@ -65,6 +87,17 @@ export function generateDiagramTemplate(input: GenerateDiagramInput): string {
 		layered: () => renderLayeredBody({ title, content: content as never }),
 		"linear-flow": () => renderLinearFlowBody({ title, content: content as never }),
 		"radial-hub": () => renderRadialHubBody({ title, content: content as never }),
+		"radial-ring": () => renderRadialRingBody({ title, content: content as never }),
+		"lane-swim": () => renderLaneSwimBody({ title, content: content as never }),
+		"deployment-tiers": () => renderDeploymentTiersBody({ title, content: content as never }),
+		"machine-clusters": () => renderMachineClustersBody({ title, content: content as never }),
+		state: () => renderStateBody({ title, content: content as never }),
+		gantt: () => renderGanttBody({ title, content: content as never }),
+		pie: () => renderPieBody({ title, content: content as never }),
+		er: () => renderErBody({ title, content: content as never }),
+		"dep-graph": () => renderDepGraphBody({ title, content: content as never }),
+		"dual-cluster": () => renderDualClusterBody({ title, content: content as never }),
+		"system-architecture": () => renderSystemArchitectureBody({ title, content: content as never }),
 	} as const;
 
 	const { bodyHtml, topologyCss } = renderers[content.topology]();

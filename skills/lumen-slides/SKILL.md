@@ -153,7 +153,7 @@ Single HTML file written to `~/.agent/lumen/<slug>.html`. Open in browser.
 
 ## PI extension route (v0.1.x)
 
-Not wired through `lumen-generate_visual` PI tool. Slides need multi-step compositional planning + image generation; LLM-authored CC path is the right fit. Deterministic slide renderer is not planned.
+Not wired through `lumen-generate_visual` PI tool. A deterministic schema (array of typed slides with pattern keys, titles, bullets, and optional diagram references) is feasible but not yet implemented. The LLM-authored CC path remains the right fit for decks that need multi-step compositional planning and image generation.
 
 ## Sources
 
