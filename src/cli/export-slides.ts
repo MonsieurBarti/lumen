@@ -15,7 +15,7 @@ const { values, positionals } = parseArgs({
 	},
 });
 
-const htmlPath = positionals[0];
+const htmlPath = positionals[0] ?? "";
 if (!htmlPath) {
 	console.error("Usage: lumen-export-slides <html-path> [--output <pptx-path>] [--preset <name>]");
 	process.exit(1);
@@ -26,18 +26,12 @@ const outputPath = values.output
 	: getVersionedPath(join(dirname(htmlPath), "deck.pptx"));
 
 async function main() {
-	if (!htmlPath) {
-		console.error(
-			"Usage: lumen-export-slides <html-path> [--output <pptx-path>] [--preset <name>]",
-		);
-		process.exit(1);
-	}
-
 	let finalHtmlPath = htmlPath;
 	let tempDir: string | undefined;
 
+	const html = readFileSync(htmlPath, "utf-8");
+
 	try {
-		const html = readFileSync(htmlPath, "utf-8");
 		const theme = await resolveTheme(values.preset ? { preset: values.preset } : {});
 		const styleTag = `<style data-injected-theme="${theme.source}">\n${theme.css}\n</style>`;
 
@@ -59,6 +53,7 @@ async function main() {
 		finalHtmlPath = join(tempDir, "deck.html");
 		writeFileSync(finalHtmlPath, modifiedHtml);
 	} catch (err) {
+		if (values.preset) throw err;
 		console.warn("Theme resolution failed, proceeding with original HTML:", err);
 	}
 

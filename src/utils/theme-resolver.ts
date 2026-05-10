@@ -20,15 +20,15 @@ export interface ResolvedTheme {
 	path: string;
 }
 
+function isEnoent(err: unknown): boolean {
+	return err instanceof Error && Reflect.get(err, "code") === "ENOENT";
+}
+
 export async function resolveTheme(
 	options: { cwd?: string; preset?: string } = {},
 ): Promise<ResolvedTheme> {
 	const cwd = options.cwd ?? process.cwd();
 	const preset = options.preset ?? "editorial";
-
-	function isEnoent(err: unknown): boolean {
-		return err instanceof Error && Reflect.get(err, "code") === "ENOENT";
-	}
 
 	const projectPath = join(cwd, "_theme.css");
 	try {
