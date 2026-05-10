@@ -1,7 +1,7 @@
 ---
 name: lumen-chart
 description: Generate single-file HTML+SVG or interactive Chart.js data chart (bar, pie, line, area, scatter, radar, funnel, bubble, table, interactive-bar, interactive-line). Invoke when user provides numeric data and asks for chart, graph, plot, trend, distribution, proportion, or comparison.
-version: 0.1.7 # x-release-please-version
+version: 0.1.8 # x-release-please-version
 ---
 
 # lumen-chart
