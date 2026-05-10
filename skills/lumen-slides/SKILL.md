@@ -118,10 +118,6 @@ Or riff on any of `_shared/aesthetics/*.css` adapted for slides (5 options there
 
 Single HTML file written to `~/.agent/lumen/<slug>.html`. Open in browser.
 
-## PPTX Export
-
-After generating a slide deck, the user may request a PowerPoint export. Invoke `lumen-slides-export` to convert the HTML deck to an editable `.pptx` file. The export preserves native text boxes and vector SVGs where possible.
-
 ## PI extension route (v0.1.x)
 
 Not wired through `lumen-generate_visual` PI tool. Slides need multi-step compositional planning + image generation; LLM-authored CC path is the right fit. Deterministic slide renderer is not planned.
