@@ -84,6 +84,7 @@ Single HTML file: a 4-tab architecture guide with embedded subsystem diagrams an
 - Fact-check verification summary present.
 - No claims silently passed (per lumen-fact-check's own quality contract).
 - File opens offline (`file://`), no broken asset references.
+- Follow `skills/_shared/instructions.md` for universal aesthetics, file-handling, validation, and citation conventions.
 
 ## Execution model
 

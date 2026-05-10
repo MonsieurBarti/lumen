@@ -30,10 +30,20 @@ Skip subjective analysis (opinions, design judgments, readability assessments) �
 - For plan docs: verify that files, functions, and types the plan references actually exist and behave as described
 - For project-recaps: re-run `git log` commands to verify activity narrative and timeline
 
-Classify each claim:
+Classify each claim by outcome:
 - **Confirmed**: claim matches the code/output exactly
 - **Corrected**: claim was inaccurate — note what was wrong and what the correct value is
 - **Unverifiable**: claim can't be checked (e.g., references a file that doesn't exist, or a behavior that requires runtime testing)
+
+Then assign a confidence level to every claim:
+- **High** — verified against a primary source with an exact match. No interpretation needed.
+- **Medium** — verified, but required inference, partial match, or reading across multiple sources. The conclusion is sound but not mechanically derivable.
+- **Low** — source is secondary, outdated, or the claim pushes beyond what the source explicitly states. Treat with skepticism.
+- **Unverifiable** — cannot be checked with available tools (missing file, runtime-only behavior, external dependency not accessible).
+
+When to flag vs correct:
+- **Correct** when the claim is factually wrong and you can determine the right value from the source.
+- **Flag (Unverifiable/Low)** when the claim might be right but you cannot verify it, or when correcting it would require runtime testing or external access you do not have. Never guess a "correction" for an unverifiable claim.
 
 **Phase 3: Correct in place.** Edit the file directly using surgical text replacements:
 - Fix incorrect numbers, function names, file paths, behavior descriptions
@@ -50,7 +60,8 @@ Include in the summary:
 - Total claims checked
 - Claims confirmed (with count)
 - Corrections made (with brief list of what was fixed: "Changed `processCleanup` to `runCleanup` to match actual function name in `worker.ts:45`")
-- Unverifiable claims flagged (if any)
+- Confidence distribution: how many claims received High / Medium / Low / Unverifiable
+- Unverifiable and Low-confidence claims flagged, with an explanation of why evidence is weak and what would be needed to upgrade the confidence (e.g., "Low — function signature matches but behavior depends on runtime state; would need integration test to verify")
 
 **Phase 5: Report.** Tell the user what was checked, what was corrected, and open the file (HTML in browser, markdown path in chat). If nothing needed correction, say so — the verification still has value as confirmation.
 

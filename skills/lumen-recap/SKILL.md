@@ -38,6 +38,19 @@ Follow the full recipe in `references/recap-recipe.md` (lifted from visual-expla
    - Cognitive debt hotspots (severity badges; concrete suggestions)
    - Next steps (inferred momentum, not prescriptive)
 
+## Research recap template
+
+In addition to the 8-section project recap above, `lumen-recap` supports a 6-section research template for summarizing investigations, competitive analysis, or decision-support material:
+
+1. **Executive Summary** — one-paragraph TL;DR of the research scope, question, and bottom-line answer.
+2. **Key Findings** — 3–7 bulleted findings, each with an inline citation pointing to the source (URL, document, or `file:line`). Minimum 3 distinct sources per major claim.
+3. **Evidence** — detailed excerpts, data tables, or screenshots that support the findings. Organized by finding, not by source.
+4. **Options Considered** — alternatives evaluated, with pros/cons and cost/trade-off notes.
+5. **Recommendation** — the preferred path with rationale tied back to findings.
+6. **Risks & Open Questions** — what could invalidate the recommendation, what remains unverified, and what follow-up research is needed.
+
+When triggered for research-oriented prompts (`research this`, `compare options`, `should we use X`), default to the 6-section template. When triggered for project-state prompts (`recap`, `where are we`), default to the 8-section project recap.
+
 ## Output
 
 Single HTML written to `~/.agent/lumen/`. Open in browser.
@@ -58,6 +71,9 @@ Single HTML written to `~/.agent/lumen/`. Open in browser.
 - Debt hotspots each carry a concrete suggestion, not just a flag.
 - `min-width: 0` on grid/flex children; `overflow-wrap: break-word`.
 - Never `display: flex` on `<li>` for marker characters — use absolute positioning.
+- Every quantitative figure traces to a git command or `file:line` source (per shared validation-first convention).
+- Research template outputs cite 3–5 distinct sources per major factual claim with inline references.
+- Follow `skills/_shared/instructions.md` for aesthetics, file-handling, browser-launch, and citation conventions.
 
 ## PI extension route (v0.1.x)
 
