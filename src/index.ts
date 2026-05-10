@@ -46,7 +46,6 @@ export const LUMEN_CAPABILITIES = [
 	"lumen-chart",
 	"lumen-mermaid",
 	"lumen-slides",
-	"lumen-slides-export",
 	"lumen-gallery",
 	"lumen-guide",
 	"lumen-recap",
