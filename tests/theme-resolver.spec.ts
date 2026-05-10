@@ -107,4 +107,10 @@ describe("resolveTheme", () => {
 
 		await expect(resolveTheme({ cwd: projectTempDir })).rejects.toThrow();
 	});
+
+	it("throws for an unknown preset", async () => {
+		await expect(
+			resolveTheme({ cwd: projectTempDir, preset: "nonexistent-preset" }),
+		).rejects.toThrow(/unknown aesthetic preset.*nonexistent-preset/i);
+	});
 });
