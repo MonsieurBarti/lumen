@@ -75,6 +75,9 @@
 		"dom-to-pptx": "^1.1.8",
 		"playwright": "^1.52.0"
 	},
+	"bin": {
+		"lumen-export-slides": "./dist/cli/export-slides.js"
+	},
 	"pi": {
 		"extensions": [
 			"./dist/index.js"
