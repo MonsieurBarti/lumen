@@ -1,6 +1,6 @@
 ---
 name: lumen-chart
-description: Generate single-file HTML+SVG data chart (bar, pie, line, area, scatter, radar, funnel, bubble, table). Invoke when user provides numeric data and asks for chart, graph, plot, trend, distribution, proportion, or comparison.
+description: Generate single-file HTML+SVG or interactive Chart.js data chart (bar, pie, line, area, scatter, radar, funnel, bubble, table, interactive-bar, interactive-line). Invoke when user provides numeric data and asks for chart, graph, plot, trend, distribution, proportion, or comparison.
 version: 0.1.7 # x-release-please-version
 ---
 
@@ -32,6 +32,8 @@ Triggers: `chart`, `graph`, `plot`, `bar chart`, `pie chart`, `line chart`, `sca
 | pipeline conversion | `schema-funnel.json` |
 | x,y,size triplets | `schema-bubble.json` |
 | structured comparison | `schema-table.json` (min/max highlighting) |
+| interactive categorical | `interactive-bar` — Chart.js canvas, tooltips, zoom |
+| interactive time-series | `interactive-line` — Chart.js canvas, tooltips, zoom |
 
 ## Chart presets (style direction — orthogonal to aesthetic)
 
@@ -64,7 +66,8 @@ Open any HTML in browser; the JSON shows the input shape.
 
 ## Output
 
-Single HTML file. SVG axes + grid + marks + legend inlined. No external deps. Opens via `file://`.
+- **Static charts** (`bar`, `pie`, `line`, `table`): single HTML file with inlined SVG. No external deps. Opens via `file://`.
+- **Interactive charts** (`interactive-bar`, `interactive-line`): single HTML file that loads Chart.js 4.4.1 from CDN. Requires network on first open; thereafter cached. Canvas-based with tooltips, hover states, and responsive scaling.
 
 ## Quality checks
 
@@ -77,7 +80,11 @@ Single HTML file. SVG axes + grid + marks + legend inlined. No external deps. Op
 
 ## PI extension route (v0.2)
 
-The `lumen-generate_visual` PI tool wires `type: "chart"` for **4 of the 9 chart types**: `bar` (vertical, grouped or stacked), `pie` (with optional donut `innerRadius`), `line` (linear or smooth, with markers), `table` (with min/max highlighting + verdict pills). The other 5 types (`area`, `scatter`, `radar`, `funnel`, `bubble`) remain LLM-authored via this skill's pipeline; they land as patch-series extensions.
+The `lumen-generate_visual` PI tool wires `type: "chart"` for **6 chart types**:
+- Static: `bar` (vertical, grouped or stacked), `pie` (with optional donut `innerRadius`), `line` (linear or smooth, with markers), `table` (with min/max highlighting + verdict pills)
+- Interactive: `interactive-bar`, `interactive-line` — Chart.js canvas with tooltips and hover states
+
+The remaining 4 types (`area`, `scatter`, `radar`, `funnel`, `bubble`) remain LLM-authored via this skill's pipeline; they land as patch-series extensions.
 
 **Coordinate philosophy for the PI route**: callers describe chart data semantically (series + categories, slices + values, columns + rows). The renderer computes scales (Nice Numbers via `src/utils/nice-numbers.ts`), pixel positions, and SVG paths. LLMs never touch viewBox math.
 

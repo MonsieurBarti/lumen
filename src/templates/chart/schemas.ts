@@ -97,13 +97,49 @@ export interface TableContent {
 	rows: TableRow[];
 }
 
-export type ChartContent = BarContent | PieContent | LineContent | TableContent;
+/** Interactive bar chart rendered via Chart.js (HTML/Canvas, not SVG). */
+export interface InteractiveBarContent {
+	chart: "interactive-bar";
+	series: BarSeries[];
+	subtitle?: string;
+	/** "grouped" (bars side-by-side) or "stacked" (cumulative). Default "grouped". */
+	variant?: "grouped" | "stacked";
+	xAxisLabel?: string;
+	yAxisLabel?: string;
+	/** Skip the legend entirely. Default false. */
+	hideLegend?: boolean;
+}
+
+/** Interactive line chart rendered via Chart.js (HTML/Canvas, not SVG). */
+export interface InteractiveLineContent {
+	chart: "interactive-line";
+	series: LineSeries[];
+	subtitle?: string;
+	/** Curve type. Default "linear". */
+	curve?: "linear" | "smooth";
+	/** Show point markers. Default true. */
+	showMarks?: boolean;
+	xAxisLabel?: string;
+	yAxisLabel?: string;
+	/** Skip the legend entirely. Default false. */
+	hideLegend?: boolean;
+}
+
+export type ChartContent =
+	| BarContent
+	| PieContent
+	| LineContent
+	| TableContent
+	| InteractiveBarContent
+	| InteractiveLineContent;
 
 export const SUPPORTED_CHARTS = [
 	"bar",
 	"pie",
 	"line",
 	"table",
+	"interactive-bar",
+	"interactive-line",
 ] as const satisfies readonly ChartContent["chart"][];
 
 export type SupportedChart = (typeof SUPPORTED_CHARTS)[number];
@@ -417,6 +453,31 @@ function parseTableContent(raw: object): TableContent {
 	return result;
 }
 
+function parseInteractiveBarContent(raw: object): InteractiveBarContent {
+	// Re-use bar validation, then swap the chart discriminator.
+	const bar = parseBarContent(raw);
+	const result: InteractiveBarContent = { chart: "interactive-bar", series: bar.series };
+	if (bar.subtitle !== undefined) result.subtitle = bar.subtitle;
+	if (bar.variant !== undefined) result.variant = bar.variant;
+	if (bar.xAxisLabel !== undefined) result.xAxisLabel = bar.xAxisLabel;
+	if (bar.yAxisLabel !== undefined) result.yAxisLabel = bar.yAxisLabel;
+	if (bar.hideLegend !== undefined) result.hideLegend = bar.hideLegend;
+	return result;
+}
+
+function parseInteractiveLineContent(raw: object): InteractiveLineContent {
+	// Re-use line validation, then swap the chart discriminator.
+	const line = parseLineContent(raw);
+	const result: InteractiveLineContent = { chart: "interactive-line", series: line.series };
+	if (line.subtitle !== undefined) result.subtitle = line.subtitle;
+	if (line.curve !== undefined) result.curve = line.curve;
+	if (line.showMarks !== undefined) result.showMarks = line.showMarks;
+	if (line.xAxisLabel !== undefined) result.xAxisLabel = line.xAxisLabel;
+	if (line.yAxisLabel !== undefined) result.yAxisLabel = line.yAxisLabel;
+	if (line.hideLegend !== undefined) result.hideLegend = line.hideLegend;
+	return result;
+}
+
 /**
  * Validate + normalize an untrusted `content` object from the PI tool param.
  * Throws Error with a precise path on any structural problem.
@@ -432,7 +493,7 @@ export function parseChartContent(raw: unknown): ChartContent {
 	const chart = Reflect.get(obj, "chart");
 	if (typeof chart !== "string" || !CHART_TYPES.has(chart)) {
 		throw new Error(
-			`content.chart must be one of: ${SUPPORTED_CHARTS.join(", ")} (got ${String(chart)}). The other 5 chart types (area, scatter, radar, funnel, bubble) land in v0.2.x patches; use the lumen-chart skill directly until then.`,
+			`content.chart must be one of: ${SUPPORTED_CHARTS.join(", ")} (got ${String(chart)}).`,
 		);
 	}
 	switch (chart as SupportedChart) {
@@ -444,5 +505,9 @@ export function parseChartContent(raw: unknown): ChartContent {
 			return parseLineContent(obj);
 		case "table":
 			return parseTableContent(obj);
+		case "interactive-bar":
+			return parseInteractiveBarContent(obj);
+		case "interactive-line":
+			return parseInteractiveLineContent(obj);
 	}
 }

@@ -131,6 +131,8 @@ export interface ChartShellInput {
 	chartCss: string;
 	chartHtml: string;
 	legendHtml?: string | undefined;
+	/** Optional CDN / inline scripts injected before </body> (e.g. Chart.js). */
+	scripts?: string[] | undefined;
 }
 
 /**
@@ -145,10 +147,12 @@ export function renderChartShell({
 	chartCss,
 	chartHtml,
 	legendHtml,
+	scripts,
 }: ChartShellInput): string {
 	const safeTitle = escapeHtml(title);
 	const safeEyebrow = escapeHtml(eyebrow);
 	const safeSubtitle = subtitle ? escapeHtml(subtitle) : "";
+	const scriptBlock = scripts?.length ? `\n${scripts.join("\n")}\n` : "";
 
 	return `<!DOCTYPE html>
 <html lang="en" data-theme="dark">
@@ -178,8 +182,7 @@ ${chartCss}
 <div class="chart-wrap">
 ${chartHtml}${legendHtml ? `\n${legendHtml}` : ""}
 </div>
-</main>
-
+</main>${scriptBlock}
 </body>
 </html>`;
 }
