@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lumen.dev/schemas/slide-template-registry.json",
+  "title": "Lumen Slide Template Registry",
+  "description": "Registry mapping slide pattern selectors to metadata, composition variants, required/optional slots, and CSS class contracts. Validates index.json for the lumen-slides skill.",
+  "type": "object",
+  "required": ["version", "patterns"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Registry version in semver format",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "patterns": {
+      "type": "array",
+      "description": "Ordered list of slide patterns recognized by SlideEngine",
+      "minItems": 10,
+      "items": {
+        "$ref": "#/definitions/pattern"
+      }
+    }
+  },
+  "definitions": {
+    "pattern": {
+      "type": "object",
+      "required": [
+        "pattern_key",
+        "name",
+        "description",
+        "composition_variants",
+        "required_slots",
+        "optional_slots",
+        "css_class_contract",
+        "supports_reveal"
+      ],
+      "properties": {
+        "pattern_key": {
+          "type": "string",
+          "description": "Kebab-case selector suffix matched by .slide--{key}",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable pattern name"
+        },
+        "description": {
+          "type": "string",
+          "description": "What the pattern is for and its content fit constraints"
+        },
+        "composition_variants": {
+          "type": "array",
+          "description": "Supported layout variants for this pattern",
+          "items": {
+            "type": "string",
+            "enum": [
+              "centered",
+              "left-heavy",
+              "right-heavy",
+              "split",
+              "edge-aligned",
+              "full-bleed"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "required_slots": {
+          "type": "array",
+          "description": "CSS class or element selectors that must be present for the pattern to render correctly",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "optional_slots": {
+          "type": "array",
+          "description": "CSS class or element selectors that may be omitted without breaking the pattern",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "css_class_contract": {
+          "type": "array",
+          "description": "All CSS class selectors used by this pattern, including both canonical and alias classes from upstream templates",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "supports_reveal": {
+          "type": "boolean",
+          "description": "Whether child elements with .reveal class receive stagger-in animations when the slide becomes visible"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

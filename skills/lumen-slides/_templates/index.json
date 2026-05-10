@@ -1,0 +1,245 @@
+{
+  "version": "0.1.7",
+  "patterns": [
+    {
+      "pattern_key": "title",
+      "name": "Title Slide",
+      "description": "Full-viewport hero opening the deck. Sets visual tone and topic. One heading at display scale (48–120px), one subtitle or date. Background via gradient or optional .slide__bg image.",
+      "composition_variants": ["centered", "full-bleed"],
+      "required_slots": [".slide__display", ".slide__subtitle", "h1"],
+      "optional_slots": [".slide__decor", ".slide__content", ".slide__bg"],
+      "css_class_contract": [
+        ".slide--title",
+        ".slide__display",
+        ".slide__subtitle",
+        ".slide__decor",
+        ".slide__content",
+        ".slide__bg"
+      ],
+      "supports_reveal": true
+    },
+    {
+      "pattern_key": "section",
+      "name": "Section Divider",
+      "description": "Breathing room between topics. Oversized decorative section number (ultra-light weight, opacity 0.08) with heading and optional subheading. No body text. Acts as a chapter boundary in the narrative arc.",
+      "composition_variants": ["centered"],
+      "required_slots": [".slide__number", ".slide__heading", "h2"],
+      "optional_slots": [".slide__subtitle", ".slide__content", ".slide__decor"],
+      "css_class_contract": [
+        ".slide--section",
+        ".slide__number",
+        ".slide__heading",
+        ".slide__subtitle",
+        ".slide__content",
+        ".slide__decor",
+        ".slide--divider"
+      ],
+      "supports_reveal": true
+    },
+    {
+      "pattern_key": "content",
+      "name": "Content Slide",
+      "description": "Heading + bullets or short paragraphs. Asymmetric layout with optional aside area for illustration, icon, or accent SVG. Max 5–6 bullets (max 2 lines each). If more content is needed, split to a second slide.",
+      "composition_variants": ["left-heavy", "right-heavy", "centered", "edge-aligned"],
+      "required_slots": [".slide__heading", "ul", "ol", ".slide__body"],
+      "optional_slots": [
+        ".slide__label",
+        ".slide__decor",
+        ".slide__inner",
+        ".slide__text",
+        ".slide__bullets",
+        ".slide__aside"
+      ],
+      "css_class_contract": [
+        ".slide--content",
+        ".slide__heading",
+        ".slide__label",
+        ".slide__body",
+        ".slide__decor",
+        ".slide__inner",
+        ".slide__text",
+        ".slide__bullets",
+        ".slide__aside",
+        "ul",
+        "ol",
+        "li"
+      ],
+      "supports_reveal": true
+    },
+    {
+      "pattern_key": "quote",
+      "name": "Quote Slide",
+      "description": "Pullquote as the sole focal point. Dramatic serif scale (24–48px) with generous whitespace. Oversized opening quotation mark as decoration. ~25 words / ~150 chars max plus attribution. Longer quotes become content slides.",
+      "composition_variants": ["centered", "full-bleed"],
+      "required_slots": ["blockquote", "cite"],
+      "optional_slots": [".slide__quote-mark", ".slide__decor"],
+      "css_class_contract": [
+        ".slide--quote",
+        ".slide__quote-mark",
+        "blockquote",
+        "cite"
+      ],
+      "supports_reveal": true
+    },
+    {
+      "pattern_key": "image",
+      "name": "Full-Bleed Image",
+      "description": "Full-bleed background image (base64 data URI or CSS gradient) with minimal text overlay. Gradient scrim ensures contrast. Zero slide padding. Background dominates; minimal overlaid text (1 heading + 1 subtitle max).",
+      "composition_variants": ["full-bleed", "edge-aligned"],
+      "required_slots": [".slide__bg", ".slide__scrim", ".slide__content"],
+      "optional_slots": [
+        ".slide__heading",
+        ".slide__subtitle",
+        ".slide__label",
+        ".slide__decor",
+        ".slide__bg--gradient"
+      ],
+      "css_class_contract": [
+        ".slide--image",
+        ".slide__bg",
+        ".slide__scrim",
+        ".slide__content",
+        ".slide__heading",
+        ".slide__subtitle",
+        ".slide__label",
+        ".slide__bg--gradient",
+        ".slide--bleed"
+      ],
+      "supports_reveal": true
+    },
+    {
+      "pattern_key": "code",
+      "name": "Code Slide",
+      "description": "Short code snippet as the focal point. Heading + recessed code block with optional floating filename label. Centered on the viewport. Max 10 lines of code. Syntax highlighting via .hl (highlight) and .cm (comment) spans.",
+      "composition_variants": ["centered"],
+      "required_slots": [".slide__heading", ".slide__code-block", "pre", "code"],
+      "optional_slots": [".slide__code-filename", ".slide__decor"],
+      "css_class_contract": [
+        ".slide--code",
+        ".slide__heading",
+        ".slide__code-block",
+        ".slide__code-filename",
+        "pre",
+        "code",
+        ".hl",
+        ".cm"
+      ],
+      "supports_reveal": true
+    },
+    {
+      "pattern_key": "comparison",
+      "name": "Comparison Slide",
+      "description": "Two-panel split for before/after, option A vs B, or text + diagram. Each panel has its own background tier. Zero padding on the slide root in some implementations — panels fill edge to edge. Each panel follows its inner type's density limits.",
+      "composition_variants": ["split", "left-heavy", "right-heavy"],
+      "required_slots": [".slide__columns", ".slide__col", ".slide__heading"],
+      "optional_slots": [
+        ".slide__label",
+        ".slide__body",
+        ".slide__col.accent",
+        ".slide__decor",
+        "h3",
+        "ul",
+        "li"
+      ],
+      "css_class_contract": [
+        ".slide--comparison",
+        ".slide__heading",
+        ".slide__columns",
+        ".slide__col",
+        ".slide__col.accent",
+        "h3",
+        "ul",
+        "li",
+        ".slide--split",
+        ".slide__panels",
+        ".slide__panel",
+        ".slide__panel--primary",
+        ".slide__panel--secondary",
+        ".slide__panel--a",
+        ".slide__panel--b"
+      ],
+      "supports_reveal": true
+    },
+    {
+      "pattern_key": "table",
+      "name": "Table Slide",
+      "description": "Structured comparison or data table. Cell text at 18–20px for projection readability. Heading at top. Max 8 rows per slide — overflow paginates to the next slide. Sticky header on scroll within slide.",
+      "composition_variants": ["centered", "edge-aligned"],
+      "required_slots": [".slide__heading", "table", "thead", "tbody"],
+      "optional_slots": [
+        ".slide__label",
+        ".slide__decor",
+        ".table-scroll",
+        ".table-wrap",
+        ".data-table"
+      ],
+      "css_class_contract": [
+        ".slide--table",
+        ".slide__heading",
+        ".table-scroll",
+        "table",
+        "th",
+        "td",
+        "thead",
+        "tbody",
+        ".table-wrap",
+        ".data-table"
+      ],
+      "supports_reveal": true
+    },
+    {
+      "pattern_key": "diagram",
+      "name": "Diagram Slide",
+      "description": "Full-viewport Mermaid diagram or inline fgraph. Heading at top, diagram fills remaining space. Max 8–10 nodes for projection readability. 18px+ labels, 2px+ edges. Zoom controls available. If the diagram is small, pair it with supporting content in a split layout.",
+      "composition_variants": ["centered", "full-bleed"],
+      "required_slots": [".slide__heading", ".slide__diagram-wrap"],
+      "optional_slots": [
+        ".slide__caption",
+        ".mermaid-wrap",
+        ".zoom-controls",
+        ".mermaid",
+        ".fgraph-wrap",
+        ".slide__label",
+        ".slide__decor"
+      ],
+      "css_class_contract": [
+        ".slide--diagram",
+        ".slide__heading",
+        ".slide__diagram-wrap",
+        ".slide__caption",
+        ".mermaid-wrap",
+        ".zoom-controls",
+        ".mermaid",
+        ".fgraph-wrap"
+      ],
+      "supports_reveal": true
+    },
+    {
+      "pattern_key": "closing",
+      "name": "Closing Slide",
+      "description": "Final slide. Mirrors the title slide structure — centered, display type or heading, optional CTA or next-step text. Background treatment echoes the title for visual bookending. No bullets, no body text beyond a single subtitle/CTA.",
+      "composition_variants": ["centered", "full-bleed"],
+      "required_slots": [".slide__heading", ".slide__subtitle"],
+      "optional_slots": [
+        ".slide__display",
+        ".slide__body",
+        ".cta",
+        ".slide__content",
+        ".slide__decor",
+        ".slide__bg"
+      ],
+      "css_class_contract": [
+        ".slide--closing",
+        ".slide__heading",
+        ".slide__body",
+        ".cta",
+        ".slide__display",
+        ".slide__subtitle",
+        ".slide__content",
+        ".slide__decor",
+        ".slide__bg"
+      ],
+      "supports_reveal": true
+    }
+  ]
+}
