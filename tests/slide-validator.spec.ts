@@ -43,6 +43,20 @@ const CLEAN_HTML = `<!DOCTYPE html>
 <section class="slide"><p>clean slide</p></section>
 </body></html>`;
 
+const REGEX_BUG_HTML = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+.slide { width: 1280px; height: 720px; }
+</style></head><body>
+<section class="slide"><article>text in article</article></section>
+</body></html>`;
+
+const ZWJ_FALSE_POSITIVE_HTML = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+.slide { width: 1280px; height: 720px; }
+</style></head><body>
+<section class="slide"><p>hello‍world</p></section>
+</body></html>`;
+
 async function loadHtml(page: Page, html: string): Promise<void> {
 	const dir = mkdtempSync(join(tmpdir(), "validator-test-"));
 	const path = join(dir, "test.html");
@@ -134,6 +148,37 @@ describe("slide-validator", () => {
 			const slideReport = report.slides[0];
 			if (!slideReport) throw new Error("expected slide report");
 			expect(slideReport.issues).toHaveLength(0);
+		} finally {
+			await closeBrowser(browser);
+		}
+	}, 15000);
+
+	it("flags unwrapped text inside article (regex precedence bug)", async () => {
+		const { browser, page } = await launchBrowserPage({ width: 1280, height: 720 });
+		try {
+			await loadHtml(page, REGEX_BUG_HTML);
+			const report = await validateSlideHtml(page);
+			const slideReport = report.slides[0];
+			if (!slideReport) throw new Error("expected slide report");
+			const unwrappedIssues = slideReport.issues.filter((i) => i.type === "unwrapped-text");
+			expect(unwrappedIssues.length).toBeGreaterThanOrEqual(1);
+			const issue = unwrappedIssues[0];
+			if (!issue) throw new Error("expected issue");
+			expect(issue.severity).toBe("warn");
+		} finally {
+			await closeBrowser(browser);
+		}
+	}, 15000);
+
+	it("does not warn on ZWJ ligatures without actual emoji", async () => {
+		const { browser, page } = await launchBrowserPage({ width: 1280, height: 720 });
+		try {
+			await loadHtml(page, ZWJ_FALSE_POSITIVE_HTML);
+			const report = await validateSlideHtml(page);
+			const slideReport = report.slides[0];
+			if (!slideReport) throw new Error("expected slide report");
+			const emojiIssues = slideReport.issues.filter((i) => i.type === "emoji");
+			expect(emojiIssues).toHaveLength(0);
 		} finally {
 			await closeBrowser(browser);
 		}

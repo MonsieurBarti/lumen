@@ -62,7 +62,6 @@ export async function exportHtmlToPptx(options: ExportOptions): Promise<void> {
 			const formatted = formatValidationReport(report);
 			for (const line of formatted.split("\n")) {
 				if (line.trim()) {
-					// eslint-disable-next-line no-console
 					console.warn(line);
 				}
 			}
@@ -87,7 +86,7 @@ export async function exportHtmlToPptx(options: ExportOptions): Promise<void> {
 			return new Uint8Array(await blob.arrayBuffer());
 		});
 
-		writeFileSync(outputPath, Buffer.from(pptxBuffer));
+		writeFileSync(outputPath, pptxBuffer);
 	} finally {
 		await closeBrowser(browser);
 	}

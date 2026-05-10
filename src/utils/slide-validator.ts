@@ -125,7 +125,7 @@ export async function validateSlideHtml(page: Page): Promise<ValidationReport> {
 						const parent = node.parentElement;
 						if (parent) {
 							const tag = parent.tagName;
-							const allowed = /^P|SPAN|H[1-6]|LI|A|STRONG|EM|CODE|PRE|BLOCKQUOTE$/;
+							const allowed = /^(P|SPAN|H[1-6]|LI|A|STRONG|EM|CODE|PRE|BLOCKQUOTE)$/;
 							if (!allowed.test(tag)) {
 								issues.push({
 									type: "unwrapped-text",
@@ -144,7 +144,7 @@ export async function validateSlideHtml(page: Page): Promise<ValidationReport> {
 			// 4. Emoji detector
 			const slideText = slide.textContent || "";
 			const emojiRegex =
-				/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F100}-\u{1F1FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{200D}]|[\u{FE0F}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FAFF}]/gu;
+				/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F100}-\u{1F1FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA00}-\u{1FAFF}]/gu;
 			const emojiMatches = slideText.match(emojiRegex);
 			if (emojiMatches && emojiMatches.length > 0) {
 				issues.push({
