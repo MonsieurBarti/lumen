@@ -71,13 +71,6 @@
 	"engines": {
 		"node": ">=22.5.0"
 	},
-	"dependencies": {
-		"dom-to-pptx": "^1.1.8",
-		"playwright": "^1.52.0"
-	},
-	"bin": {
-		"lumen-export-slides": "./dist/cli/export-slides.js"
-	},
 	"pi": {
 		"extensions": [
 			"./dist/index.js"
@@ -104,7 +97,6 @@
 		"typebox": "*",
 		"@types/node": "^22.0.0",
 		"@vitest/coverage-v8": "^2.1.0",
-		"jszip": "^3.10.1",
 		"lefthook": "^2.1.5",
 		"typescript": "^5.7.0",
 		"vitest": "^2.1.0"
