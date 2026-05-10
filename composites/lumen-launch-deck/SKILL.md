@@ -95,6 +95,7 @@ Single HTML file: a 10–12-slide scroll-snap deck announcing the launch. Offlin
 - Every chart in the deck came from Step 2 (or the slide is absent if no metric exists).
 - The hero diagram in slide 4 came from Step 3 (no hand-drawn SVG).
 - Total slide count is honest — no padding to hit a round number.
+- Follow `skills/_shared/instructions.md` for universal aesthetics, file-handling, validation, and citation conventions.
 
 ## Execution model
 

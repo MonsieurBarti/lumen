@@ -40,7 +40,16 @@ export type Aesthetic =
  * output. Distinct from `Aesthetic` (which drives mermaid rendering through
  * PALETTES in src/templates/shared.ts).
  */
-export type FgraphAesthetic = "blueprint" | "dark-professional" | "editorial" | "lyra" | "terminal";
+export type FgraphAesthetic =
+	| "blueprint"
+	| "dark-professional"
+	| "editorial"
+	| "lyra"
+	| "midnight-editorial"
+	| "swiss-clean"
+	| "terminal"
+	| "terminal-mono"
+	| "warm-signal";
 
 /** Union accepted at the tool-param level; renderers narrow internally. */
 export type AnyAesthetic = Aesthetic | FgraphAesthetic;

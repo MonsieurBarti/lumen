@@ -1,0 +1,228 @@
+/* ══════════════════════════════════════════════════════════════════
+   swiss-clean.css — white, geometric sans, single bold accent.
+   Visible grid, tight geometry, sharp typography. Light-first.
+
+   Identity: analytical decks, data reports, minimalist presentations.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Fonts ──
+   Add to <head>:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+*/
+
+/* ── Baseline Tokens — Swiss Light ── */
+:root,
+[data-theme="light"] {
+	color-scheme: light dark;
+
+	/* Surfaces */
+	--bg: #ffffff;
+	--surface: #f8f8f8;
+	--surface2: #f0f0f0;
+	--surface-elevated: #ffffff;
+	--border: rgba(0, 0, 0, 0.08);
+	--border-bright: rgba(0, 0, 0, 0.16);
+
+	/* Text */
+	--text: #111111;
+	--text-dim: #666666;
+	--text-muted: #888888;
+
+	/* Accent — electric blue */
+	--accent: #0055ff;
+	--accent-dim: rgba(0, 85, 255, 0.06);
+	--accent-glow: rgba(0, 85, 255, 0.2);
+
+	/* Code */
+	--code-bg: #18181b;
+	--code-text: #e4e4e7;
+}
+
+/* ── Baseline Tokens — Swiss Dark ── */
+[data-theme="dark"] {
+	--bg: #111111;
+	--surface: #1a1a1a;
+	--surface2: #222222;
+	--surface-elevated: #2a2a2a;
+	--border: rgba(255, 255, 255, 0.08);
+	--border-bright: rgba(255, 255, 255, 0.16);
+
+	--text: #f0f0f0;
+	--text-dim: #888888;
+	--text-muted: #666666;
+
+	--accent: #3b82f6;
+	--accent-dim: rgba(59, 130, 246, 0.08);
+	--accent-glow: rgba(59, 130, 246, 0.25);
+
+	--code-bg: #0a0a0a;
+	--code-text: #e4e4e7;
+}
+
+/* ── Semantic Color Tokens — Swiss Light ── */
+:root,
+[data-theme="light"] {
+	--success: #16a34a;
+	--success-dim: rgba(22, 163, 74, 0.1);
+	--warning: #d97706;
+	--warning-dim: rgba(217, 119, 6, 0.1);
+	--error: #dc2626;
+	--error-dim: rgba(220, 38, 38, 0.1);
+	--info: #0055ff;
+	--info-dim: rgba(0, 85, 255, 0.06);
+
+	/* Extended palette */
+	--cyan: #0891b2;
+	--cyan-dim: rgba(8, 145, 178, 0.1);
+	--green: #16a34a;
+	--green-dim: rgba(22, 163, 74, 0.1);
+	--amber: #d97706;
+	--amber-dim: rgba(217, 119, 6, 0.1);
+	--red: #dc2626;
+	--red-dim: rgba(220, 38, 38, 0.1);
+	--purple: #7c3aed;
+	--purple-dim: rgba(124, 58, 237, 0.1);
+}
+
+/* ── Semantic Color Tokens — Swiss Dark ── */
+[data-theme="dark"] {
+	--success: #4ade80;
+	--success-dim: rgba(74, 222, 128, 0.1);
+	--warning: #fbbf24;
+	--warning-dim: rgba(251, 191, 36, 0.1);
+	--error: #f87171;
+	--error-dim: rgba(248, 113, 113, 0.12);
+	--info: #3b82f6;
+	--info-dim: rgba(59, 130, 246, 0.08);
+
+	--cyan: #22d3ee;
+	--cyan-dim: rgba(34, 211, 238, 0.12);
+	--green: #4ade80;
+	--green-dim: rgba(74, 222, 128, 0.1);
+	--amber: #fbbf24;
+	--amber-dim: rgba(251, 191, 36, 0.1);
+	--red: #f87171;
+	--red-dim: rgba(248, 113, 113, 0.12);
+	--purple: #c084fc;
+	--purple-dim: rgba(192, 132, 252, 0.1);
+}
+
+/* ── Swiss Dark — OS preference (unless manually light) ── */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #111111;
+		--surface: #1a1a1a;
+		--surface2: #222222;
+		--surface-elevated: #2a2a2a;
+		--border: rgba(255, 255, 255, 0.08);
+		--border-bright: rgba(255, 255, 255, 0.16);
+
+		--text: #f0f0f0;
+		--text-dim: #888888;
+		--text-muted: #666666;
+
+		--accent: #3b82f6;
+		--accent-dim: rgba(59, 130, 246, 0.08);
+		--accent-glow: rgba(59, 130, 246, 0.25);
+
+		--code-bg: #0a0a0a;
+		--code-text: #e4e4e7;
+
+		--success: #4ade80;
+		--success-dim: rgba(74, 222, 128, 0.1);
+		--warning: #fbbf24;
+		--warning-dim: rgba(251, 191, 36, 0.1);
+		--error: #f87171;
+		--error-dim: rgba(248, 113, 113, 0.12);
+		--info: #3b82f6;
+		--info-dim: rgba(59, 130, 246, 0.08);
+
+		--cyan: #22d3ee;
+		--cyan-dim: rgba(34, 211, 238, 0.12);
+		--green: #4ade80;
+		--green-dim: rgba(74, 222, 128, 0.1);
+		--amber: #fbbf24;
+		--amber-dim: rgba(251, 191, 36, 0.1);
+		--red: #f87171;
+		--red-dim: rgba(248, 113, 113, 0.12);
+		--purple: #c084fc;
+		--purple-dim: rgba(192, 132, 252, 0.1);
+	}
+}
+
+/* ── Typography Overrides ── */
+body {
+	font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+h1, h2, h3, h4 {
+	font-family: 'DM Sans', system-ui, sans-serif;
+	font-weight: 700;
+	letter-spacing: -0.5px;
+}
+
+code, pre, .mono {
+	font-family: 'Fira Code', 'SF Mono', monospace;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Slide mode — swiss-clean aesthetic (used by forge-slides)
+   Clean white/near-black, visible grid, tight geometric layouts.
+   ══════════════════════════════════════════════════════════════════ */
+
+.deck .slide--title {
+	background:
+		linear-gradient(to right, var(--border) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--border) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--bg), var(--surface));
+	background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+.deck .slide--title .slide__display {
+	font-family: 'DM Sans', system-ui, sans-serif;
+	font-weight: 800;
+	letter-spacing: -2px;
+	color: var(--text);
+}
+.deck .slide--title .slide__subtitle {
+	color: var(--text-dim);
+	border-top: 1px solid var(--border-bright);
+	padding-top: 1rem;
+}
+.deck .slide--content {
+	background:
+		linear-gradient(to right, var(--border) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--border) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--bg), var(--surface));
+	background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+.deck .slide--content .slide__heading {
+	font-family: 'DM Sans', system-ui, sans-serif;
+	color: var(--text);
+	letter-spacing: -1px;
+}
+.deck .slide--content .slide__label {
+	color: var(--accent);
+}
+.deck .slide--section .slide__number {
+	color: var(--accent);
+	opacity: 0.06;
+}
+.deck .slide--closing {
+	background:
+		linear-gradient(to right, var(--border) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--border) 1px, transparent 1px),
+		linear-gradient(to top, var(--bg), var(--surface));
+	background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+.deck .slide--closing .slide__heading {
+	font-family: 'DM Sans', system-ui, sans-serif;
+	color: var(--accent);
+}
+.deck .slide--closing .cta {
+	background: var(--accent);
+	color: #ffffff;
+	border: none;
+	font-weight: 700;
+}

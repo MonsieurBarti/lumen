@@ -9,6 +9,8 @@
 import type { FgraphAesthetic } from "../../types.js";
 import { loadAestheticCss, renderChartShell } from "./_shared.js";
 import { renderBarBody } from "./bar.js";
+import { renderInteractiveBarBody } from "./interactive-bar.js";
+import { renderInteractiveLineBody } from "./interactive-line.js";
 import { renderLineBody } from "./line.js";
 import { renderPieBody } from "./pie.js";
 import { renderTableBody } from "./table.js";
@@ -20,6 +22,8 @@ export {
 	type BarSeries,
 	type ChartContent,
 	type DataPoint,
+	type InteractiveBarContent,
+	type InteractiveLineContent,
 	type LineContent,
 	type LineSeries,
 	type PieContent,
@@ -44,6 +48,8 @@ const CHART_LABEL: Record<ChartContent["chart"], string> = {
 	pie: "Pie chart",
 	line: "Line chart",
 	table: "Comparison table",
+	"interactive-bar": "Interactive bar chart",
+	"interactive-line": "Interactive line chart",
 };
 
 /**
@@ -56,6 +62,7 @@ export function generateChartTemplate(input: GenerateChartInput): string {
 	const aestheticCss = loadAestheticCss(aesthetic);
 
 	let result: { chartHtml: string; chartCss: string; legendHtml?: string };
+	let scripts: string[] | undefined;
 
 	switch (content.chart) {
 		case "bar":
@@ -70,6 +77,26 @@ export function generateChartTemplate(input: GenerateChartInput): string {
 		case "table":
 			result = renderTableBody({ title, content });
 			break;
+		case "interactive-bar": {
+			const r = renderInteractiveBarBody({ content });
+			result = {
+				chartHtml: r.chartHtml,
+				chartCss: r.chartCss,
+				...(r.legendHtml !== undefined && { legendHtml: r.legendHtml }),
+			};
+			scripts = r.scripts;
+			break;
+		}
+		case "interactive-line": {
+			const r = renderInteractiveLineBody({ content });
+			result = {
+				chartHtml: r.chartHtml,
+				chartCss: r.chartCss,
+				...(r.legendHtml !== undefined && { legendHtml: r.legendHtml }),
+			};
+			scripts = r.scripts;
+			break;
+		}
 	}
 
 	return renderChartShell({
@@ -80,5 +107,6 @@ export function generateChartTemplate(input: GenerateChartInput): string {
 		chartCss: result.chartCss,
 		chartHtml: result.chartHtml,
 		legendHtml: result.legendHtml,
+		scripts,
 	});
 }

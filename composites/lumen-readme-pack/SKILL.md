@@ -80,6 +80,7 @@ Single HTML file: a 3–4-tab project showcase (Overview / Architecture / [Metri
 - Architecture tab embeds the Step 2 diagram (no hand-drawn SVG).
 - Metrics tab is either present with real data or absent (no placeholder charts).
 - File opens offline (`file://`).
+- Follow `skills/_shared/instructions.md` for universal aesthetics, file-handling, validation, and citation conventions.
 
 ## Execution model
 

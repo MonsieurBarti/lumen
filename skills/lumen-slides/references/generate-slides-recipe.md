@@ -15,4 +15,38 @@ Follow the visual-explainer skill workflow. Read the reference template at `./te
 
 **Compositional variety:** Consecutive slides must vary their spatial approach. Alternate between centered, left-heavy, right-heavy, split, edge-aligned, and full-bleed. Three centered slides in a row means push one off-axis.
 
+**Template keys:** Every slide gets a `pattern_key` from the registry in `skills/lumen-slides/_templates/index.json`. Choose based on content type, not aesthetic preference:
+
+| Content need | Pattern key |
+|---|---|
+| Title / hero | `title` |
+| Section divider | `section` |
+| Bullets or paragraphs | `content` |
+| Pullquote | `quote` |
+| Full-bleed image | `image` |
+| Code snippet | `code` |
+| Two-panel comparison | `comparison` |
+| Data table | `table` |
+| Mermaid / fgraph diagram | `diagram` |
+| Closing / CTA | `closing` |
+
+Each pattern declares `composition_variants` (e.g. `centered`, `split`, `full-bleed`) and `required_slots`. Use `getPatternByKey()` from `src/utils/template-registry.ts` to look up a pattern programmatically.
+
+**Theme resolution:** Themes are discovered in this order (highest priority wins):
+
+1. `<cwd>/_theme.css` — project-level override
+2. `~/.agent/lumen/_theme.css` — user-global override
+3. `skills/_shared/aesthetics/{preset}.css` — built-in fallback
+
+Use `resolveTheme({ cwd, preset })` from `src/utils/theme-resolver.ts` to load the resolved CSS at build time.
+
+**Example:**
+```typescript
+import { getPatternByKey } from "./src/utils/template-registry.ts";
+import { resolveTheme } from "./src/utils/theme-resolver.ts";
+
+const titlePattern = getPatternByKey("title");      // { pattern_key: "title", composition_variants: ["centered", "full-bleed"], ... }
+const theme = await resolveTheme({ preset: "swiss-clean" }); // { css: "...", source: "preset", path: "..." }
+```
+
 Write to `~/.agent/diagrams/` and open the result in the browser.

@@ -1,0 +1,346 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   _theme.css — Lumen Slide Theme Template
+   ═══════════════════════════════════════════════════════════════════════
+
+   HOW TO USE THIS TEMPLATE
+   ─────────────────────────
+   1. Copy this file to one of the locations below.
+   2. Change the hex / rgba values to match your brand or mood.
+   3. Customize font-family strings to use your preferred typefaces.
+   4. Delete any token categories you do not need — the defaults in
+      lumen-slides will fill the gaps.
+
+   WHERE TO PLACE YOUR CUSTOMIZED FILE
+   ─────────────────────────────────────
+   The lumen-slides engine looks for a user theme in this order:
+
+     1.  <project-root>/_theme.css          (per-project override)
+     2.  ~/.agent/lumen/_theme.css          (user-global override)
+     3.  Built-in preset                    (fallback)
+
+   If a token is defined in (1), it wins. Missing tokens are inherited
+   from (2), then from the built-in preset. This means you can override
+   just a few accent colors in a project theme while keeping the rest of
+   your global palette.
+
+   DARK / LIGHT VARIANTS
+   ─────────────────────
+   This template uses `prefers-color-scheme` media queries so the deck
+   automatically adapts to the viewer's OS setting. If you want to force
+   a mode, add `data-theme="dark"` or `data-theme="light"` to the
+   `<html>` tag and duplicate the override blocks from any built-in
+   preset (e.g., editorial.css or blueprint.css).
+
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Base color-scheme hint for the browser chrome ── */
+:root {
+  color-scheme: light dark;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BASELINE TOKENS — Dark (default)
+   These form the surface and text hierarchy of every slide.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Background — the deepest layer, fills the viewport behind slides */
+  --bg: #0f172a;
+
+  /* Surface — card backgrounds, code blocks, panels */
+  --surface: #1e293b;
+
+  /* Surface2 — secondary surfaces, alternating rows, inner panels */
+  --surface2: #283548;
+
+  /* Surface Elevated — popovers, floating elements, highest surface tier */
+  --surface-elevated: #334155;
+
+  /* Border — dividers, card outlines, table borders. Use low-opacity
+     rgba() so borders remain subtle on both dark and light backgrounds. */
+  --border: rgba(148, 163, 184, 0.12);
+
+  /* Border Bright — stronger borders for focus states, active tabs,
+     emphasized dividers. Slightly higher opacity than --border. */
+  --border-bright: rgba(148, 163, 184, 0.24);
+
+  /* Text — headings, primary body copy, strong emphasis. Must have
+     AAA contrast against --bg. */
+  --text: #f8fafc;
+
+  /* Text Muted — body paragraphs, descriptions, secondary content.
+     Readable but visually de-emphasized compared to --text. */
+  --text-muted: #cbd5e1;
+
+  /* Text Dim — captions, labels, metadata, timestamps, fine print.
+     Lowest text tier; still legible at projection distance. */
+  --text-dim: #64748b;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ACCENT TOKENS
+   One dominant accent color that carries the brand identity.
+   Used for progress bars, active dots, bullet markers, CTAs, and
+   decorative SVG strokes.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Accent — primary brand color. Should pop against --bg. */
+  --accent: #22d3ee;
+
+  /* Accent Dim — very low-opacity version for background washes,
+     hover states, and glow gradients. Keep at 0.06–0.12 opacity. */
+  --accent-dim: rgba(34, 211, 238, 0.1);
+
+  /* Accent Glow — slightly stronger than dim, used for text-shadows,
+     radial gradient halos on title slides, and ambient lighting. */
+  --accent-glow: rgba(34, 211, 238, 0.25);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SEMANTIC TOKENS
+   Status and feedback colors. Used for badges, alerts, KPI indicators,
+   pipeline step borders, and card accent stripes.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Success — positive states, completed tasks, healthy metrics */
+  --success: #34d399;
+  --success-dim: rgba(52, 211, 153, 0.12);
+
+  /* Warning — caution states, pending items, attention needed */
+  --warning: #fbbf24;
+  --warning-dim: rgba(251, 191, 36, 0.12);
+
+  /* Error — failures, critical alerts, blocked states */
+  --error: #f87171;
+  --error-dim: rgba(248, 113, 113, 0.12);
+
+  /* Info — neutral informational highlights, tips, hints */
+  --info: #60a5fa;
+  --info-dim: rgba(96, 165, 250, 0.12);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   EXTENDED PALETTE
+   Named color aliases for diagramming, architecture slides, and
+   multi-category dashboards. Each pairs with a `-dim` variant for
+   background badges and washed surfaces.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --cyan: #22d3ee;
+  --cyan-dim: rgba(34, 211, 238, 0.12);
+
+  --green: #34d399;
+  --green-dim: rgba(52, 211, 153, 0.12);
+
+  --amber: #fbbf24;
+  --amber-dim: rgba(251, 191, 36, 0.12);
+
+  --orange: #fb923c;
+  --orange-dim: rgba(251, 146, 60, 0.12);
+
+  --red: #f87171;
+  --red-dim: rgba(248, 113, 113, 0.12);
+
+  --purple: #c084fc;
+  --purple-dim: rgba(192, 132, 252, 0.12);
+
+  --pink: #f472b6;
+  --pink-dim: rgba(244, 114, 182, 0.12);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY TOKENS
+   Three font roles: body (paragraphs, bullets), mono (code, labels,
+   counters), and display (hero titles, oversized section numbers).
+   Add Google Fonts or self-hosted @font-face rules in a <style> block
+   above this theme, or link them in the HTML <head>.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Body — primary reading text. Prefer a clean sans or serif
+     with good legibility at 16–24px presentation scale. */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Mono — code blocks, file names, labels, keyboard hints, counters.
+     Must render crisply at small sizes (10–14px). */
+  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  /* Display — hero headings, title slides, section dividers.
+     Can be the same as --font-body or a distinct display face. */
+  --font-display: 'Outfit', 'Inter', system-ui, sans-serif;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CODE TOKENS
+   Specialized surfaces for inline and block code in slides.
+   Code slides use a recessed dark background even in light themes
+   to maintain syntax-highlight contrast.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Code Background — fills the .slide__code-block container.
+     Often darker than --surface to create depth. */
+  --code-bg: #0a0f1e;
+
+  /* Code Text — default un-highlighted code color inside blocks.
+     Should be legible against --code-bg. */
+  --code-text: #d4d0c4;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SPACING TOKENS
+   Shared rhythm values for padding, gutters, and corner radius.
+   Slides primarily use viewport-relative clamp() values, but these
+   tokens anchor the design system for cards, badges, and chrome.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Pad — standard internal padding for cards, panels, code blocks.
+     Think of it as the "unit" of whitespace inside components. */
+  --pad: 1rem;
+
+  /* Gap — space between sibling elements in grids, flex rows,
+     dashboard KPI cards, and pipeline steps. */
+  --gap: 1rem;
+
+  /* Radius — corner rounding for cards, code blocks, badges, tables.
+     Set to 0 for a flat / blueprint aesthetic. */
+  --radius: 0.75rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SLIDE-SPECIFIC TOKENS
+   Layout constants that control the slide canvas itself.
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  /* Slide Padding — the inner safe-zone inside each 100dvh slide.
+     The default engine uses clamp(40px, 6vh, 80px) vertically and
+     clamp(40px, 8vw, 120px) horizontally. You can pin both axes to
+     a single token if you prefer uniform margins. */
+  --slide-padding: clamp(40px, 6vh, 80px) clamp(40px, 8vw, 120px);
+
+  /* Slide Max Width — constrains text content on ultra-wide viewports
+     so line lengths stay readable at presentation distance. */
+  --slide-max-width: 1400px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LIGHT VARIANT — prefers-color-scheme: light
+   Override every dark-default token with its light-mode counterpart.
+   Keep the semantic relationships identical: --bg stays the deepest
+   layer, --surface stays elevated above it, --text stays high contrast.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Baseline Tokens — Light */
+    --bg: #faf8f2;
+    --surface: #ffffff;
+    --surface2: #f5f0e6;
+    --surface-elevated: #fffdf5;
+    --border: rgba(30, 30, 50, 0.08);
+    --border-bright: rgba(30, 30, 50, 0.16);
+    --text: #1a1814;
+    --text-muted: #4a4540;
+    --text-dim: #7a7468;
+
+    /* Accent Tokens — Light */
+    --accent: #0891b2;
+    --accent-dim: rgba(8, 145, 178, 0.08);
+    --accent-glow: rgba(8, 145, 178, 0.18);
+
+    /* Semantic Tokens — Light */
+    --success: #16a34a;
+    --success-dim: rgba(22, 163, 74, 0.1);
+    --warning: #d97706;
+    --warning-dim: rgba(217, 119, 6, 0.1);
+    --error: #dc2626;
+    --error-dim: rgba(220, 38, 38, 0.1);
+    --info: #2563eb;
+    --info-dim: rgba(37, 99, 235, 0.1);
+
+    /* Extended Palette — Light */
+    --cyan: #0891b2;
+    --cyan-dim: rgba(8, 145, 178, 0.1);
+    --green: #16a34a;
+    --green-dim: rgba(22, 163, 74, 0.1);
+    --amber: #d97706;
+    --amber-dim: rgba(217, 119, 6, 0.1);
+    --orange: #ea580c;
+    --orange-dim: rgba(234, 88, 12, 0.1);
+    --red: #dc2626;
+    --red-dim: rgba(220, 38, 38, 0.1);
+    --purple: #7c3aed;
+    --purple-dim: rgba(124, 58, 237, 0.1);
+    --pink: #db2777;
+    --pink-dim: rgba(219, 39, 119, 0.1);
+
+    /* Code Tokens — Light */
+    --code-bg: #1a1814;
+    --code-text: #e8e4d8;
+
+    /* Spacing & Slide Tokens — Light (usually identical to dark) */
+    --pad: 1rem;
+    --gap: 1rem;
+    --radius: 0.75rem;
+    --slide-padding: clamp(40px, 6vh, 80px) clamp(40px, 8vw, 120px);
+    --slide-max-width: 1400px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DARK VARIANT — prefers-color-scheme: dark
+   Explicit re-declaration for symmetry with the light block above.
+   These values mirror the :root defaults so the file is self-documenting.
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Baseline Tokens — Dark */
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #283548;
+    --surface-elevated: #334155;
+    --border: rgba(148, 163, 184, 0.12);
+    --border-bright: rgba(148, 163, 184, 0.24);
+    --text: #f8fafc;
+    --text-muted: #cbd5e1;
+    --text-dim: #64748b;
+
+    /* Accent Tokens — Dark */
+    --accent: #22d3ee;
+    --accent-dim: rgba(34, 211, 238, 0.1);
+    --accent-glow: rgba(34, 211, 238, 0.25);
+
+    /* Semantic Tokens — Dark */
+    --success: #34d399;
+    --success-dim: rgba(52, 211, 153, 0.12);
+    --warning: #fbbf24;
+    --warning-dim: rgba(251, 191, 36, 0.12);
+    --error: #f87171;
+    --error-dim: rgba(248, 113, 113, 0.12);
+    --info: #60a5fa;
+    --info-dim: rgba(96, 165, 250, 0.12);
+
+    /* Extended Palette — Dark */
+    --cyan: #22d3ee;
+    --cyan-dim: rgba(34, 211, 238, 0.12);
+    --green: #34d399;
+    --green-dim: rgba(52, 211, 153, 0.12);
+    --amber: #fbbf24;
+    --amber-dim: rgba(251, 191, 36, 0.12);
+    --orange: #fb923c;
+    --orange-dim: rgba(251, 146, 60, 0.12);
+    --red: #f87171;
+    --red-dim: rgba(248, 113, 113, 0.12);
+    --purple: #c084fc;
+    --purple-dim: rgba(192, 132, 252, 0.12);
+    --pink: #f472b6;
+    --pink-dim: rgba(244, 114, 182, 0.12);
+
+    /* Code Tokens — Dark */
+    --code-bg: #0a0f1e;
+    --code-text: #d4d0c4;
+
+    /* Spacing & Slide Tokens — Dark */
+    --pad: 1rem;
+    --gap: 1rem;
+    --radius: 0.75rem;
+    --slide-padding: clamp(40px, 6vh, 80px) clamp(40px, 8vw, 120px);
+    --slide-max-width: 1400px;
+  }
+}

@@ -91,6 +91,7 @@ Single HTML file: a 5-tab postmortem (Summary / Timeline / Impact / Root Cause /
 - Timeline events have timestamps.
 - No fabricated metrics.
 - Severity (`sev-1` / `sev-2` / `sev-3`) is stated explicitly in the Summary.
+- Follow `skills/_shared/instructions.md` for universal aesthetics, file-handling, validation, and citation conventions.
 
 ## Execution model
 

@@ -18,19 +18,20 @@ Single-file scroll-snap deck. Inlined CSS + JS. Offline-playable. Magazine-quali
 
 Triggers: `create deck`, `make a deck`, `slides`, `slide deck`, `presentation deck`, `pitch deck`, `slides from #N`, `keynote-style`.
 
-## Pipeline (Frame → Structure → Style → Deliver)
+## Pipeline (Frame → Template → Structure → Style → Deliver)
 
 Full recipe in `references/generate-slides-recipe.md`. Summary:
 
 1. **Frame** — infer reader-action / takeaway / tone. Slides have a *temporal dimension* — compose a story arc, not a list of sections.
-2. **Plan the sequence** before writing HTML:
+2. **Template** — load the pattern registry and assign a `pattern_key` to each planned slide. Reference `skills/lumen-slides/_templates/index.json` for the 10 available patterns and their metadata (composition variants, required/optional slots, CSS class contracts). Use `loadTemplateRegistry()` or `getPatternByKey()` from `src/utils/template-registry.ts` for programmatic access.
+3. **Structure** before writing HTML:
    - Start with impact (title)
    - Build context (overview)
    - Deep dive (content, diagrams, data)
    - Resolve (summary, next steps)
    - Assign a composition (centered / left-heavy / right-heavy / split / edge-aligned / full-bleed) to each slide
-3. **Style** — pick ONE aesthetic from the 4 slide presets in `references/slide-patterns.md` (Midnight Editorial, Warm Signal, Terminal Mono, Swiss Clean) or riff on a `_shared/aesthetics/*.css` file. Commit to one direction; carry it through every slide. Vary from previous decks in the same session.
-4. **Deliver** — start from `templates/slide-deck.html`. All CSS/JS inlined. Offline `file://` safe.
+4. **Style** — pick ONE aesthetic from the 4 slide presets in `references/slide-patterns.md` (Midnight Editorial, Warm Signal, Terminal Mono, Swiss Clean) or riff on a `_shared/aesthetics/*.css` file. Commit to one direction; carry it through every slide. Vary from previous decks in the same session.
+5. **Deliver** — start from `templates/slide-deck.html`. All CSS/JS inlined. Offline `file://` safe.
 
 ## 10 slide patterns
 
@@ -50,6 +51,28 @@ Exact `.slide--{type}` selectors recognized by the SlideEngine in `templates/sli
 | `.slide--closing` | Final slide (CTA, contact) |
 
 All patterns support `.reveal` child elements for stagger-in animations.
+
+## Template registry
+
+`skills/lumen-slides/_templates/index.json` is the canonical registry for the 10 slide patterns. Each entry maps a `pattern_key` to metadata:
+
+| Field | Description |
+|---|---|
+| `pattern_key` | Stable identifier (e.g. `title`, `content`, `diagram`) |
+| `name` | Human-readable label |
+| `description` | When to use the pattern and its visual behavior |
+| `composition_variants` | Allowed spatial approaches for this pattern |
+| `required_slots` | CSS class selectors that must be present in the slide markup |
+| `optional_slots` | Additional selectors that may appear |
+| `css_class_contract` | Full set of selectors recognized by the SlideEngine for this pattern |
+| `supports_reveal` | Whether `.reveal` child elements animate on scroll |
+
+For programmatic access, `src/utils/template-registry.ts` exports:
+
+- `loadTemplateRegistry()` — loads and validates `index.json`, returns a `TemplateRegistry` object. Cached after first call.
+- `getPatternByKey(key)` — looks up a single `SlidePattern` by `pattern_key`. Returns `undefined` if the key is not found.
+
+Validation enforces exactly 10 patterns, unique keys, and the full field schema. This registry is the single source of truth for both human authors (writing HTML by hand) and code generators (producing slides programmatically).
 
 ## SlideEngine (built into `templates/slide-deck.html`)
 
@@ -75,14 +98,24 @@ Consecutive slides MUST vary their spatial approach. Three centered slides in a 
 
 Two families of preset are available — pick **one direction** per deck and carry it through every slide.
 
+### Theme discovery
+
+Themes resolve via `src/utils/theme-resolver.ts` in hierarchical order (highest priority wins):
+
+1. **Project override** — `<cwd>/_theme.css` in the working directory
+2. **User-global override** — `~/.agent/lumen/_theme.css`
+3. **Built-in preset fallback** — `skills/_shared/aesthetics/{preset}.css`
+
+The `resolveTheme({ cwd, preset })` function returns the CSS string plus metadata about which source was used (`project`, `global`, or `preset`). If no custom theme is found, it falls back to the named preset (default `editorial`). This lets teams share a project-level `_theme.css`, individual users keep a personal default, and one-off decks still pick from the built-in library.
+
 ### Typographic family (4 — minimalist)
 
 Detail in `references/slide-patterns.md`. Best for technical / executive audiences where text is the payload.
 
-- **Midnight Editorial** — dark serif, warm gold accents, magazine feel
-- **Warm Signal** — cream + amber, narrative tone
-- **Terminal Mono** — monospace, high-contrast, technical
-- **Swiss Clean** — minimalist, tight grid, sharp typography
+- **Midnight Editorial** (`midnight-editorial`) — dark serif, warm gold accents, magazine feel
+- **Warm Signal** (`warm-signal`) — cream + amber, narrative tone
+- **Terminal Mono** (`terminal-mono`) — monospace, high-contrast, technical
+- **Swiss Clean** (`swiss-clean`) — minimalist, tight grid, sharp typography
 
 ### Illustrated family (6 — visual-rich, AI-generation-friendly)
 

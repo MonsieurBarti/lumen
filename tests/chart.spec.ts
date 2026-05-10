@@ -588,7 +588,17 @@ describe("generateChartTemplate", () => {
 	});
 
 	it("loads each of the 5 fgraph aesthetics for chart output", () => {
-		const aesthetics = ["blueprint", "dark-professional", "editorial", "lyra", "terminal"] as const;
+		const aesthetics = [
+			"blueprint",
+			"dark-professional",
+			"editorial",
+			"lyra",
+			"midnight-editorial",
+			"swiss-clean",
+			"terminal",
+			"terminal-mono",
+			"warm-signal",
+		] as const;
 		for (const aesthetic of aesthetics) {
 			const html = generateChartTemplate({
 				title: `Aesthetic: ${aesthetic}`,
@@ -609,5 +619,153 @@ describe("generateChartTemplate", () => {
 			expect(html).toContain(`Aesthetic: ${aesthetic}`);
 			expect(html).toMatch(/--bg:\s*#/);
 		}
+	});
+});
+
+/* ────────────────────────────────────────────────────────────────────
+   Interactive chart types — Chart.js via CDN
+   ──────────────────────────────────────────────────────────────────── */
+
+describe("interactive charts", () => {
+	describe("parseChartContent", () => {
+		it("accepts interactive-bar with the same schema as bar", () => {
+			const parsed = parseChartContent({
+				chart: "interactive-bar",
+				series: [{ name: "A", data: [{ label: "x", value: 1 }] }],
+			});
+			expect(parsed.chart).toBe("interactive-bar");
+		});
+
+		it("accepts interactive-line with the same schema as line", () => {
+			const parsed = parseChartContent({
+				chart: "interactive-line",
+				series: [
+					{
+						name: "A",
+						data: [
+							{ label: "a", value: 1 },
+							{ label: "b", value: 2 },
+							{ label: "c", value: 3 },
+						],
+					},
+				],
+			});
+			expect(parsed.chart).toBe("interactive-line");
+		});
+	});
+
+	describe("generateChartTemplate", () => {
+		it("renders interactive-bar with Chart.js CDN and canvas", () => {
+			const html = generateChartTemplate({
+				title: "Interactive Bar",
+				content: {
+					chart: "interactive-bar",
+					series: [
+						{
+							name: "Revenue",
+							data: [
+								{ label: "Q1", value: 10 },
+								{ label: "Q2", value: 20 },
+							],
+						},
+					],
+				},
+				aesthetic: "dark-professional",
+			});
+			expect(html).toContain("chart.js@4.4.1");
+			expect(html).toContain("<canvas");
+			expect(html).toContain("new Chart(");
+			expect(html).toMatch(/<!DOCTYPE html>/);
+			expect(html).toContain("</html>");
+		});
+
+		it("renders interactive-line with Chart.js CDN and canvas", () => {
+			const html = generateChartTemplate({
+				title: "Interactive Line",
+				content: {
+					chart: "interactive-line",
+					series: [
+						{
+							name: "Latency",
+							data: [
+								{ label: "D1", value: 40 },
+								{ label: "D2", value: 45 },
+								{ label: "D3", value: 42 },
+							],
+						},
+					],
+				},
+				aesthetic: "dark-professional",
+			});
+			expect(html).toContain("chart.js@4.4.1");
+			expect(html).toContain("<canvas");
+			expect(html).toContain("new Chart(");
+		});
+
+		it("does not inject Chart.js into static SVG charts", () => {
+			const bar = generateChartTemplate({
+				title: "Static Bar",
+				content: {
+					chart: "bar",
+					series: [{ name: "A", data: [{ label: "x", value: 1 }] }],
+				},
+				aesthetic: "dark-professional",
+			});
+			expect(bar).not.toContain("chart.js");
+			expect(bar).not.toContain("<canvas");
+		});
+
+		it("renders interactive-bar stacked variant without legend", () => {
+			const html = generateChartTemplate({
+				title: "Stacked Bar",
+				content: {
+					chart: "interactive-bar",
+					variant: "stacked",
+					hideLegend: true,
+					series: [
+						{ name: "A", data: [{ label: "x", value: 1 }] },
+						{ name: "B", data: [{ label: "x", value: 2 }] },
+					],
+				},
+				aesthetic: "dark-professional",
+			});
+			expect(html).toContain("chart.js@4.4.1");
+			expect(html).toContain("<canvas");
+		});
+
+		it("renders interactive-line smooth curve without marks", () => {
+			const html = generateChartTemplate({
+				title: "Smooth Line",
+				content: {
+					chart: "interactive-line",
+					curve: "smooth",
+					showMarks: false,
+					series: [
+						{
+							name: "A",
+							data: [
+								{ label: "a", value: 1 },
+								{ label: "b", value: 2 },
+								{ label: "c", value: 3 },
+							],
+						},
+					],
+				},
+				aesthetic: "dark-professional",
+			});
+			expect(html).toContain("chart.js@4.4.1");
+			expect(html).toContain("<canvas");
+		});
+	});
+});
+
+/* ────────────────────────────────────────────────────────────────────
+   SUPPORTED_CHARTS integration
+   ──────────────────────────────────────────────────────────────────── */
+
+describe("SUPPORTED_CHARTS", () => {
+	it("includes interactive-bar and interactive-line", () => {
+		expect(SUPPORTED_CHARTS).toContain("interactive-bar");
+		expect(SUPPORTED_CHARTS).toContain("interactive-line");
 	});
 });
