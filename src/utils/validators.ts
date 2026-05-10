@@ -46,7 +46,11 @@ const VALID_FGRAPH_AESTHETICS: readonly FgraphAesthetic[] = [
 	"dark-professional",
 	"editorial",
 	"lyra",
+	"midnight-editorial",
+	"swiss-clean",
 	"terminal",
+	"terminal-mono",
+	"warm-signal",
 ];
 
 // Union of mermaid + fgraph aesthetics with duplicates collapsed.

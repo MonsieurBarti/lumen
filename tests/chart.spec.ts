@@ -588,7 +588,17 @@ describe("generateChartTemplate", () => {
 	});
 
 	it("loads each of the 5 fgraph aesthetics for chart output", () => {
-		const aesthetics = ["blueprint", "dark-professional", "editorial", "lyra", "terminal"] as const;
+		const aesthetics = [
+			"blueprint",
+			"dark-professional",
+			"editorial",
+			"lyra",
+			"midnight-editorial",
+			"swiss-clean",
+			"terminal",
+			"terminal-mono",
+			"warm-signal",
+		] as const;
 		for (const aesthetic of aesthetics) {
 			const html = generateChartTemplate({
 				title: `Aesthetic: ${aesthetic}`,

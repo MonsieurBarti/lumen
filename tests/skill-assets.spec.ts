@@ -266,7 +266,17 @@ describe("lumen-diagram templates", () => {
 describe("shared aesthetics (skills/_shared/aesthetics/)", () => {
 	const AESTHETICS_DIR = join(SKILLS_DIR, "_shared", "aesthetics");
 
-	const expectedAesthetics = ["dark-professional", "editorial", "blueprint", "terminal", "lyra"];
+	const expectedAesthetics = [
+		"blueprint",
+		"dark-professional",
+		"editorial",
+		"lyra",
+		"midnight-editorial",
+		"swiss-clean",
+		"terminal",
+		"terminal-mono",
+		"warm-signal",
+	];
 
 	for (const aesthetic of expectedAesthetics) {
 		it(`ships ${aesthetic}.css`, () => {
