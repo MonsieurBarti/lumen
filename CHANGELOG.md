@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.8...lumen-v0.1.9) (2026-05-10)
+
+
+### Features
+
+* **diagram:** wire 11 deferred fgraph topologies through generate_visual ([#37](https://github.com/MonsieurBarti/lumen/issues/37)) ([e45eaf3](https://github.com/MonsieurBarti/lumen/commit/e45eaf3f199de31d5b90700c4a5607cc34a1ed64))
+
 ## [0.1.8](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.7...lumen-v0.1.8) (2026-05-10)
 
 
