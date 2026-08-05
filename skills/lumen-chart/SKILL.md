@@ -94,7 +94,7 @@ The remaining 4 types (`area`, `scatter`, `radar`, `funnel`, `bubble`) remain LL
 generateVisual({
   type: "chart",
   title: "Quarterly revenue",
-  aesthetic: "dark-professional",  // any of the 5 fgraph aesthetics
+  aesthetic: "dark-professional",  // any of the 13 fgraph aesthetics
   content: {
     chart: "bar",
     variant: "grouped",  // or "stacked"

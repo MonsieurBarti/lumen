@@ -124,7 +124,7 @@ The `lumen-generate_visual` PI tool wires `type: "diagram"` for **all 15 topolog
 generateVisual({
   type: "diagram",
   title: "RAG pipeline",
-  aesthetic: "dark-professional",  // any of the 5 fgraph aesthetics
+  aesthetic: "dark-professional",  // any of the 13 fgraph aesthetics
   content: {
     topology: "linear-flow",
     stages: [

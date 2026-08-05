@@ -758,8 +758,18 @@ describe("generateDiagramTemplate", () => {
 		expect(html).toContain("&lt;bad&gt;");
 	});
 
-	it("loads each of the 5 fgraph aesthetics without error", () => {
-		const aesthetics = ["blueprint", "dark-professional", "editorial", "lyra", "terminal"] as const;
+	it("loads each fgraph aesthetic without error", () => {
+		const aesthetics = [
+			"aurora",
+			"blueprint",
+			"cyberpunk-neon",
+			"dark-professional",
+			"editorial",
+			"glassmorphism",
+			"hand-drawn",
+			"lyra",
+			"terminal",
+		] as const;
 		for (const aesthetic of aesthetics) {
 			const html = generateDiagramTemplate({
 				title: `Aesthetic check: ${aesthetic}`,

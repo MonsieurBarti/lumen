@@ -41,9 +41,13 @@ export type Aesthetic =
  * PALETTES in src/templates/shared.ts).
  */
 export type FgraphAesthetic =
+	| "aurora"
 	| "blueprint"
+	| "cyberpunk-neon"
 	| "dark-professional"
 	| "editorial"
+	| "glassmorphism"
+	| "hand-drawn"
 	| "lyra"
 	| "midnight-editorial"
 	| "swiss-clean"

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumen — modern aesthetics preview</title>
+<!--
+  Interactive preview of the 4 modern fgraph aesthetics.
+  Press 1–4 or click chips to switch. Offline-safe once fonts cache.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,400;7..72,700&family=Orbitron:wght@700;900&family=Outfit:wght@400;700;800&family=Share+Tech+Mono&family=Sora:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style id="base">
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { overflow: hidden; }
+  .chrome {
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+    z-index: 50; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    max-width: 96vw;
+  }
+  .chrome button {
+    border: 1px solid var(--border-bright, #444);
+    background: var(--surface, #111);
+    color: var(--text, #eee);
+    font: 600 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 10px 14px; border-radius: 999px; cursor: pointer;
+  }
+  .chrome button[aria-pressed="true"] {
+    background: var(--accent, #8b9cff);
+    color: #0a0a12;
+    border-color: transparent;
+  }
+  .hint {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--text-dim, #888); z-index: 50; opacity: 0.75;
+  }
+  .deck {
+    height: 100dvh; width: 100vw;
+    display: flex; flex-direction: row;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .deck::-webkit-scrollbar { display: none; }
+  .slide {
+    flex: 0 0 100%; width: 100vw; height: 100dvh;
+    scroll-snap-align: start; scroll-snap-stop: always;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(48px, 8vh, 96px) clamp(32px, 8vw, 120px);
+    position: relative; overflow: hidden;
+  }
+  .slide__label {
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px; font-weight: 600;
+  }
+  .slide__display {
+    font-size: clamp(48px, 9vw, 112px); line-height: 0.98;
+    margin-bottom: 20px;
+  }
+  .slide__subtitle {
+    font-size: clamp(14px, 1.6vw, 18px); color: var(--text-dim);
+    max-width: 42ch; line-height: 1.5;
+  }
+  .slide__kpis {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px; margin-top: 40px; max-width: 900px;
+  }
+  .slide__kpi {
+    padding: 20px 22px; border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .slide__kpi-val {
+    font-size: clamp(28px, 4vw, 42px); font-weight: 700; letter-spacing: -0.03em;
+  }
+  .slide__kpi-label {
+    margin-top: 8px; font-size: 12px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+  .slide__bullets {
+    list-style: none; margin-top: 28px; max-width: 40ch;
+  }
+  .slide__bullets li {
+    position: relative; padding: 8px 0 8px 22px;
+    font-size: clamp(16px, 1.8vw, 20px); color: var(--text-dim); line-height: 1.45;
+  }
+  .slide__bullets li::before {
+    content: ""; position: absolute; left: 0; top: 0.85em;
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+  }
+  .slide__heading {
+    font-size: clamp(32px, 5vw, 56px); line-height: 1.1; margin-bottom: 8px;
+  }
+</style>
+<style id="theme"></style>
+</head>
+<body>
+<div class="chrome" id="chrome" role="toolbar" aria-label="Aesthetic picker"></div>
+<div class="deck" data-nav="horizontal">
+  <section class="slide slide--title">
+    <p class="slide__label" id="label">Modern family</p>
+    <h1 class="slide__display" id="title">Glassmorphism</h1>
+    <p class="slide__subtitle" id="blurb">Frosted panels on a soft indigo field. Built for SaaS launches and polished product keynotes.</p>
+  </section>
+  <section class="slide slide--content">
+    <p class="slide__label">Why it works</p>
+    <h2 class="slide__heading">One idea, loud chrome</h2>
+    <ul class="slide__bullets">
+      <li>Content budgets still apply — style is not a substitute for clarity</li>
+      <li>Cards pick up the aesthetic automatically (KPI, code, tables)</li>
+      <li>Swap with resolveTheme({ preset }) or paste the CSS file</li>
+    </ul>
+    <div class="slide__kpis">
+      <div class="slide__kpi">
+        <div class="slide__kpi-val">13</div>
+        <div class="slide__kpi-label">Fgraph aesthetics</div>
+      </div>
+      <div class="slide__kpi">
+        <div class="slide__kpi-val">4</div>
+        <div class="slide__kpi-label">Modern presets</div>
+      </div>
+      <div class="slide__kpi">
+        <div class="slide__kpi-val">S</div>
+        <div class="slide__kpi-label">Presenter mode</div>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="hint">1–4 switch aesthetic · ← → slides · offline after first font load</div>
+<script type="module">
+const presets = [
+  {
+    id: "glassmorphism",
+    name: "Glassmorphism",
+    blurb: "Frosted panels on a soft indigo field. Built for SaaS launches and polished product keynotes.",
+    href: "../../skills/_shared/aesthetics/glassmorphism.css",
+  },
+  {
+    id: "cyberpunk-neon",
+    name: "Cyberpunk Neon",
+    blurb: "Void black, hot cyan and magenta neon. Tech demos, AI launches, night-city energy.",
+    href: "../../skills/_shared/aesthetics/cyberpunk-neon.css",
+  },
+  {
+    id: "hand-drawn",
+    name: "Hand-drawn",
+    blurb: "Warm paper, ink headings, imperfect geometry. Workshops, teaching decks, kickoffs.",
+    href: "../../skills/_shared/aesthetics/hand-drawn.css",
+  },
+  {
+    id: "aurora",
+    name: "Aurora",
+    blurb: "Multi-stop luminous gradients and bloom fields. Vision decks, brand launches, investor days.",
+    href: "../../skills/_shared/aesthetics/aurora.css",
+  },
+];
+
+const themeEl = document.getElementById("theme");
+const chrome = document.getElementById("chrome");
+const title = document.getElementById("title");
+const blurb = document.getElementById("blurb");
+const label = document.getElementById("label");
+const cache = new Map();
+let active = 0;
+
+for (const [i, p] of presets.entries()) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.textContent = `${i + 1} ${p.name}`;
+  b.dataset.index = String(i);
+  b.addEventListener("click", () => apply(i));
+  chrome.appendChild(b);
+}
+
+async function load(preset) {
+  if (cache.has(preset.id)) return cache.get(preset.id);
+  const res = await fetch(preset.href);
+  if (!res.ok) throw new Error(`Failed to load ${preset.id}: ${res.status}`);
+  const css = await res.text();
+  cache.set(preset.id, css);
+  return css;
+}
+
+async function apply(index) {
+  active = index;
+  const preset = presets[index];
+  const css = await load(preset);
+  themeEl.textContent = css;
+  title.textContent = preset.name;
+  blurb.textContent = preset.blurb;
+  label.textContent = `Modern · ${preset.id}`;
+  document.body.dataset.aesthetic = preset.id;
+  for (const [i, btn] of [...chrome.children].entries()) {
+    btn.setAttribute("aria-pressed", i === index ? "true" : "false");
+  }
+  history.replaceState(null, "", `#${preset.id}`);
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key >= "1" && e.key <= "4") {
+    e.preventDefault();
+    apply(Number(e.key) - 1);
+    return;
+  }
+  const deck = document.querySelector(".deck");
+  const slides = [...document.querySelectorAll(".slide")];
+  const cur = Math.round(deck.scrollLeft / window.innerWidth);
+  if (["ArrowRight", "ArrowDown", " ", "PageDown"].includes(e.key)) {
+    e.preventDefault();
+    slides[Math.min(cur + 1, slides.length - 1)]?.scrollIntoView({ behavior: "smooth", inline: "start" });
+  } else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) {
+    e.preventDefault();
+    slides[Math.max(cur - 1, 0)]?.scrollIntoView({ behavior: "smooth", inline: "start" });
+  }
+});
+
+const fromHash = presets.findIndex((p) => p.id === location.hash.slice(1));
+apply(fromHash >= 0 ? fromHash : 0).catch((err) => {
+  title.textContent = "Load failed";
+  blurb.textContent = String(err);
+});
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 ---
 name: lumen-slides
-description: Generate magazine-quality scroll-snap presentation deck as single HTML file. 10 slide patterns with reveal animations, horizontal (default) or vertical navigation, presenter mode with speaker notes + timer, content-budget quality gates, prefers-reduced-motion support. 4+ aesthetic presets. Invoke when user asks for deck, slides, pitch, presentation, slides from issue #N.
+description: Generate magazine-quality scroll-snap presentation deck as single HTML file. 10 slide patterns with reveal animations, horizontal (default) or vertical navigation, presenter mode with speaker notes + timer, content-budget quality gates, prefers-reduced-motion support. 13 fgraph aesthetics including modern glassmorphism / cyberpunk-neon / hand-drawn / aurora. Invoke when user asks for deck, slides, pitch, presentation, slides from issue #N.
 version: 0.1.9 # x-release-please-version
 ---
 
@@ -30,7 +30,7 @@ Full recipe in `references/generate-slides-recipe.md`. Summary:
    - Deep dive (content, diagrams, data)
    - Resolve (summary, next steps)
    - Assign a composition (centered / left-heavy / right-heavy / split / edge-aligned / full-bleed) to each slide
-4. **Style** — pick ONE aesthetic from the 4 slide presets in `references/slide-patterns.md` (Midnight Editorial, Warm Signal, Terminal Mono, Swiss Clean) or riff on a `_shared/aesthetics/*.css` file. Commit to one direction; carry it through every slide. Vary from previous decks in the same session.
+4. **Style** — pick ONE aesthetic: typographic family (Midnight Editorial, Warm Signal, Terminal Mono, Swiss Clean), modern family (`glassmorphism`, `cyberpunk-neon`, `hand-drawn`, `aurora` — see `references/slide-modern-presets.md`), illustrated family, or any `_shared/aesthetics/*.css`. Commit to one direction; carry it through every slide. Vary from previous decks in the same session.
 5. **Deliver** — start from `templates/slide-deck.html`. All CSS/JS inlined. Offline `file://` safe.
 
 ## 10 slide patterns
@@ -134,6 +134,15 @@ Detail in `references/slide-patterns.md`. Best for technical / executive audienc
 - **Warm Signal** (`warm-signal`) — cream + amber, narrative tone
 - **Terminal Mono** (`terminal-mono`) — monospace, high-contrast, technical
 - **Swiss Clean** (`swiss-clean`) — minimalist, tight grid, sharp typography
+
+### Modern family (4 — 2025+ stage-ready)
+
+Detail in `references/slide-modern-presets.md`. Prefer these for external / high-stakes decks when you want a contemporary look without illustration.
+
+- **Glassmorphism** (`glassmorphism`) — frosted panels, soft indigo field, gradient display type. SaaS / product launches.
+- **Cyberpunk Neon** (`cyberpunk-neon`) — void black, cyan+magenta neon, Orbitron display. Tech demos, AI launches.
+- **Hand-drawn** (`hand-drawn`) — warm paper, Caveat ink headings, imperfect geometry. Workshops, teaching, kickoffs.
+- **Aurora** (`aurora`) — multi-stop luminous gradients, Outfit type, bloom fields. Vision / brand / investor days.
 
 ### Illustrated family (6 — visual-rich, AI-generation-friendly)
 

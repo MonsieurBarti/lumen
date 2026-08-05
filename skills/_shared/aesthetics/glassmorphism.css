@@ -1,0 +1,286 @@
+/* ══════════════════════════════════════════════════════════════════
+   glassmorphism.css — frosted glass panels on soft gradient fields.
+   Translucent surfaces, blur, hairline borders. Dark-first.
+
+   Identity: product launches, SaaS decks, modern keynotes, AI demos.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Fonts ──
+   Add to <head>:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+*/
+
+/* ── Baseline Tokens — Glass Dark ── */
+:root,
+[data-theme="dark"] {
+	color-scheme: light dark;
+
+	/* Surfaces — translucent over a deep indigo field */
+	--bg: #0b1020;
+	--surface: rgba(255, 255, 255, 0.06);
+	--surface2: rgba(255, 255, 255, 0.1);
+	--surface-elevated: rgba(255, 255, 255, 0.14);
+	--border: rgba(255, 255, 255, 0.12);
+	--border-bright: rgba(255, 255, 255, 0.28);
+
+	/* Text */
+	--text: #f4f7ff;
+	--text-dim: #a8b3d4;
+	--text-muted: #7b86a8;
+
+	/* Accent — electric periwinkle */
+	--accent: #8b9cff;
+	--accent-dim: rgba(139, 156, 255, 0.16);
+	--accent-glow: rgba(139, 156, 255, 0.4);
+
+	/* Code */
+	--code-bg: rgba(8, 12, 28, 0.85);
+	--code-text: #e8ecff;
+
+	/* Glass extras */
+	--glass-blur: 18px;
+	--glass-shine: rgba(255, 255, 255, 0.18);
+	--field-a: #1a1440;
+	--field-b: #0d2a4a;
+	--field-c: #1a0f30;
+}
+
+/* ── Baseline Tokens — Glass Light ── */
+[data-theme="light"] {
+	--bg: #eef2ff;
+	--surface: rgba(255, 255, 255, 0.55);
+	--surface2: rgba(255, 255, 255, 0.72);
+	--surface-elevated: rgba(255, 255, 255, 0.88);
+	--border: rgba(30, 40, 90, 0.1);
+	--border-bright: rgba(30, 40, 90, 0.22);
+
+	--text: #12162a;
+	--text-dim: #4a5578;
+	--text-muted: #6b7596;
+
+	--accent: #4f5dff;
+	--accent-dim: rgba(79, 93, 255, 0.12);
+	--accent-glow: rgba(79, 93, 255, 0.28);
+
+	--code-bg: #161b33;
+	--code-text: #e8ecff;
+
+	--glass-blur: 16px;
+	--glass-shine: rgba(255, 255, 255, 0.7);
+	--field-a: #dfe6ff;
+	--field-b: #e8f0ff;
+	--field-c: #f3e8ff;
+}
+
+/* ── Semantic Color Tokens — Glass Dark ── */
+:root,
+[data-theme="dark"] {
+	--success: #4ade80;
+	--success-dim: rgba(74, 222, 128, 0.14);
+	--warning: #fbbf24;
+	--warning-dim: rgba(251, 191, 36, 0.14);
+	--error: #fb7185;
+	--error-dim: rgba(251, 113, 133, 0.14);
+	--info: #67e8f9;
+	--info-dim: rgba(103, 232, 249, 0.14);
+
+	--cyan: #67e8f9;
+	--cyan-dim: rgba(103, 232, 249, 0.14);
+	--green: #4ade80;
+	--green-dim: rgba(74, 222, 128, 0.14);
+	--amber: #fbbf24;
+	--amber-dim: rgba(251, 191, 36, 0.14);
+	--red: #fb7185;
+	--red-dim: rgba(251, 113, 133, 0.14);
+	--purple: #c4b5fd;
+	--purple-dim: rgba(196, 181, 253, 0.14);
+}
+
+/* ── Semantic Color Tokens — Glass Light ── */
+[data-theme="light"] {
+	--success: #16a34a;
+	--success-dim: rgba(22, 163, 74, 0.1);
+	--warning: #d97706;
+	--warning-dim: rgba(217, 119, 6, 0.1);
+	--error: #e11d48;
+	--error-dim: rgba(225, 29, 72, 0.1);
+	--info: #0891b2;
+	--info-dim: rgba(8, 145, 178, 0.1);
+
+	--cyan: #0891b2;
+	--cyan-dim: rgba(8, 145, 178, 0.1);
+	--green: #16a34a;
+	--green-dim: rgba(22, 163, 74, 0.1);
+	--amber: #d97706;
+	--amber-dim: rgba(217, 119, 6, 0.1);
+	--red: #e11d48;
+	--red-dim: rgba(225, 29, 72, 0.1);
+	--purple: #7c3aed;
+	--purple-dim: rgba(124, 58, 237, 0.1);
+}
+
+/* ── Glass Light — OS preference (unless manually dark) ── */
+@media (prefers-color-scheme: light) {
+	:root:not([data-theme="dark"]) {
+		--bg: #eef2ff;
+		--surface: rgba(255, 255, 255, 0.55);
+		--surface2: rgba(255, 255, 255, 0.72);
+		--surface-elevated: rgba(255, 255, 255, 0.88);
+		--border: rgba(30, 40, 90, 0.1);
+		--border-bright: rgba(30, 40, 90, 0.22);
+
+		--text: #12162a;
+		--text-dim: #4a5578;
+		--text-muted: #6b7596;
+
+		--accent: #4f5dff;
+		--accent-dim: rgba(79, 93, 255, 0.12);
+		--accent-glow: rgba(79, 93, 255, 0.28);
+
+		--code-bg: #161b33;
+		--code-text: #e8ecff;
+
+		--glass-blur: 16px;
+		--glass-shine: rgba(255, 255, 255, 0.7);
+		--field-a: #dfe6ff;
+		--field-b: #e8f0ff;
+		--field-c: #f3e8ff;
+
+		--success: #16a34a;
+		--success-dim: rgba(22, 163, 74, 0.1);
+		--warning: #d97706;
+		--warning-dim: rgba(217, 119, 6, 0.1);
+		--error: #e11d48;
+		--error-dim: rgba(225, 29, 72, 0.1);
+		--info: #0891b2;
+		--info-dim: rgba(8, 145, 178, 0.1);
+
+		--cyan: #0891b2;
+		--cyan-dim: rgba(8, 145, 178, 0.1);
+		--green: #16a34a;
+		--green-dim: rgba(22, 163, 74, 0.1);
+		--amber: #d97706;
+		--amber-dim: rgba(217, 119, 6, 0.1);
+		--red: #e11d48;
+		--red-dim: rgba(225, 29, 72, 0.1);
+		--purple: #7c3aed;
+		--purple-dim: rgba(124, 58, 237, 0.1);
+	}
+}
+
+/* ── Typography Overrides ── */
+body {
+	font-family: "Sora", system-ui, sans-serif;
+	background:
+		radial-gradient(ellipse 80% 60% at 10% 20%, var(--field-a) 0%, transparent 55%),
+		radial-gradient(ellipse 70% 50% at 90% 80%, var(--field-b) 0%, transparent 50%),
+		radial-gradient(ellipse 50% 40% at 50% 50%, var(--field-c) 0%, transparent 60%),
+		var(--bg);
+	background-attachment: fixed;
+}
+
+h1, h2, h3, h4 {
+	font-family: "Sora", system-ui, sans-serif;
+	font-weight: 700;
+	letter-spacing: -0.03em;
+}
+
+code, pre, .mono {
+	font-family: "IBM Plex Mono", "SF Mono", monospace;
+}
+
+/* Glass card utility (diagrams, charts, guide panels) */
+.glass,
+.slide__kpi,
+.slide__code-block,
+.table-wrap,
+.mermaid-wrap,
+.slide__panel {
+	background: var(--surface) !important;
+	border: 1px solid var(--border-bright) !important;
+	backdrop-filter: blur(var(--glass-blur));
+	-webkit-backdrop-filter: blur(var(--glass-blur));
+	box-shadow:
+		0 8px 32px rgba(0, 0, 0, 0.18),
+		inset 0 1px 0 var(--glass-shine);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Slide mode — glassmorphism
+   Soft gradient field, frosted panels, hairline glass borders.
+   ══════════════════════════════════════════════════════════════════ */
+
+.deck {
+	background: transparent;
+}
+
+.deck .slide {
+	background:
+		radial-gradient(ellipse 70% 50% at 15% 15%, var(--accent-glow) 0%, transparent 55%),
+		radial-gradient(ellipse 60% 45% at 85% 85%, rgba(103, 232, 249, 0.12) 0%, transparent 50%);
+}
+
+.deck .slide--title {
+	background-image:
+		radial-gradient(ellipse at 50% 30%, var(--accent-glow) 0%, transparent 50%),
+		radial-gradient(ellipse at 80% 80%, rgba(196, 181, 253, 0.18) 0%, transparent 45%);
+}
+
+.deck .slide--title .slide__display {
+	font-family: "Sora", system-ui, sans-serif;
+	font-weight: 800;
+	letter-spacing: -0.04em;
+	background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+}
+
+.deck .slide--title .slide__subtitle {
+	color: var(--text-dim);
+	border-top: 1px solid var(--border-bright);
+	padding-top: 1rem;
+}
+
+.deck .slide--content .slide__heading,
+.deck .slide--closing .slide__heading {
+	font-family: "Sora", system-ui, sans-serif;
+	font-weight: 700;
+	letter-spacing: -0.03em;
+}
+
+.deck .slide--content .slide__label {
+	color: var(--accent);
+}
+
+.deck .slide--section .slide__number {
+	color: var(--accent);
+	opacity: 0.12;
+}
+
+.deck .slide--closing {
+	background-image:
+		radial-gradient(ellipse at 50% 70%, var(--accent-dim) 0%, transparent 55%);
+}
+
+.deck .slide--closing .cta {
+	background: var(--surface-elevated);
+	border: 1px solid var(--border-bright);
+	backdrop-filter: blur(var(--glass-blur));
+	box-shadow: 0 0 0 3px var(--accent-dim), 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.glass,
+	.slide__kpi,
+	.slide__code-block,
+	.table-wrap,
+	.mermaid-wrap,
+	.slide__panel {
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+	}
+}

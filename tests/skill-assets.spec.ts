@@ -199,6 +199,7 @@ describe("lumen-slides assets", () => {
 	it("ships generate-slides recipe + libraries reference", () => {
 		expect(existsSync(join(DIR, "references", "generate-slides-recipe.md"))).toBe(true);
 		expect(existsSync(join(DIR, "references", "libraries.md"))).toBe(true);
+		expect(existsSync(join(DIR, "references", "slide-modern-presets.md"))).toBe(true);
 	});
 });
 
@@ -273,9 +274,13 @@ describe("shared aesthetics (skills/_shared/aesthetics/)", () => {
 	const AESTHETICS_DIR = join(SKILLS_DIR, "_shared", "aesthetics");
 
 	const expectedAesthetics = [
+		"aurora",
 		"blueprint",
+		"cyberpunk-neon",
 		"dark-professional",
 		"editorial",
+		"glassmorphism",
+		"hand-drawn",
 		"lyra",
 		"midnight-editorial",
 		"swiss-clean",
