@@ -1,0 +1,339 @@
+/* ══════════════════════════════════════════════════════════════════
+   aurora.css — luminous multi-stop gradients, soft bloom, airy type.
+   Northern-lights energy. Dark-first.
+
+   Identity: vision decks, brand launches, 2025+ keynotes, investor days.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Fonts ──
+   Add to <head>:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+*/
+
+/* ── Baseline Tokens — Aurora Dark ── */
+:root,
+[data-theme="dark"] {
+	color-scheme: light dark;
+
+	/* Surfaces */
+	--bg: #070b16;
+	--surface: #10182b;
+	--surface2: #172240;
+	--surface-elevated: #1e2c52;
+	--border: rgba(160, 200, 255, 0.1);
+	--border-bright: rgba(160, 200, 255, 0.24);
+
+	/* Text */
+	--text: #eef4ff;
+	--text-dim: #9aadc8;
+	--text-muted: #6d809e;
+
+	/* Accent — aurora teal→violet midpoint */
+	--accent: #5eead4;
+	--accent-dim: rgba(94, 234, 212, 0.14);
+	--accent-glow: rgba(94, 234, 212, 0.4);
+
+	/* Aurora stops */
+	--aurora-1: #22d3ee;
+	--aurora-2: #a78bfa;
+	--aurora-3: #f472b6;
+	--aurora-4: #34d399;
+
+	/* Code */
+	--code-bg: #050810;
+	--code-text: #dce8ff;
+}
+
+/* ── Baseline Tokens — Aurora Light ── */
+[data-theme="light"] {
+	--bg: #f4f7ff;
+	--surface: #ffffff;
+	--surface2: #e8eefc;
+	--surface-elevated: #ffffff;
+	--border: rgba(40, 60, 120, 0.1);
+	--border-bright: rgba(40, 60, 120, 0.22);
+
+	--text: #0f172a;
+	--text-dim: #475569;
+	--text-muted: #64748b;
+
+	--accent: #0d9488;
+	--accent-dim: rgba(13, 148, 136, 0.12);
+	--accent-glow: rgba(13, 148, 136, 0.28);
+
+	--aurora-1: #06b6d4;
+	--aurora-2: #8b5cf6;
+	--aurora-3: #ec4899;
+	--aurora-4: #10b981;
+
+	--code-bg: #0f172a;
+	--code-text: #e2e8f0;
+}
+
+/* ── Semantic Color Tokens — Aurora Dark ── */
+:root,
+[data-theme="dark"] {
+	--success: #34d399;
+	--success-dim: rgba(52, 211, 153, 0.14);
+	--warning: #fbbf24;
+	--warning-dim: rgba(251, 191, 36, 0.14);
+	--error: #fb7185;
+	--error-dim: rgba(251, 113, 133, 0.14);
+	--info: #22d3ee;
+	--info-dim: rgba(34, 211, 238, 0.14);
+
+	--cyan: #22d3ee;
+	--cyan-dim: rgba(34, 211, 238, 0.14);
+	--green: #34d399;
+	--green-dim: rgba(52, 211, 153, 0.14);
+	--amber: #fbbf24;
+	--amber-dim: rgba(251, 191, 36, 0.14);
+	--red: #fb7185;
+	--red-dim: rgba(251, 113, 133, 0.14);
+	--purple: #a78bfa;
+	--purple-dim: rgba(167, 139, 250, 0.14);
+}
+
+/* ── Semantic Color Tokens — Aurora Light ── */
+[data-theme="light"] {
+	--success: #059669;
+	--success-dim: rgba(5, 150, 105, 0.1);
+	--warning: #d97706;
+	--warning-dim: rgba(217, 119, 6, 0.1);
+	--error: #e11d48;
+	--error-dim: rgba(225, 29, 72, 0.1);
+	--info: #0891b2;
+	--info-dim: rgba(8, 145, 178, 0.1);
+
+	--cyan: #0891b2;
+	--cyan-dim: rgba(8, 145, 178, 0.1);
+	--green: #059669;
+	--green-dim: rgba(5, 150, 105, 0.1);
+	--amber: #d97706;
+	--amber-dim: rgba(217, 119, 6, 0.1);
+	--red: #e11d48;
+	--red-dim: rgba(225, 29, 72, 0.1);
+	--purple: #7c3aed;
+	--purple-dim: rgba(124, 58, 237, 0.1);
+}
+
+/* ── Aurora Light — OS preference (unless manually dark) ── */
+@media (prefers-color-scheme: light) {
+	:root:not([data-theme="dark"]) {
+		--bg: #f4f7ff;
+		--surface: #ffffff;
+		--surface2: #e8eefc;
+		--surface-elevated: #ffffff;
+		--border: rgba(40, 60, 120, 0.1);
+		--border-bright: rgba(40, 60, 120, 0.22);
+
+		--text: #0f172a;
+		--text-dim: #475569;
+		--text-muted: #64748b;
+
+		--accent: #0d9488;
+		--accent-dim: rgba(13, 148, 136, 0.12);
+		--accent-glow: rgba(13, 148, 136, 0.28);
+
+		--aurora-1: #06b6d4;
+		--aurora-2: #8b5cf6;
+		--aurora-3: #ec4899;
+		--aurora-4: #10b981;
+
+		--code-bg: #0f172a;
+		--code-text: #e2e8f0;
+
+		--success: #059669;
+		--success-dim: rgba(5, 150, 105, 0.1);
+		--warning: #d97706;
+		--warning-dim: rgba(217, 119, 6, 0.1);
+		--error: #e11d48;
+		--error-dim: rgba(225, 29, 72, 0.1);
+		--info: #0891b2;
+		--info-dim: rgba(8, 145, 178, 0.1);
+
+		--cyan: #0891b2;
+		--cyan-dim: rgba(8, 145, 178, 0.1);
+		--green: #059669;
+		--green-dim: rgba(5, 150, 105, 0.1);
+		--amber: #d97706;
+		--amber-dim: rgba(217, 119, 6, 0.1);
+		--red: #e11d48;
+		--red-dim: rgba(225, 29, 72, 0.1);
+		--purple: #7c3aed;
+		--purple-dim: rgba(124, 58, 237, 0.1);
+	}
+}
+
+/* ── Typography Overrides ── */
+body {
+	font-family: "Outfit", system-ui, sans-serif;
+	background: var(--bg);
+}
+
+h1, h2, h3, h4 {
+	font-family: "Outfit", system-ui, sans-serif;
+	font-weight: 700;
+	letter-spacing: -0.03em;
+}
+
+code, pre, .mono {
+	font-family: "JetBrains Mono", "SF Mono", monospace;
+}
+
+/* Gradient text utility */
+.aurora-text {
+	background: linear-gradient(
+		120deg,
+		var(--aurora-1) 0%,
+		var(--aurora-2) 40%,
+		var(--aurora-3) 70%,
+		var(--aurora-4) 100%
+	);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+}
+
+.aurora-bar {
+	height: 3px;
+	border-radius: 999px;
+	background: linear-gradient(
+		90deg,
+		var(--aurora-1),
+		var(--aurora-2),
+		var(--aurora-3),
+		var(--aurora-4)
+	);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Slide mode — aurora
+   Blooming multi-stop fields, gradient display type, soft elevation.
+   ══════════════════════════════════════════════════════════════════ */
+
+.deck .slide {
+	background-image:
+		radial-gradient(ellipse 70% 55% at 10% 20%, rgba(34, 211, 238, 0.16) 0%, transparent 55%),
+		radial-gradient(ellipse 60% 50% at 90% 80%, rgba(167, 139, 250, 0.18) 0%, transparent 50%),
+		radial-gradient(ellipse 50% 40% at 50% 100%, rgba(244, 114, 182, 0.1) 0%, transparent 45%);
+}
+
+.deck .slide--title {
+	background-image:
+		radial-gradient(ellipse at 30% 30%, rgba(34, 211, 238, 0.22) 0%, transparent 50%),
+		radial-gradient(ellipse at 70% 60%, rgba(167, 139, 250, 0.2) 0%, transparent 45%),
+		radial-gradient(ellipse at 50% 100%, rgba(52, 211, 153, 0.12) 0%, transparent 40%);
+}
+
+.deck .slide--title .slide__display {
+	font-family: "Outfit", system-ui, sans-serif;
+	font-weight: 800;
+	letter-spacing: -0.04em;
+	background: linear-gradient(
+		120deg,
+		var(--aurora-1) 0%,
+		var(--aurora-2) 45%,
+		var(--aurora-3) 100%
+	);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+	filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.25));
+}
+
+.deck .slide--title .slide__subtitle {
+	color: var(--text-dim);
+	border-top: none;
+	padding-top: 1rem;
+	position: relative;
+}
+
+.deck .slide--title .slide__subtitle::before {
+	content: "";
+	display: block;
+	width: 120px;
+	height: 3px;
+	border-radius: 999px;
+	margin: 0 auto 1rem;
+	background: linear-gradient(90deg, var(--aurora-1), var(--aurora-2), var(--aurora-3));
+}
+
+.deck .slide--content .slide__heading {
+	font-family: "Outfit", system-ui, sans-serif;
+	font-weight: 700;
+	letter-spacing: -0.03em;
+	color: var(--text);
+}
+
+.deck .slide--content .slide__label {
+	background: linear-gradient(90deg, var(--aurora-1), var(--aurora-2));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+}
+
+.deck .slide--section .slide__number {
+	background: linear-gradient(180deg, var(--aurora-2), var(--aurora-3));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+	opacity: 0.35;
+}
+
+.deck .slide__kpi {
+	border: 1px solid var(--border-bright);
+	background:
+		linear-gradient(var(--surface), var(--surface)) padding-box,
+		linear-gradient(135deg, var(--aurora-1), var(--aurora-2), var(--aurora-3)) border-box;
+	border: 1px solid transparent;
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.deck .slide__kpi-val {
+	background: linear-gradient(120deg, var(--text), var(--aurora-1));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+}
+
+.deck .slide--closing {
+	background-image:
+		radial-gradient(ellipse at 50% 60%, rgba(167, 139, 250, 0.22) 0%, transparent 55%),
+		radial-gradient(ellipse at 20% 30%, rgba(34, 211, 238, 0.16) 0%, transparent 45%);
+}
+
+.deck .slide--closing .slide__heading {
+	font-family: "Outfit", system-ui, sans-serif;
+	font-weight: 800;
+	background: linear-gradient(120deg, var(--aurora-1), var(--aurora-3));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+}
+
+.deck .slide--closing .cta {
+	background: linear-gradient(120deg, var(--aurora-1), var(--aurora-2), var(--aurora-3));
+	color: #070b16;
+	border: none;
+	box-shadow: 0 12px 40px rgba(167, 139, 250, 0.35);
+	font-weight: 700;
+}
+
+.deck .deck-progress {
+	background: linear-gradient(90deg, var(--aurora-1), var(--aurora-2), var(--aurora-3), var(--aurora-4));
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.deck .slide--title .slide__display {
+		filter: none;
+	}
+}

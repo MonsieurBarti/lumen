@@ -1,0 +1,304 @@
+/* ══════════════════════════════════════════════════════════════════
+   hand-drawn.css — warm paper, ink lines, imperfect geometry.
+   Sketchbook / marker-pen energy. Light-first.
+
+   Identity: workshops, teaching decks, product storytelling, kickoffs.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Fonts ──
+   Add to <head>:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+*/
+
+/* ── Baseline Tokens — Sketch Light ── */
+:root,
+[data-theme="light"] {
+	color-scheme: light dark;
+
+	/* Surfaces — warm paper */
+	--bg: #f7f1e3;
+	--surface: #fffaf0;
+	--surface2: #efe6d4;
+	--surface-elevated: #fffdf8;
+	--border: rgba(40, 30, 20, 0.14);
+	--border-bright: rgba(40, 30, 20, 0.32);
+
+	/* Text — ink */
+	--text: #1f1812;
+	--text-dim: #5c4f42;
+	--text-muted: #8a7a68;
+
+	/* Accent — marker red-orange */
+	--accent: #d44a1a;
+	--accent-dim: rgba(212, 74, 26, 0.12);
+	--accent-glow: rgba(212, 74, 26, 0.28);
+
+	/* Code */
+	--code-bg: #2a241c;
+	--code-text: #f5e6c8;
+
+	/* Sketch extras */
+	--ink: #1f1812;
+	--marker-blue: #2a6fdb;
+	--marker-green: #2f8f4e;
+	--marker-yellow: #e6b422;
+	--wobble: 2px;
+}
+
+/* ── Baseline Tokens — Sketch Dark (charcoal paper) ── */
+[data-theme="dark"] {
+	--bg: #1c1814;
+	--surface: #26201a;
+	--surface2: #322a22;
+	--surface-elevated: #3c3228;
+	--border: rgba(240, 220, 190, 0.12);
+	--border-bright: rgba(240, 220, 190, 0.28);
+
+	--text: #f3e8d4;
+	--text-dim: #b5a48c;
+	--text-muted: #8a7a66;
+
+	--accent: #ff7a45;
+	--accent-dim: rgba(255, 122, 69, 0.14);
+	--accent-glow: rgba(255, 122, 69, 0.32);
+
+	--code-bg: #120e0a;
+	--code-text: #f3e8d4;
+
+	--ink: #f3e8d4;
+	--marker-blue: #6aa8ff;
+	--marker-green: #5dca7e;
+	--marker-yellow: #f0c84a;
+	--wobble: 2px;
+}
+
+/* ── Semantic Color Tokens — Sketch Light ── */
+:root,
+[data-theme="light"] {
+	--success: #2f8f4e;
+	--success-dim: rgba(47, 143, 78, 0.12);
+	--warning: #c98900;
+	--warning-dim: rgba(201, 137, 0, 0.12);
+	--error: #c0392b;
+	--error-dim: rgba(192, 57, 43, 0.12);
+	--info: #2a6fdb;
+	--info-dim: rgba(42, 111, 219, 0.12);
+
+	--cyan: #1a8a9a;
+	--cyan-dim: rgba(26, 138, 154, 0.12);
+	--green: #2f8f4e;
+	--green-dim: rgba(47, 143, 78, 0.12);
+	--amber: #c98900;
+	--amber-dim: rgba(201, 137, 0, 0.12);
+	--red: #c0392b;
+	--red-dim: rgba(192, 57, 43, 0.12);
+	--purple: #7a3db8;
+	--purple-dim: rgba(122, 61, 184, 0.12);
+}
+
+/* ── Semantic Color Tokens — Sketch Dark ── */
+[data-theme="dark"] {
+	--success: #5dca7e;
+	--success-dim: rgba(93, 202, 126, 0.14);
+	--warning: #f0c84a;
+	--warning-dim: rgba(240, 200, 74, 0.14);
+	--error: #ff6b5a;
+	--error-dim: rgba(255, 107, 90, 0.14);
+	--info: #6aa8ff;
+	--info-dim: rgba(106, 168, 255, 0.14);
+
+	--cyan: #5ec8d6;
+	--cyan-dim: rgba(94, 200, 214, 0.14);
+	--green: #5dca7e;
+	--green-dim: rgba(93, 202, 126, 0.14);
+	--amber: #f0c84a;
+	--amber-dim: rgba(240, 200, 74, 0.14);
+	--red: #ff6b5a;
+	--red-dim: rgba(255, 107, 90, 0.14);
+	--purple: #c49bff;
+	--purple-dim: rgba(196, 155, 255, 0.14);
+}
+
+/* ── Sketch Dark — OS preference (unless manually light) ── */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--bg: #1c1814;
+		--surface: #26201a;
+		--surface2: #322a22;
+		--surface-elevated: #3c3228;
+		--border: rgba(240, 220, 190, 0.12);
+		--border-bright: rgba(240, 220, 190, 0.28);
+
+		--text: #f3e8d4;
+		--text-dim: #b5a48c;
+		--text-muted: #8a7a66;
+
+		--accent: #ff7a45;
+		--accent-dim: rgba(255, 122, 69, 0.14);
+		--accent-glow: rgba(255, 122, 69, 0.32);
+
+		--code-bg: #120e0a;
+		--code-text: #f3e8d4;
+
+		--ink: #f3e8d4;
+		--marker-blue: #6aa8ff;
+		--marker-green: #5dca7e;
+		--marker-yellow: #f0c84a;
+
+		--success: #5dca7e;
+		--success-dim: rgba(93, 202, 126, 0.14);
+		--warning: #f0c84a;
+		--warning-dim: rgba(240, 200, 74, 0.14);
+		--error: #ff6b5a;
+		--error-dim: rgba(255, 107, 90, 0.14);
+		--info: #6aa8ff;
+		--info-dim: rgba(106, 168, 255, 0.14);
+
+		--cyan: #5ec8d6;
+		--cyan-dim: rgba(94, 200, 214, 0.14);
+		--green: #5dca7e;
+		--green-dim: rgba(93, 202, 126, 0.14);
+		--amber: #f0c84a;
+		--amber-dim: rgba(240, 200, 74, 0.14);
+		--red: #ff6b5a;
+		--red-dim: rgba(255, 107, 90, 0.14);
+		--purple: #c49bff;
+		--purple-dim: rgba(196, 155, 255, 0.14);
+	}
+}
+
+/* ── Typography Overrides ── */
+body {
+	font-family: "Literata", Georgia, serif;
+	background-color: var(--bg);
+	/* subtle paper grain */
+	background-image:
+		radial-gradient(rgba(40, 30, 20, 0.03) 0.6px, transparent 0.6px);
+	background-size: 3px 3px;
+}
+
+h1, h2, h3, h4 {
+	font-family: "Caveat", "Segoe Print", cursive;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+}
+
+code, pre, .mono {
+	font-family: "IBM Plex Mono", "SF Mono", monospace;
+}
+
+/* Hand-drawn borders — slightly uneven via box-shadow stack */
+.sketch-border,
+.slide__kpi,
+.slide__code-block,
+.table-wrap,
+.mermaid-wrap,
+.slide__panel {
+	border: 2px solid var(--ink) !important;
+	border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
+	box-shadow:
+		2px 3px 0 rgba(0, 0, 0, 0.08),
+		inset 0 0 0 1px var(--surface);
+	background: var(--surface) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Slide mode — hand-drawn
+   Paper field, ink headings, marker accent, imperfect geometry.
+   ══════════════════════════════════════════════════════════════════ */
+
+.deck .slide--title {
+	background-image:
+		radial-gradient(ellipse at 20% 80%, var(--accent-dim) 0%, transparent 50%),
+		radial-gradient(ellipse at 80% 20%, rgba(42, 111, 219, 0.08) 0%, transparent 45%);
+}
+
+.deck .slide--title .slide__display {
+	font-family: "Caveat", cursive;
+	font-weight: 700;
+	font-size: clamp(56px, 11vw, 128px);
+	letter-spacing: 0.01em;
+	color: var(--ink);
+	transform: rotate(-1.2deg);
+}
+
+.deck .slide--title .slide__subtitle {
+	font-family: "Literata", Georgia, serif;
+	font-style: italic;
+	color: var(--text-dim);
+	border-top: 2px dashed var(--border-bright);
+	padding-top: 1rem;
+	transform: rotate(0.4deg);
+}
+
+.deck .slide--content .slide__heading {
+	font-family: "Caveat", cursive;
+	font-weight: 700;
+	color: var(--ink);
+	letter-spacing: 0.01em;
+	transform: rotate(-0.5deg);
+}
+
+.deck .slide--content .slide__label {
+	font-family: "Caveat", cursive;
+	font-size: 1.1em;
+	color: var(--accent);
+	letter-spacing: 0.08em;
+	text-transform: none;
+}
+
+.deck .slide--section .slide__number {
+	font-family: "Caveat", cursive;
+	color: var(--accent);
+	opacity: 0.2;
+}
+
+.deck .slide__bullets li {
+	font-family: "Literata", Georgia, serif;
+}
+
+.deck .slide__bullets li::before {
+	/* hand-drawn dash instead of perfect circle */
+	width: 12px;
+	height: 3px;
+	border-radius: 2px;
+	background: var(--accent);
+	top: 0.85em;
+	transform: rotate(-8deg);
+}
+
+.deck .slide--quote blockquote {
+	font-family: "Caveat", cursive;
+	font-size: clamp(28px, 4.5vw, 52px);
+	transform: rotate(-0.6deg);
+}
+
+.deck .slide--closing {
+	background-image:
+		radial-gradient(ellipse at 50% 70%, var(--accent-dim) 0%, transparent 55%);
+}
+
+.deck .slide--closing .slide__heading {
+	font-family: "Caveat", cursive;
+	color: var(--accent);
+	transform: rotate(-1deg);
+}
+
+.deck .slide--closing .cta {
+	border: 2.5px solid var(--ink);
+	border-radius: 255px 20px 225px 15px / 15px 225px 20px 255px;
+	box-shadow: 3px 4px 0 var(--accent-dim);
+	background: var(--surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.deck .slide--title .slide__display,
+	.deck .slide--title .slide__subtitle,
+	.deck .slide--content .slide__heading,
+	.deck .slide--quote blockquote,
+	.deck .slide--closing .slide__heading {
+		transform: none;
+	}
+}

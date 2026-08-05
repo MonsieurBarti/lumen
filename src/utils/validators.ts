@@ -42,9 +42,13 @@ const VALID_AESTHETICS: readonly Aesthetic[] = [
 ];
 
 const VALID_FGRAPH_AESTHETICS: readonly FgraphAesthetic[] = [
+	"aurora",
 	"blueprint",
+	"cyberpunk-neon",
 	"dark-professional",
 	"editorial",
+	"glassmorphism",
+	"hand-drawn",
 	"lyra",
 	"midnight-editorial",
 	"swiss-clean",

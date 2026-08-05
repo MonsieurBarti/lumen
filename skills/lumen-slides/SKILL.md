@@ -1,6 +1,6 @@
 ---
 name: lumen-slides
-description: Generate magazine-quality scroll-snap presentation deck as single HTML file. 10 slide patterns with reveal animations, keyboard + touch navigation, prefers-reduced-motion support. 4+ aesthetic presets. Invoke when user asks for deck, slides, pitch, presentation, slides from issue #N.
+description: Generate magazine-quality scroll-snap presentation deck as single HTML file. 10 slide patterns with reveal animations, horizontal (default) or vertical navigation, presenter mode with speaker notes + timer, content-budget quality gates, prefers-reduced-motion support. 13 fgraph aesthetics including modern glassmorphism / cyberpunk-neon / hand-drawn / aurora. Invoke when user asks for deck, slides, pitch, presentation, slides from issue #N.
 version: 0.1.9 # x-release-please-version
 ---
 
@@ -30,7 +30,7 @@ Full recipe in `references/generate-slides-recipe.md`. Summary:
    - Deep dive (content, diagrams, data)
    - Resolve (summary, next steps)
    - Assign a composition (centered / left-heavy / right-heavy / split / edge-aligned / full-bleed) to each slide
-4. **Style** — pick ONE aesthetic from the 4 slide presets in `references/slide-patterns.md` (Midnight Editorial, Warm Signal, Terminal Mono, Swiss Clean) or riff on a `_shared/aesthetics/*.css` file. Commit to one direction; carry it through every slide. Vary from previous decks in the same session.
+4. **Style** — pick ONE aesthetic: typographic family (Midnight Editorial, Warm Signal, Terminal Mono, Swiss Clean), modern family (`glassmorphism`, `cyberpunk-neon`, `hand-drawn`, `aurora` — see `references/slide-modern-presets.md`), illustrated family, or any `_shared/aesthetics/*.css`. Commit to one direction; carry it through every slide. Vary from previous decks in the same session.
 5. **Deliver** — start from `templates/slide-deck.html`. All CSS/JS inlined. Offline `file://` safe.
 
 ## 10 slide patterns
@@ -77,12 +77,30 @@ Validation enforces exactly 10 patterns, unique keys, and the full field schema.
 ## SlideEngine (built into `templates/slide-deck.html`)
 
 - Scroll-snap container, one slide per viewport
-- Keyboard nav: ↑ / ↓ / PgUp / PgDn / Home / End / Space
-- Touch swipe (vertical)
-- `prefers-reduced-motion` honored (no transitions, no `.reveal` stagger)
-- Progress indicator (slide N / total)
+- **Navigation axis** via `data-nav` on `.deck`:
+  - `horizontal` (**default**, keynote / board-room) — left/right swipe + arrows
+  - `vertical` — scroll-doc style, up/down swipe + arrows
+  - Toggle live with **`O`** (orientation)
+- Keyboard nav: ← / → / ↑ / ↓ / PgUp / PgDn / Home / End / Space
+- **`S`** — presenter mode (dual-window via `BroadcastChannel`; falls back to in-page overlay if the popup is blocked). Shows current title, next title, speaker notes, elapsed timer
+- **`F`** — toggle fullscreen
+- Touch swipe follows the active axis
+- `prefers-reduced-motion` honored (no transitions, no `.reveal` stagger; instant `scrollIntoView`)
+- Progress indicator (slide N / total) + dots (bottom for horizontal, right for vertical)
 - URL fragment sync (`#slide-3`) for deep-link
-- Print stylesheet (one slide per page)
+- Print stylesheet (one slide per page; speaker notes printed below each slide)
+
+### Speaker notes
+
+Put talking points in an audience-hidden aside inside each `<section class="slide">`:
+
+```html
+<aside class="speaker-notes">
+  Open with the outage story. Pause after the 40ms figure.
+</aside>
+```
+
+Notes are stripped from content-budget body-text counts and only surface in presenter mode / print.
 
 ## Compositional variety (hard rule)
 
@@ -117,6 +135,15 @@ Detail in `references/slide-patterns.md`. Best for technical / executive audienc
 - **Terminal Mono** (`terminal-mono`) — monospace, high-contrast, technical
 - **Swiss Clean** (`swiss-clean`) — minimalist, tight grid, sharp typography
 
+### Modern family (4 — 2025+ stage-ready)
+
+Detail in `references/slide-modern-presets.md`. Prefer these for external / high-stakes decks when you want a contemporary look without illustration.
+
+- **Glassmorphism** (`glassmorphism`) — frosted panels, soft indigo field, gradient display type. SaaS / product launches.
+- **Cyberpunk Neon** (`cyberpunk-neon`) — void black, cyan+magenta neon, Orbitron display. Tech demos, AI launches.
+- **Hand-drawn** (`hand-drawn`) — warm paper, Caveat ink headings, imperfect geometry. Workshops, teaching, kickoffs.
+- **Aurora** (`aurora`) — multi-stop luminous gradients, Outfit type, bloom fields. Vision / brand / investor days.
+
 ### Illustrated family (6 — visual-rich, AI-generation-friendly)
 
 Summary below; detailed per-preset specs (palette tokens, typography, layout rules, decorative SVG fragments, image-prompt templates, do/don't) in `references/slide-illustrated-presets.md`.
@@ -136,9 +163,30 @@ Or riff on any of `_shared/aesthetics/*.css` adapted for slides (5 options there
 
 `templates/slide-deck-base.css` (lifted from roxabi-forge) provides an alternative styling foundation if you want roxabi's slide tokens instead of visual-explainer's defaults.
 
+## Content budgets (hard quality gates)
+
+Evidence-based limits (PLOS CompBio ten rules, UCSD multimedia learning, 5-5-5 / 6×6). Enforce while authoring; validate with `validateContentBudgets(html)` from `src/utils/content-budget.ts` before delivery.
+
+| Rule | Soft (warn) | Hard (error) |
+|---|---|---|
+| Bullets per slide | ≤4 (UCSD rule of four) | ≤6 |
+| Words per bullet | ≤12 | ≤20 |
+| Major visual elements per slide | ≤6 (Phillips) | — |
+| Consecutive text-heavy slides | ≤2 | — |
+| Slide title | Assertive takeaway, not generic (`Results`, `Overview`, `Agenda`, …) | — |
+| One idea per slide | Heading states the single claim; no multi-topic slides | — |
+
+**Authoring checklist (every slide):**
+1. Can the distracted viewer read the takeaway from the title alone?
+2. ≤4 bullets, each a short phrase — not a sentence paragraph
+3. Prefer a diagram / KPI / image over a fifth bullet
+4. Add `<aside class="speaker-notes">` for anything you would otherwise dump on the slide
+5. No three text-only slides in a row — break with visual / quote / diagram
+
 ## Quality checks
 
-- Each slide fits in viewport (100vh) without scroll
+- Each slide fits in viewport (100vh / 100vw) without internal page scroll
+- Content-budget report has **zero errors** (`contentBudgetHasErrors(report) === false`)
 - Code slides: syntax highlighting works offline (no CDN dep that breaks `file://`)
 - Tables: sticky header on scroll within slide
 - `prefers-reduced-motion` disables all `.reveal`
@@ -146,6 +194,9 @@ Or riff on any of `_shared/aesthetics/*.css` adapted for slides (5 options there
 - Compositional rule satisfied (no three consecutive same-composition slides)
 - Story arc has an impact-build-resolve shape (no "list of sections")
 - Mermaid diagrams (if any) use the zoom-pan pattern from `lumen-mermaid`
+- Deck root is `<div class="deck" data-nav="horizontal">` unless the user asked for a vertical scroll-doc
+- Presenter mode works: at least the title + closing slides carry `speaker-notes`
+- Keyboard hints mention S / F / O
 
 ## Output
 

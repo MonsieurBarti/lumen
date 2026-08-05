@@ -1,0 +1,243 @@
+/* ══════════════════════════════════════════════════════════════════
+   cyberpunk-neon.css — pure black void, hot neon accents, scanlines.
+   High-contrast, night-city energy. Dark-only (light is a dim variant).
+
+   Identity: tech demos, hacker talks, AI product launches, gaming.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Fonts ──
+   Add to <head>:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+*/
+
+/* ── Baseline Tokens — Neon Dark ── */
+:root,
+[data-theme="dark"] {
+	color-scheme: dark;
+
+	/* Surfaces — near-black void */
+	--bg: #05050a;
+	--surface: #0c0c14;
+	--surface2: #141422;
+	--surface-elevated: #1a1a2e;
+	--border: rgba(0, 255, 200, 0.12);
+	--border-bright: rgba(0, 255, 200, 0.35);
+
+	/* Text */
+	--text: #e8fff8;
+	--text-dim: #7a9e96;
+	--text-muted: #4a6660;
+
+	/* Accent — hot cyan neon */
+	--accent: #00ffc8;
+	--accent-dim: rgba(0, 255, 200, 0.12);
+	--accent-glow: rgba(0, 255, 200, 0.45);
+
+	/* Secondary neon */
+	--neon-magenta: #ff2bd6;
+	--neon-magenta-dim: rgba(255, 43, 214, 0.14);
+	--neon-yellow: #f8ff2a;
+	--neon-blue: #3d7eff;
+
+	/* Code */
+	--code-bg: #020208;
+	--code-text: #00ffc8;
+}
+
+/* ── Baseline Tokens — Neon "Light" (dim day mode, still dark-leaning) ── */
+[data-theme="light"] {
+	--bg: #0e1018;
+	--surface: #161a28;
+	--surface2: #1e2438;
+	--surface-elevated: #262e48;
+	--border: rgba(0, 255, 200, 0.18);
+	--border-bright: rgba(0, 255, 200, 0.4);
+
+	--text: #f0fff9;
+	--text-dim: #8fb3aa;
+	--text-muted: #5a7a72;
+
+	--accent: #00e6b5;
+	--accent-dim: rgba(0, 230, 181, 0.14);
+	--accent-glow: rgba(0, 230, 181, 0.4);
+
+	--neon-magenta: #ff4de0;
+	--neon-magenta-dim: rgba(255, 77, 224, 0.16);
+	--neon-yellow: #f0ff4a;
+	--neon-blue: #5a90ff;
+
+	--code-bg: #080a12;
+	--code-text: #00e6b5;
+}
+
+/* ── Semantic Color Tokens ── */
+:root,
+[data-theme="dark"],
+[data-theme="light"] {
+	--success: #00ff9d;
+	--success-dim: rgba(0, 255, 157, 0.14);
+	--warning: #f8ff2a;
+	--warning-dim: rgba(248, 255, 42, 0.14);
+	--error: #ff2b6a;
+	--error-dim: rgba(255, 43, 106, 0.16);
+	--info: #3d7eff;
+	--info-dim: rgba(61, 126, 255, 0.14);
+
+	--cyan: #00ffc8;
+	--cyan-dim: rgba(0, 255, 200, 0.12);
+	--green: #00ff9d;
+	--green-dim: rgba(0, 255, 157, 0.14);
+	--amber: #f8ff2a;
+	--amber-dim: rgba(248, 255, 42, 0.14);
+	--red: #ff2b6a;
+	--red-dim: rgba(255, 43, 106, 0.16);
+	--purple: #ff2bd6;
+	--purple-dim: rgba(255, 43, 214, 0.14);
+}
+
+/* ── Typography Overrides ── */
+body {
+	font-family: "Share Tech Mono", "SF Mono", monospace;
+	background: var(--bg);
+	/* subtle scanline field */
+	background-image:
+		repeating-linear-gradient(
+			0deg,
+			transparent,
+			transparent 2px,
+			rgba(0, 255, 200, 0.015) 2px,
+			rgba(0, 255, 200, 0.015) 4px
+		);
+	background-attachment: fixed;
+}
+
+h1, h2, h3, h4 {
+	font-family: "Orbitron", system-ui, sans-serif;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+code, pre, .mono {
+	font-family: "Share Tech Mono", "SF Mono", monospace;
+}
+
+/* Neon glow utilities */
+.neon-text {
+	color: var(--accent);
+	text-shadow:
+		0 0 8px var(--accent-glow),
+		0 0 24px var(--accent-glow);
+}
+
+.neon-box,
+.slide__kpi,
+.slide__code-block,
+.table-wrap,
+.mermaid-wrap {
+	border: 1px solid var(--border-bright) !important;
+	box-shadow:
+		0 0 12px var(--accent-dim),
+		inset 0 0 24px rgba(0, 255, 200, 0.04);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Slide mode — cyberpunk-neon
+   Void black, cyan/magenta neon, uppercase display type, scanlines.
+   ══════════════════════════════════════════════════════════════════ */
+
+.deck .slide {
+	background-image:
+		radial-gradient(ellipse at 20% 0%, rgba(255, 43, 214, 0.12) 0%, transparent 45%),
+		radial-gradient(ellipse at 80% 100%, rgba(0, 255, 200, 0.1) 0%, transparent 45%);
+}
+
+.deck .slide--title {
+	background-image:
+		radial-gradient(ellipse at 50% 40%, var(--accent-glow) 0%, transparent 40%),
+		radial-gradient(ellipse at 15% 85%, var(--neon-magenta-dim) 0%, transparent 40%);
+}
+
+.deck .slide--title .slide__display {
+	font-family: "Orbitron", system-ui, sans-serif;
+	font-weight: 900;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--accent);
+	text-shadow:
+		0 0 12px var(--accent-glow),
+		0 0 40px var(--accent-glow),
+		0 0 80px rgba(255, 43, 214, 0.35);
+}
+
+.deck .slide--title .slide__subtitle {
+	font-family: "Share Tech Mono", monospace;
+	color: var(--neon-magenta);
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	border-top: 1px solid var(--border-bright);
+	padding-top: 1rem;
+	text-shadow: 0 0 8px var(--neon-magenta-dim);
+}
+
+.deck .slide--content .slide__heading {
+	font-family: "Orbitron", system-ui, sans-serif;
+	color: var(--text);
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+}
+
+.deck .slide--content .slide__label {
+	color: var(--accent);
+	letter-spacing: 0.22em;
+	text-shadow: 0 0 8px var(--accent-glow);
+}
+
+.deck .slide--section .slide__number {
+	color: var(--neon-magenta);
+	opacity: 0.18;
+	font-family: "Orbitron", system-ui, sans-serif;
+}
+
+.deck .slide__bullets li::before {
+	background: var(--accent);
+	box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.deck .slide--closing {
+	background-image:
+		radial-gradient(ellipse at 50% 60%, var(--accent-dim) 0%, transparent 50%),
+		radial-gradient(ellipse at 80% 20%, var(--neon-magenta-dim) 0%, transparent 40%);
+}
+
+.deck .slide--closing .slide__heading {
+	font-family: "Orbitron", system-ui, sans-serif;
+	color: var(--accent);
+	text-transform: uppercase;
+	text-shadow: 0 0 20px var(--accent-glow);
+}
+
+.deck .slide--closing .cta {
+	border: 1px solid var(--accent);
+	box-shadow:
+		0 0 0 3px var(--accent-dim),
+		0 0 24px var(--accent-glow);
+	color: var(--accent);
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+}
+
+.deck .deck-progress {
+	box-shadow: 0 0 12px var(--accent-glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.deck .slide--title .slide__display,
+	.deck .slide--title .slide__subtitle,
+	.deck .slide--content .slide__label,
+	.deck .slide--closing .slide__heading {
+		text-shadow: none;
+	}
+}

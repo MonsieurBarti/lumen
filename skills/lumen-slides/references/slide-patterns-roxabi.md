@@ -935,7 +935,7 @@ Mermaid SVGs rendered on `DOMContentLoaded` are fixed-size snapshots of the view
 | Feature | Why deferred |
 |---|---|
 | Mermaid pan/zoom (`svg-pan-zoom`) | Adds ~30 KB runtime dependency; presentation use case rarely needs pan/zoom (8-node max); deferred to v0.2 |
-| Presenter mode (speaker notes + second screen) | Requires `BroadcastChannel` or `window.open` + postMessage; out-of-scope complexity for v0.1 |
+| Presenter mode (speaker notes + second screen) | **Shipped** in `templates/slide-deck.html` SlideEngine — `S` opens a dual-window presenter via `BroadcastChannel` (in-page overlay fallback); notes live in `<aside class="speaker-notes">` |
 | Remote-controlled decks | Requires WebSocket or Broadcast API with a server component; contradicts offline-first design |
 | PDF export | Print-media CSS is a separate project; `@page` rules and forced page breaks interact poorly with scroll-snap layout |
 | WYSIWYG editor | Not a forge output type — forge generates, not edits |

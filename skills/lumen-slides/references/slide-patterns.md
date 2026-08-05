@@ -293,6 +293,13 @@ For decks where some slides are light and some dark (especially full-bleed slide
 
 Add once at the end of the page. Handles navigation, chrome updates, and scroll-triggered reveals. Event delegation ensures slide-internal interactions (Mermaid zoom, scrollable code, overflow tables) don't trigger slide navigation.
 
+**Canonical implementation:** copy from `templates/slide-deck.html` (not the abbreviated class below). The shipped engine also provides:
+
+- `data-nav="horizontal"|"vertical"` on `.deck` (default horizontal; toggle with **O**)
+- **S** presenter mode — dual-window via `BroadcastChannel`, in-page overlay fallback
+- Speaker notes from `<aside class="speaker-notes">`
+- **F** fullscreen, hash sync `#slide-N`, axis-aware touch swipe
+
 ```javascript
 class SlideEngine {
   constructor() {
@@ -336,7 +343,7 @@ class SlideEngine {
     // Keyboard hints
     var hints = document.createElement('div');
     hints.className = 'deck-hints';
-    hints.textContent = '\u2190 \u2192 or scroll to navigate';
+    hints.textContent = '\u2190 \u2192 navigate \u00b7 S presenter \u00b7 F fullscreen \u00b7 O orientation';
     document.body.appendChild(hints);
     this.hints = hints;
     this.hintTimer = setTimeout(function() {

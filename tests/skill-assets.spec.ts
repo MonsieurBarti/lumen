@@ -179,6 +179,12 @@ describe("lumen-slides assets", () => {
 		const body = readFileSync(path, "utf8");
 		expect(body).toContain("<!DOCTYPE html>");
 		expect(body.length).toBeGreaterThan(5000);
+		// v0.2 runtime: horizontal default, presenter mode, speaker notes
+		expect(body).toContain('data-nav="horizontal"');
+		expect(body).toContain("togglePresenter");
+		expect(body).toContain("speaker-notes");
+		expect(body).toContain("BroadcastChannel");
+		expect(body).toContain("toggleOrientation");
 	});
 
 	it("ships slide-deck-base.css from roxabi", () => {
@@ -193,6 +199,7 @@ describe("lumen-slides assets", () => {
 	it("ships generate-slides recipe + libraries reference", () => {
 		expect(existsSync(join(DIR, "references", "generate-slides-recipe.md"))).toBe(true);
 		expect(existsSync(join(DIR, "references", "libraries.md"))).toBe(true);
+		expect(existsSync(join(DIR, "references", "slide-modern-presets.md"))).toBe(true);
 	});
 });
 
@@ -267,9 +274,13 @@ describe("shared aesthetics (skills/_shared/aesthetics/)", () => {
 	const AESTHETICS_DIR = join(SKILLS_DIR, "_shared", "aesthetics");
 
 	const expectedAesthetics = [
+		"aurora",
 		"blueprint",
+		"cyberpunk-neon",
 		"dark-professional",
 		"editorial",
+		"glassmorphism",
+		"hand-drawn",
 		"lyra",
 		"midnight-editorial",
 		"swiss-clean",

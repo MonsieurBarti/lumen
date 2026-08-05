@@ -15,4 +15,15 @@ Four lifted verbatim from [Roxabi/roxabi-forge](https://github.com/Roxabi/roxabi
 
 `dark-professional.css` is authored fresh by lumen, but its semantic palette (cyan-frontend / emerald-backend / violet-database / amber-cloud / rose-security / orange-bus / slate-external) is derived from [Cocoon-AI/architecture-diagram-generator](https://github.com/Cocoon-AI/architecture-diagram-generator) (MIT). Token names follow the roxabi-forge fgraph-base.css convention so it's interchangeable with the other aesthetics.
 
+Typographic slide presets authored by lumen (same token surface):
+
+- `midnight-editorial.css`, `warm-signal.css`, `swiss-clean.css`, `terminal-mono.css`
+
+Modern family authored by lumen (idea-level debt to 2025 presentation trends + gmdiagram's aesthetic enum; no file-level reuse):
+
+- `glassmorphism.css` — frosted panels on soft gradient fields
+- `cyberpunk-neon.css` — void black + cyan/magenta neon
+- `hand-drawn.css` — warm paper, ink lines, imperfect geometry
+- `aurora.css` — multi-stop luminous gradients
+
 When upstream updates, refresh from the source repo and bump lumen's minor version.

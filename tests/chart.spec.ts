@@ -587,11 +587,15 @@ describe("generateChartTemplate", () => {
 		expect(html).toContain("&lt;script&gt;");
 	});
 
-	it("loads each of the 5 fgraph aesthetics for chart output", () => {
+	it("loads each fgraph aesthetic for chart output", () => {
 		const aesthetics = [
+			"aurora",
 			"blueprint",
+			"cyberpunk-neon",
 			"dark-professional",
 			"editorial",
+			"glassmorphism",
+			"hand-drawn",
 			"lyra",
 			"midnight-editorial",
 			"swiss-clean",

@@ -11,7 +11,9 @@
   and rose (data-table) templates so agents absorb variety.
   Key patterns demonstrated:
   - All 10 slide types in a cohesive narrative
-  - SlideEngine JS: keyboard/touch/wheel nav, progress bar, dots, counter, hints
+  - SlideEngine JS: horizontal (default) + vertical nav, progress bar, dots, counter, hints
+  - Presenter mode (S): dual-window notes + next-slide preview + elapsed timer
+  - Speaker notes via <aside class="speaker-notes"> (hidden from audience)
   - Cinematic transitions: fade + translateY + scale, staggered child reveals
   - Per-slide background variation (gradient direction, accent glow position)
   - Decorative SVG accents (corner marks, quote mark, divider)
@@ -23,6 +25,7 @@
   - Nav chrome with backdrop blur for mixed-background visibility
   - Event delegation: Mermaid zoom and table scroll don't trigger slide nav
   - prefers-reduced-motion respected
+  - Content budgets: ≤4 bullets, assertive titles, speaker notes optional
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,17 +88,34 @@
   }
 
   /* ============ DECK ENGINE ============ */
+  /* data-nav="horizontal" (default, keynote/board) or "vertical" (scroll-doc) */
   .deck {
     height: 100dvh;
-    overflow-y: auto;
-    scroll-snap-type: y mandatory;
+    width: 100vw;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
   }
 
+  .deck[data-nav="vertical"] {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+  }
+
+  .deck[data-nav="horizontal"] {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    display: flex;
+    flex-direction: row;
+  }
+
   .slide {
     height: 100dvh;
+    width: 100vw;
+    flex: 0 0 100%;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
     overflow: hidden;
     position: relative;
     display: flex;
@@ -108,6 +128,35 @@
     transition:
       opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
       transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Audience-hidden speaker notes (surfaced in presenter mode) */
+  .speaker-notes {
+    display: none;
+  }
+
+  @media print {
+    .speaker-notes {
+      display: block;
+      margin-top: 1.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border-bright);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      white-space: pre-wrap;
+    }
+    .deck-progress, .deck-dots, .deck-counter, .deck-hints, .presenter-overlay {
+      display: none !important;
+    }
+    .deck { display: block; overflow: visible; height: auto; }
+    .slide {
+      page-break-after: always;
+      height: auto;
+      min-height: 100vh;
+      opacity: 1 !important;
+      transform: none !important;
+    }
   }
 
   .slide.visible {
@@ -147,12 +196,18 @@
   }
 
   .deck-dots {
-    position: fixed; right: clamp(12px, 2vw, 24px); top: 50%;
-    transform: translateY(-50%); display: flex; flex-direction: column;
-    gap: 8px; z-index: 100; padding: 8px;
+    position: fixed; z-index: 100; padding: 8px;
+    display: flex; gap: 8px;
     background: color-mix(in srgb, var(--bg) 60%, transparent 40%);
     border-radius: 20px;
     backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    /* default = horizontal */
+    bottom: clamp(40px, 5vh, 56px); left: 50%;
+    transform: translateX(-50%); flex-direction: row;
+  }
+  body[data-deck-nav="vertical"] .deck-dots {
+    right: clamp(12px, 2vw, 24px); top: 50%; bottom: auto; left: auto;
+    transform: translateY(-50%); flex-direction: column;
   }
 
   .deck-dot {
@@ -171,13 +226,74 @@
   }
 
   .deck-hints {
-    position: fixed; bottom: clamp(12px, 2vh, 24px); left: 50%;
+    position: fixed; top: clamp(12px, 2vh, 24px); left: 50%;
     transform: translateX(-50%); font-family: var(--font-mono);
     font-size: 11px; color: var(--text-dim); opacity: 0.6; z-index: 100;
     transition: opacity 0.5s ease; white-space: nowrap;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
   .deck-hints.faded { opacity: 0; pointer-events: none; }
+
+  /* ============ PRESENTER OVERLAY (fallback if popup blocked) ============ */
+  .presenter-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: #0a0e18;
+    color: var(--text);
+    font-family: var(--font-mono);
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 16px;
+    padding: 20px;
+  }
+  body.presenter-local .presenter-overlay { display: grid; }
+  body.presenter-local .deck,
+  body.presenter-local .deck-progress,
+  body.presenter-local .deck-dots,
+  body.presenter-local .deck-counter,
+  body.presenter-local .deck-hints { visibility: hidden; }
+
+  .presenter-overlay__header {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 13px; color: var(--text-dim); letter-spacing: 0.04em;
+  }
+  .presenter-overlay__timer {
+    font-size: 28px; color: var(--accent); font-variant-numeric: tabular-nums;
+  }
+  .presenter-overlay__current,
+  .presenter-overlay__next {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    overflow: auto;
+    min-height: 0;
+  }
+  .presenter-overlay__label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--accent); margin-bottom: 12px;
+  }
+  .presenter-overlay__notes {
+    grid-column: 1 / -1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 15px; line-height: 1.55;
+    color: var(--text);
+    white-space: pre-wrap;
+    min-height: 120px;
+  }
+  .presenter-overlay__title {
+    font-family: var(--font-body);
+    font-size: clamp(22px, 3vw, 36px);
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .presenter-overlay__sub {
+    color: var(--text-dim); font-size: 13px;
+  }
 
   /* ============ SHARED SLIDE ELEMENTS ============ */
   .slide__display {
@@ -588,7 +704,7 @@
 </head>
 <body>
 
-<div class="deck">
+<div class="deck" data-nav="horizontal">
 
   <!-- SLIDE 1: TITLE -->
   <section class="slide slide--title">
@@ -607,6 +723,7 @@
     <div class="reveal">
       <p class="slide__subtitle" style="margin-top:clamp(16px,2vh,32px);">From monolith proxy to edge-native routing</p>
     </div>
+    <aside class="speaker-notes">Open with the outage story from last quarter. Goal: get buy-in for a 6-week cutover, not a rewrite.</aside>
   </section>
 
   <!-- SLIDE 2: SECTION DIVIDER -->
@@ -630,6 +747,7 @@
           <li class="reveal">Auth validation adds 40ms per request</li>
           <li class="reveal">No circuit breaking &mdash; cascade failures hit everything</li>
         </ul>
+        <aside class="speaker-notes">Emphasize cascade failures — the auth outage took down billing. Pause after the 40ms figure; finance cares about that number.</aside>
       </div>
       <div class="slide__aside reveal">
         <svg viewBox="0 0 160 160" width="160" height="160">
@@ -791,6 +909,7 @@ graph LR
       <h2 class="slide__heading reveal">Ship Shadow Mode This Week</h2>
       <p class="slide__subtitle reveal" style="color:rgba(255,255,255,0.6); margin-top:12px;">Full cutover targeted for end of Q1</p>
     </div>
+    <aside class="speaker-notes">Close with the ask: two engineers for six weeks. Offer the shadow-mode demo live if time remains.</aside>
   </section>
 
 </div><!-- /deck -->
@@ -862,54 +981,301 @@ graph LR
   function openMermaidInNewTab(w){var svg=w.querySelector('.mermaid svg');if(!svg)return;var clone=svg.cloneNode(true);clone.style.zoom='';clone.style.transform='';var styles=getComputedStyle(document.documentElement);var bg=styles.getPropertyValue('--bg').trim()||'#ffffff';var html='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Diagram</title><style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:'+bg+';padding:40px;box-sizing:border-box}svg{max-width:100%;max-height:90vh;height:auto}</style></head><body>'+clone.outerHTML+'</body></html>';window.open(URL.createObjectURL(new Blob([html],{type:'text/html'})),'_blank');}
   document.querySelectorAll('.mermaid-wrap').forEach(function(w){w.addEventListener('wheel',function(e){if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();var t=w.querySelector('.mermaid');var c=parseFloat(t.dataset.zoom||INITIAL_ZOOM);var f=e.deltaY<0?1.1:0.9;var n=Math.min(Math.max(c*f,0.5),5);t.dataset.zoom=n;t.style.zoom=n;},{passive:false});var sX,sY,sL,sT,sTime,didPan;w.addEventListener('mousedown',function(e){if(e.target.closest('.zoom-controls'))return;w.classList.add('is-panning');sX=e.clientX;sY=e.clientY;sL=w.scrollLeft;sT=w.scrollTop;sTime=Date.now();didPan=false;});window.addEventListener('mousemove',function(e){if(!w.classList.contains('is-panning'))return;var dx=e.clientX-sX,dy=e.clientY-sY;if(Math.abs(dx)>5||Math.abs(dy)>5)didPan=true;w.scrollLeft=sL-dx;w.scrollTop=sT-dy;});window.addEventListener('mouseup',function(){if(!w.classList.contains('is-panning'))return;w.classList.remove('is-panning');if(!didPan&&Date.now()-sTime<300)openMermaidInNewTab(w);});});
 
-  // SlideEngine
+  // SlideEngine — horizontal/vertical nav, hash sync, presenter mode (S)
   function SlideEngine(){
     this.deck=document.querySelector('.deck');
     this.slides=[].slice.call(document.querySelectorAll('.slide'));
     this.current=0;
     this.total=this.slides.length;
+    this.nav=this.resolveNav();
+    this.channel=null;
+    this.presenterWin=null;
+    this.timerStartedAt=null;
+    this.timerInterval=null;
+    this.applyNav();
+    this.collectNotes();
     this.buildChrome();
+    this.buildPresenterOverlay();
     this.bindEvents();
     this.observe();
+    this.initChannel();
+    this.restoreHash();
     this.update();
   }
+  SlideEngine.prototype.resolveNav=function(){
+    var attr=(this.deck.getAttribute('data-nav')||'horizontal').toLowerCase();
+    return attr==='vertical'?'vertical':'horizontal';
+  };
+  SlideEngine.prototype.applyNav=function(){
+    this.deck.setAttribute('data-nav',this.nav);
+    document.body.setAttribute('data-deck-nav',this.nav);
+  };
+  SlideEngine.prototype.collectNotes=function(){
+    var self=this;
+    this.notes=this.slides.map(function(slide){
+      var el=slide.querySelector('.speaker-notes');
+      return el?el.textContent.trim():'';
+    });
+    this.titles=this.slides.map(function(slide){
+      var h=slide.querySelector('h1,h2,.slide__display,.slide__heading');
+      return h?h.textContent.trim():('Slide');
+    });
+  };
   SlideEngine.prototype.buildChrome=function(){
     var bar=document.createElement('div');bar.className='deck-progress';document.body.appendChild(bar);this.bar=bar;
     var dots=document.createElement('div');dots.className='deck-dots';var self=this;
-    this.slides.forEach(function(_,i){var d=document.createElement('button');d.className='deck-dot';d.title='Slide '+(i+1);d.onclick=function(){self.goTo(i);};dots.appendChild(d);});
+    this.slides.forEach(function(_,i){
+      var d=document.createElement('button');
+      d.className='deck-dot';d.type='button';
+      d.title='Slide '+(i+1);
+      d.setAttribute('aria-label','Go to slide '+(i+1));
+      d.onclick=function(){self.goTo(i);};
+      dots.appendChild(d);
+    });
     document.body.appendChild(dots);this.dots=[].slice.call(dots.children);
     var ctr=document.createElement('div');ctr.className='deck-counter';document.body.appendChild(ctr);this.counter=ctr;
-    var hints=document.createElement('div');hints.className='deck-hints';hints.textContent='\u2190 \u2192 or scroll to navigate';document.body.appendChild(hints);this.hints=hints;
-    this.hintTimer=setTimeout(function(){hints.classList.add('faded');},4000);
+    var hints=document.createElement('div');hints.className='deck-hints';
+    hints.textContent='\u2190 \u2192 navigate \u00b7 S presenter \u00b7 F fullscreen \u00b7 O orientation';
+    document.body.appendChild(hints);this.hints=hints;
+    this.hintTimer=setTimeout(function(){hints.classList.add('faded');},5000);
+  };
+  SlideEngine.prototype.buildPresenterOverlay=function(){
+    var ov=document.createElement('div');
+    ov.className='presenter-overlay';
+    ov.innerHTML=[
+      '<div class="presenter-overlay__header">',
+      '  <span>PRESENTER MODE \u00b7 press S to exit</span>',
+      '  <span class="presenter-overlay__timer" data-role="timer">00:00</span>',
+      '</div>',
+      '<div class="presenter-overlay__current">',
+      '  <div class="presenter-overlay__label">Now</div>',
+      '  <div class="presenter-overlay__title" data-role="cur-title"></div>',
+      '  <div class="presenter-overlay__sub" data-role="cur-sub"></div>',
+      '</div>',
+      '<div class="presenter-overlay__next">',
+      '  <div class="presenter-overlay__label">Next</div>',
+      '  <div class="presenter-overlay__title" data-role="next-title"></div>',
+      '  <div class="presenter-overlay__sub" data-role="next-sub"></div>',
+      '</div>',
+      '<div class="presenter-overlay__notes" data-role="notes"></div>'
+    ].join('');
+    document.body.appendChild(ov);
+    this.overlay=ov;
+    this.overlayTimer=ov.querySelector('[data-role="timer"]');
+    this.overlayCurTitle=ov.querySelector('[data-role="cur-title"]');
+    this.overlayCurSub=ov.querySelector('[data-role="cur-sub"]');
+    this.overlayNextTitle=ov.querySelector('[data-role="next-title"]');
+    this.overlayNextSub=ov.querySelector('[data-role="next-sub"]');
+    this.overlayNotes=ov.querySelector('[data-role="notes"]');
+  };
+  SlideEngine.prototype.initChannel=function(){
+    var self=this;
+    try{
+      this.channel=new BroadcastChannel('lumen-presenter');
+      this.channel.onmessage=function(ev){
+        var data=ev.data||{};
+        if(data.type==='request-state'){self.broadcastState();}
+        else if(data.type==='goTo'&&typeof data.index==='number'){self.goTo(data.index,true);}
+        else if(data.type==='next'){self.next(true);}
+        else if(data.type==='prev'){self.prev(true);}
+      };
+    }catch(_e){this.channel=null;}
+  };
+  SlideEngine.prototype.broadcastState=function(){
+    if(!this.channel)return;
+    this.channel.postMessage({
+      type:'state',
+      index:this.current,
+      total:this.total,
+      title:this.titles[this.current]||'',
+      notes:this.notes[this.current]||'',
+      nextTitle:this.titles[this.current+1]||'(end)',
+      nextNotes:this.notes[this.current+1]||'',
+      timerStartedAt:this.timerStartedAt
+    });
   };
   SlideEngine.prototype.bindEvents=function(){
     var self=this;
     document.addEventListener('keydown',function(e){
       if(e.target.closest('.mermaid-wrap,.table-scroll,.code-scroll,input,textarea,[contenteditable]'))return;
-      if(['ArrowDown','ArrowRight',' ','PageDown'].indexOf(e.key)>-1){e.preventDefault();self.next();}
-      else if(['ArrowUp','ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();self.prev();}
-      else if(e.key==='Home'){e.preventDefault();self.goTo(0);}
-      else if(e.key==='End'){e.preventDefault();self.goTo(self.total-1);}
+      var k=e.key;
+      if(k==='s'||k==='S'){e.preventDefault();self.togglePresenter();return;}
+      if(k==='f'||k==='F'){e.preventDefault();self.toggleFullscreen();return;}
+      if(k==='o'||k==='O'){e.preventDefault();self.toggleOrientation();return;}
+      if(k==='Escape'&&document.body.classList.contains('presenter-local')){e.preventDefault();self.closeLocalPresenter();return;}
+      if(['ArrowDown','ArrowRight',' ','PageDown'].indexOf(k)>-1){e.preventDefault();self.next();}
+      else if(['ArrowUp','ArrowLeft','PageUp'].indexOf(k)>-1){e.preventDefault();self.prev();}
+      else if(k==='Home'){e.preventDefault();self.goTo(0);}
+      else if(k==='End'){e.preventDefault();self.goTo(self.total-1);}
       self.fadeHints();
     });
-    var tY;
-    this.deck.addEventListener('touchstart',function(e){tY=e.touches[0].clientY;},{passive:true});
-    this.deck.addEventListener('touchend',function(e){var dy=tY-e.changedTouches[0].clientY;if(Math.abs(dy)>50){dy>0?self.next():self.prev();}});
+    var tX=0,tY=0;
+    this.deck.addEventListener('touchstart',function(e){
+      tX=e.touches[0].clientX;tY=e.touches[0].clientY;
+    },{passive:true});
+    this.deck.addEventListener('touchend',function(e){
+      var dx=tX-e.changedTouches[0].clientX;
+      var dy=tY-e.changedTouches[0].clientY;
+      if(self.nav==='horizontal'){
+        if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){dx>0?self.next():self.prev();}
+      }else{
+        if(Math.abs(dy)>50&&Math.abs(dy)>Math.abs(dx)){dy>0?self.next():self.prev();}
+      }
+    });
+    window.addEventListener('hashchange',function(){self.restoreHash(true);});
+    window.addEventListener('beforeunload',function(){
+      if(self.presenterWin&&!self.presenterWin.closed)self.presenterWin.close();
+    });
   };
   SlideEngine.prototype.observe=function(){
     var self=this;
-    var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){entry.target.classList.add('visible');self.current=self.slides.indexOf(entry.target);self.update();}});},{threshold:0.5});
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          var idx=self.slides.indexOf(entry.target);
+          if(idx>=0&&idx!==self.current){
+            self.current=idx;
+            self.update();
+          }else if(idx===self.current){
+            self.update();
+          }
+        }
+      });
+    },{threshold:0.5});
     this.slides.forEach(function(s){obs.observe(s);});
   };
-  SlideEngine.prototype.goTo=function(i){this.slides[Math.max(0,Math.min(i,this.total-1))].scrollIntoView({behavior:'smooth'});};
-  SlideEngine.prototype.next=function(){if(this.current<this.total-1)this.goTo(this.current+1);};
-  SlideEngine.prototype.prev=function(){if(this.current>0)this.goTo(this.current-1);};
-  SlideEngine.prototype.update=function(){
+  SlideEngine.prototype.goTo=function(i,fromPresenter){
+    var idx=Math.max(0,Math.min(i,this.total-1));
+    this.current=idx;
+    var behavior=window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
+    this.slides[idx].scrollIntoView({behavior:behavior,inline:'start',block:'start'});
+    this.update(fromPresenter);
+  };
+  SlideEngine.prototype.next=function(fromPresenter){if(this.current<this.total-1)this.goTo(this.current+1,fromPresenter);};
+  SlideEngine.prototype.prev=function(fromPresenter){if(this.current>0)this.goTo(this.current-1,fromPresenter);};
+  SlideEngine.prototype.update=function(fromPresenter){
     this.bar.style.width=((this.current+1)/this.total*100)+'%';
     var c=this.current;this.dots.forEach(function(d,i){d.classList.toggle('active',i===c);});
     this.counter.textContent=(this.current+1)+' / '+this.total;
+    try{history.replaceState(null,'','#slide-'+(this.current+1));}catch(_e){}
+    this.refreshPresenterUI();
+    if(!fromPresenter)this.broadcastState();
+  };
+  SlideEngine.prototype.restoreHash=function(fromEvent){
+    var m=location.hash.match(/^#slide-(\d+)$/i);
+    if(!m)return;
+    var n=parseInt(m[1],10)-1;
+    if(n>=0&&n<this.total&&(fromEvent||n!==this.current))this.goTo(n);
   };
   SlideEngine.prototype.fadeHints=function(){clearTimeout(this.hintTimer);this.hints.classList.add('faded');};
+  SlideEngine.prototype.toggleOrientation=function(){
+    this.nav=this.nav==='horizontal'?'vertical':'horizontal';
+    this.applyNav();
+    var self=this;
+    requestAnimationFrame(function(){self.goTo(self.current);});
+  };
+  SlideEngine.prototype.toggleFullscreen=function(){
+    if(!document.fullscreenElement){
+      document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();
+    }else if(document.exitFullscreen){
+      document.exitFullscreen();
+    }
+  };
+  SlideEngine.prototype.ensureTimer=function(){
+    if(this.timerStartedAt==null)this.timerStartedAt=Date.now();
+    var self=this;
+    if(this.timerInterval)return;
+    this.timerInterval=setInterval(function(){self.refreshPresenterUI();},1000);
+  };
+  SlideEngine.prototype.formatElapsed=function(){
+    if(this.timerStartedAt==null)return'00:00';
+    var sec=Math.floor((Date.now()-this.timerStartedAt)/1000);
+    var m=Math.floor(sec/60),s=sec%60;
+    return(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  };
+  SlideEngine.prototype.refreshPresenterUI=function(){
+    if(this.overlayTimer)this.overlayTimer.textContent=this.formatElapsed();
+    if(this.overlayCurTitle)this.overlayCurTitle.textContent=this.titles[this.current]||'';
+    if(this.overlayCurSub)this.overlayCurSub.textContent='Slide '+(this.current+1)+' / '+this.total;
+    if(this.overlayNextTitle)this.overlayNextTitle.textContent=this.titles[this.current+1]||'(end of deck)';
+    if(this.overlayNextSub){
+      this.overlayNextSub.textContent=this.current+1<this.total?('Slide '+(this.current+2)+' / '+this.total):'';
+    }
+    if(this.overlayNotes){
+      this.overlayNotes.textContent=this.notes[this.current]||'(no speaker notes on this slide)';
+    }
+  };
+  SlideEngine.prototype.openPresenterWindow=function(){
+    var self=this;
+    this.ensureTimer();
+    var html=this.buildPresenterWindowHtml();
+    var url=URL.createObjectURL(new Blob([html],{type:'text/html'}));
+    var win=window.open(url,'lumen-presenter','width=1100,height=720');
+    if(!win){URL.revokeObjectURL(url);return false;}
+    this.presenterWin=win;
+    setTimeout(function(){URL.revokeObjectURL(url);self.broadcastState();},1500);
+    return true;
+  };
+  SlideEngine.prototype.buildPresenterWindowHtml=function(){
+    var bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()||'#0f1729';
+    var surface=getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()||'#162040';
+    var text=getComputedStyle(document.documentElement).getPropertyValue('--text').trim()||'#e8e4d8';
+    var dim=getComputedStyle(document.documentElement).getPropertyValue('--text-dim').trim()||'#9a9484';
+    var accent=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#d4a73a';
+    return'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Lumen Presenter</title><style>'+
+      'html,body{margin:0;height:100%;background:'+bg+';color:'+text+';font-family:ui-monospace,SFMono-Regular,Menlo,monospace}'+
+      'body{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:auto 1fr auto;gap:16px;padding:20px;box-sizing:border-box}'+
+      'header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;color:'+dim+';font-size:13px}'+
+      '.timer{font-size:32px;color:'+accent+';font-variant-numeric:tabular-nums}'+
+      '.card{background:'+surface+';border-radius:12px;padding:16px;overflow:auto;min-height:0}'+
+      '.label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:'+accent+';margin-bottom:12px}'+
+      '.title{font-family:Georgia,serif;font-size:28px;margin:0 0 8px}'+
+      '.sub{color:'+dim+';font-size:13px}'+
+      '.notes{grid-column:1/-1;background:'+surface+';border-radius:12px;padding:18px 20px;font-size:16px;line-height:1.55;white-space:pre-wrap;min-height:140px}'+
+      'kbd{border:1px solid '+dim+';border-radius:4px;padding:1px 6px;font-size:11px}'+
+      '</style></head><body>'+
+      '<header><span>LUMEN PRESENTER \u00b7 <kbd>\u2190</kbd> <kbd>\u2192</kbd> navigate \u00b7 keep audience window focused for clicks</span><span class="timer" id="timer">00:00</span></header>'+
+      '<div class="card"><div class="label">Now</div><div class="title" id="curTitle">\u2014</div><div class="sub" id="curSub"></div></div>'+
+      '<div class="card"><div class="label">Next</div><div class="title" id="nextTitle">\u2014</div><div class="sub" id="nextSub"></div></div>'+
+      '<div class="notes" id="notes">Waiting for deck\u2026</div>'+
+      '<script>(function(){var ch;try{ch=new BroadcastChannel("lumen-presenter");}catch(e){document.getElementById("notes").textContent="BroadcastChannel unavailable";return;}'+
+      'var startedAt=null;function fmt(ms){if(ms==null)return"00:00";var sec=Math.floor(((Date.now()-ms)/1000));var m=Math.floor(sec/60),s=sec%60;return(m<10?"0":"")+m+":"+(s<10?"0":"")+s;}'+
+      'setInterval(function(){document.getElementById("timer").textContent=fmt(startedAt);},500);'+
+      'ch.onmessage=function(ev){var d=ev.data||{};if(d.type!=="state")return;startedAt=d.timerStartedAt||startedAt||Date.now();'+
+      'document.getElementById("curTitle").textContent=d.title||"";'+
+      'document.getElementById("curSub").textContent="Slide "+(d.index+1)+" / "+d.total;'+
+      'document.getElementById("nextTitle").textContent=d.nextTitle||"(end)";'+
+      'document.getElementById("nextSub").textContent=d.index+1<d.total?("Slide "+(d.index+2)+" / "+d.total):"";'+
+      'document.getElementById("notes").textContent=d.notes||"(no speaker notes on this slide)";};'+
+      'document.addEventListener("keydown",function(e){'+
+      'if(["ArrowRight","ArrowDown"," ","PageDown"].indexOf(e.key)>-1){e.preventDefault();ch.postMessage({type:"next"});}'+
+      'else if(["ArrowLeft","ArrowUp","PageUp"].indexOf(e.key)>-1){e.preventDefault();ch.postMessage({type:"prev"});}'+
+      'else if(e.key==="Home"){e.preventDefault();ch.postMessage({type:"goTo",index:0});}'+
+      'else if(e.key==="End"){e.preventDefault();ch.postMessage({type:"goTo",index:9999});}'+
+      '});ch.postMessage({type:"request-state"});})();<\/script></body></html>';
+  };
+  SlideEngine.prototype.openLocalPresenter=function(){
+    this.ensureTimer();
+    document.body.classList.add('presenter-local');
+    this.refreshPresenterUI();
+  };
+  SlideEngine.prototype.closeLocalPresenter=function(){
+    document.body.classList.remove('presenter-local');
+  };
+  SlideEngine.prototype.togglePresenter=function(){
+    if(document.body.classList.contains('presenter-local')){
+      this.closeLocalPresenter();
+      return;
+    }
+    if(this.presenterWin&&!this.presenterWin.closed){
+      this.presenterWin.focus();
+      this.broadcastState();
+      return;
+    }
+    var opened=this.openPresenterWindow();
+    if(!opened)this.openLocalPresenter();
+  };
 </script>
 
 </body>
