@@ -89,7 +89,7 @@ Skills are organized in three tiers (inspired by Shiv Sakhuja's [Skill Graphs 2.
 | `lumen-diagram` | Architecture / flow / sequence / ER / state / gantt / network / dependency-graph / AI-pattern diagrams | `draw`, `diagram`, `visualize`, `sketch`, `architecture of X` |
 | `lumen-chart` | Bar / pie / line / area / scatter / radar / funnel / bubble / table | `chart`, `graph`, `plot`, `trend`, `comparison` |
 | `lumen-mermaid` | Mermaid with zoom / pan / fit / new-tab export | `mermaid diagram`, raw mermaid source |
-| `lumen-slides` | Magazine-quality scroll-snap deck, 10 slide patterns | `create deck`, `slides`, `pitch`, `presentation` |
+| `lumen-slides` | Magazine-quality scroll-snap deck, 10 slide patterns, horizontal/vertical nav, presenter mode + speaker notes, content-budget gates | `create deck`, `slides`, `pitch`, `presentation` |
 | `lumen-gallery` | Image / audio comparison gallery, 5 templates, dynamic filters (standalone — not chained from any composite) | `gallery`, `showcase`, `compare visually`, `side by side` |
 | `lumen-guide` | Multi-tab HTML doc with component library | `write a guide`, `architecture doc`, `multi-tab doc` |
 | `lumen-recap` | Project state recap (state + recent + debt + next) | `recap`, `where are we`, `summarize the project` |
@@ -139,7 +139,7 @@ Skills are auto-routed by trigger phrases. Output is a single HTML file you can 
 v0.1.9
 <!-- x-release-please-end -->
 
-8 capabilities + 4 composites + 2 playbooks shipped, all with production-ready `SKILL.md` and the tier-aware structure described above. PI tool routes wire mermaid + diagram + chart deterministically; composites and playbooks are LLM-authored only by design — they orchestrate other skills, so there's no single deterministic route to expose. Skill-graph eval (`tests/skill-graph.spec.ts`) guards structural invariants (tier banners, pipeline references, no cross-tier ID collisions). New aesthetics (`glassmorphism` / `cyberpunk-neon` / `hand-drawn`) remain on the v0.2 roadmap.
+8 capabilities + 4 composites + 2 playbooks shipped, all with production-ready `SKILL.md` and the tier-aware structure described above. PI tool routes wire mermaid + diagram + chart deterministically; composites and playbooks are LLM-authored only by design — they orchestrate other skills, so there's no single deterministic route to expose. Skill-graph eval (`tests/skill-graph.spec.ts`) guards structural invariants (tier banners, pipeline references, no cross-tier ID collisions). Slide runtime now ships horizontal nav (default), presenter mode (`S`), and content-budget validation (`src/utils/content-budget.ts`). New aesthetics (`glassmorphism` / `cyberpunk-neon` / `hand-drawn`) remain on the v0.2 roadmap.
 
 ## 🧪 Development
 

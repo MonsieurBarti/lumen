@@ -179,6 +179,12 @@ describe("lumen-slides assets", () => {
 		const body = readFileSync(path, "utf8");
 		expect(body).toContain("<!DOCTYPE html>");
 		expect(body.length).toBeGreaterThan(5000);
+		// v0.2 runtime: horizontal default, presenter mode, speaker notes
+		expect(body).toContain('data-nav="horizontal"');
+		expect(body).toContain("togglePresenter");
+		expect(body).toContain("speaker-notes");
+		expect(body).toContain("BroadcastChannel");
+		expect(body).toContain("toggleOrientation");
 	});
 
 	it("ships slide-deck-base.css from roxabi", () => {

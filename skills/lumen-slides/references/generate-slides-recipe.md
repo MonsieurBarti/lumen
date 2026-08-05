@@ -11,6 +11,19 @@ Follow the visual-explainer skill workflow. Read the reference template at `./te
 
 **Narrative structure:** Slides have a temporal dimension — compose a story arc, not a list of sections. Start with impact (title), build context (overview), deep dive (content, diagrams, data), resolve (summary/next steps). Plan the slide sequence and assign a composition (centered, left-heavy, split, full-bleed) to each slide before writing HTML.
 
+**Content budgets (non-negotiable):**
+- One idea per slide; the `h1`/`h2` **is** the takeaway (never generic labels like "Results" or "Overview")
+- ≤4 bullets per slide (hard max 6); ≤12 words per bullet (hard max 20)
+- ≤6 major visual elements per slide
+- ≤2 consecutive text-heavy slides — break runs with diagram / quote / KPI / image
+- Put spoken detail in `<aside class="speaker-notes">…</aside>`, not on the slide face
+- After writing HTML, run `validateContentBudgets(html)` from `src/utils/content-budget.ts` and fix every `error` before delivery
+
+**Navigation + presenter runtime:**
+- Root: `<div class="deck" data-nav="horizontal">` (use `vertical` only for scroll-doc / long-read decks)
+- Keep the SlideEngine from `templates/slide-deck.html` intact — it provides horizontal/vertical nav, `S` presenter mode, `F` fullscreen, `O` orientation toggle, hash sync, and notes extraction
+- Author speaker notes on title, key argument, and closing slides at minimum
+
 **Visual richness:** Proactively reach for visuals. If `surf` CLI is available (`which surf`), generate images for title slide backgrounds and full-bleed slides via `surf gemini --generate-image`. Add SVG decorative accents, inline sparklines, mini-charts, and small Mermaid diagrams where they make the story more compelling. Visual-first, text-second.
 
 **Compositional variety:** Consecutive slides must vary their spatial approach. Alternate between centered, left-heavy, right-heavy, split, edge-aligned, and full-bleed. Three centered slides in a row means push one off-axis.
