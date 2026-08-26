@@ -1,122 +1,17 @@
 ---
 name: lumen-chart
-description: Generate single-file HTML+SVG or interactive Chart.js data chart (bar, pie, line, area, scatter, radar, funnel, bubble, table, interactive-bar, interactive-line). Invoke when user provides numeric data and asks for chart, graph, plot, trend, distribution, proportion, or comparison.
+description: Chart: single-file HTML/SVG or Chart.js from data. User asks for chart, plot, graph, trend, or comparison table.
+license: MIT
+compatibility: Claude Code · Pi · OMP. Pi tool: type chart.
 version: 0.1.9 # x-release-please-version
 ---
 
-# lumen-chart
+**Tier:** capability (atomic) — does not invoke other lumen skills.
 
-Single-file HTML+SVG chart. Nice axis ticks. Offline-safe.
+## Steps
 
-**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
+1. **Schema** — shape data to `schemas/schema-<type>.json` (shared axes: `schema-shared.json`). Done when JSON validates against the chosen type.
+2. **Render** — follow `references/chart-recipes.md` (Nice Numbers, palettes, per-type SVG/Chart.js). Optional style direction: `references/chart-presets.md`. Done when chart fits viewBox and axis labels are human-readable.
+3. **Deliver** — write `~/.agent/diagrams/<slug>.html`, open in browser. Done when path is returned.
 
-## When to invoke
-
-Triggers: `chart`, `graph`, `plot`, `bar chart`, `pie chart`, `line chart`, `scatter`, `radar`, `funnel`, `bubble`, `comparison table`, `trend over time`, `distribution`, `proportion`, `feature matrix`.
-
-## Pipeline (two-step, never skip Step 1)
-
-1. **Extract JSON values** conforming to `schemas/schema-<type>.json`. Common axis + legend config in `schemas/schema-shared.json`.
-2. **Render** following `references/chart-recipes.md` — covers per-type guidance, the Nice Numbers algorithm, and color palette guidance.
-
-## Chart type → schema
-
-| Need | Schema |
-|---|---|
-| categorical magnitude | `schema-bar.json` (vertical / horizontal / grouped / stacked) |
-| proportion of whole | `schema-pie.json` (donut via inner radius) |
-| time-series single/multi | `schema-line.json` (smooth / linear) |
-| stacked time-series | `schema-area.json` |
-| x,y correlation | `schema-scatter.json` (with optional trend line) |
-| multi-dim profile | `schema-radar.json` |
-| pipeline conversion | `schema-funnel.json` |
-| x,y,size triplets | `schema-bubble.json` |
-| structured comparison | `schema-table.json` (min/max highlighting) |
-| interactive categorical | `interactive-bar` — Chart.js canvas, tooltips, zoom |
-| interactive time-series | `interactive-line` — Chart.js canvas, tooltips, zoom |
-
-## Chart presets (style direction — orthogonal to aesthetic)
-
-**Aesthetic** = palette + typography (reused from `_shared/aesthetics/`).
-**Preset** = chart-specific style choices: gridline density, axis treatment, label conventions, annotation grammar. Composes freely with any aesthetic — `aesthetic: lyra` + `preset: editorial-broadsheet` is a valid combination.
-
-| Preset | Gridlines | Axes & labels | Annotation grammar | Best for |
-|---|---|---|---|---|
-| `editorial-broadsheet` | sparse horizontal only | sans-serif, single accent color, units in subtitle | inline endpoint labels, no separate legend | newspaper-style charts; one chart per insight |
-| `consulting-deck` | none — value labels on the bars themselves | bold action title above, source footnote below | takeaway box top-right summarizing the "so what" | board / executive decks; one chart = one decision |
-| `newsweekly` | dense horizontal with one accent bar (often red) | high label density, integrated callouts | annotation arrows pointing to named outliers | dense-information charts the reader is expected to study |
-| `investment-bank` | tight grid, monospaced numerics | dual-axis common, footnoted units | min/max highlighted in table form, decimal precision rules | tables and dense numeric charts |
-| `swiss-grid` | hairline horizontals only | sans-serif, no axis titles | no chart junk, generous whitespace | minimalist single-message charts |
-
-Presets dictate **defaults**; the LLM-authored pipeline may override per-chart when context warrants. The PI deterministic route ignores presets in v0.1.x (LLM-only); they may be threaded into `ChartContent` in a future version.
-
-Detailed CSS / SVG fragment specs per preset, plus a preset × chart-type compatibility matrix, in `references/chart-presets.md`.
-
-## Examples
-
-3 paired `(name).html` + `(name).json` files in `examples/`:
-
-| Use case | Files | Type |
-|---|---|---|
-| feature comparison matrix | `product-comparison` | table |
-| team performance grid | `team-performance` | table |
-| skills radar | `team-skills` | radar |
-
-Open any HTML in browser; the JSON shows the input shape.
-
-## Output
-
-- **Static charts** (`bar`, `pie`, `line`, `table`): single HTML file with inlined SVG. No external deps. Opens via `file://`.
-- **Interactive charts** (`interactive-bar`, `interactive-line`): single HTML file that loads Chart.js 4.4.1 from CDN. Requires network on first open; thereafter cached. Canvas-based with tooltips, hover states, and responsive scaling.
-
-## Quality checks
-
-- Axis labels human-readable (no 2.333…); use Nice Numbers
-- Legend colors match data series colors
-- Stacked totals never overflow viewBox
-- `<title>` tooltips on each data mark
-- Min 3 data points for line/area; min 2 categories for bar/pie
-- Default to `viewBox="0 0 800 480"` so charts scale cleanly inside guides/recaps
-
-## PI extension route (v0.2)
-
-The `lumen-generate_visual` PI tool wires `type: "chart"` for **6 chart types**:
-- Static: `bar` (vertical, grouped or stacked), `pie` (with optional donut `innerRadius`), `line` (linear or smooth, with markers), `table` (with min/max highlighting + verdict pills)
-- Interactive: `interactive-bar`, `interactive-line` — Chart.js canvas with tooltips and hover states
-
-The remaining 4 types (`area`, `scatter`, `radar`, `funnel`, `bubble`) remain LLM-authored via this skill's pipeline; they land as patch-series extensions.
-
-**Coordinate philosophy for the PI route**: callers describe chart data semantically (series + categories, slices + values, columns + rows). The renderer computes scales (Nice Numbers via `src/utils/nice-numbers.ts`), pixel positions, and SVG paths. LLMs never touch viewBox math.
-
-**Call shape:**
-
-```js
-generateVisual({
-  type: "chart",
-  title: "Quarterly revenue",
-  aesthetic: "dark-professional",  // any of the 13 fgraph aesthetics
-  content: {
-    chart: "bar",
-    variant: "grouped",  // or "stacked"
-    yAxisLabel: "Revenue ($M)",
-    series: [
-      { name: "Enterprise", data: [{ label: "Q1", value: 12 }, { label: "Q2", value: 18 }] },
-      { name: "SMB",        data: [{ label: "Q1", value: 5 },  { label: "Q2", value: 7 }] },
-    ],
-  },
-});
-```
-
-Full `ChartContent` shape per chart type: `src/templates/chart/schemas.ts`. Cross-series consistency: bar + line require all series to share the same x labels in the same order (parser enforces).
-
-**Library exports** (for direct programmatic use without the PI tool):
-- `generateChartTemplate(input)` — returns the single-file HTML string
-- `parseChartContent(unknown)` — schema validator with precise error paths
-- `niceNumbers(min, max)` — Wilkinson Nice Numbers algorithm (axis ticks)
-
-## Sources
-
-- [`gmdiagram/gm-data-chart`](https://github.com/ZeroZ-lab/gmdiagram) (MIT) — chart-type schemas. The original Chinese-language reference docs were dropped; their algorithms are restated in English in `references/chart-recipes.md`.
-- 3 English-only example pairs from gmdiagram's example set (`product-comparison`, `team-performance`, `team-skills`)
-- `skills/_shared/aesthetics/` (this package) — 5 aesthetics shared with diagrams when embedding charts in guides/recaps
-- [`alchaincyf/huashu-skills`](https://github.com/alchaincyf/huashu-skills) — *idea-level credit only, no license at time of writing.* The `huashu-data-pro` skill's named-preset taxonomy (FT / McKinsey / Economist / Goldman / Swiss) inspired the chart-preset axis above. Lumen presets are independently authored in English with descriptive names — no brand references, no file-level reuse.
+Examples: `examples/*.html` + paired `.json`. PI route schema: `src/templates/chart/schemas.ts`.

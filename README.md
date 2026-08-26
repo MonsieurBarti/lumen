@@ -4,7 +4,7 @@
   <h1>💡 Lumen</h1>
 
   <p>
-    <strong>Illuminate code: 8 skills for diagrams, charts, mermaid, slides, galleries, guides, project recaps, and fact-checks — for both Claude Code and PI coding agent</strong>
+    <strong>Illuminate code: 9 skills for diagrams, charts, mermaid, slides, galleries, guides, project recaps, and fact-checks — for Claude Code, Pi, and OMP</strong>
   </p>
 
   <p>
@@ -32,11 +32,11 @@ Single-file HTML/SVG outputs that work offline. Bundles and unifies capabilities
 
 ## ✨ Features
 
-- **🎨 8 skills** — diagram, chart, mermaid, slides, gallery, guide, recap, fact-check
-- **🖌️ 21 aesthetics** — 8 mermaid palettes (`blueprint`, `editorial`, `paper`, `terminal`, `dracula`, `nord`, `solarized`, `gruvbox`) + 13 fgraph aesthetics including modern `glassmorphism` / `cyberpunk-neon` / `hand-drawn` / `aurora` plus typographic (`midnight-editorial`, `warm-signal`, `swiss-clean`, `terminal-mono`, …)
+- **🎨 9 capabilities** — diagram, chart, mermaid, slides, slides-export, gallery, guide, recap, fact-check
+- **🖌️ 21 aesthetics** — default deck preset `aurora`; 8 mermaid palettes + 13 fgraph aesthetics (`glassmorphism`, `cyberpunk-neon`, `hand-drawn`, `aurora`, …)
 - **📄 Single-file HTML** — embedded CSS/JS/SVG, opens in any browser, works offline (`file://`)
-- **🤖 Dual distribution** — Claude Code plugin AND PI extension from the same repo
-- **🪜 Frame → Structure → Style → Deliver** — disciplined methodology baked into every skill
+- **🤖 Triple distribution** — Claude Code plugin, Pi extension, OMP (inherits `.claude` skills)
+- **🧠 Agent Skills format** — slim `SKILL.md` bodies ([writing-for-agents](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents)); composites/playbooks are user-invoked to save context
 - **⚡ No Python, no librsvg** — pure HTML/CSS/SVG; LLM authors via skill, or deterministic TS renderer via PI tool
 
 ## 📦 Installation
@@ -74,6 +74,16 @@ Replace `<version>` with the [latest release](https://www.npmjs.com/package/@the
 
 Then reload PI with `/reload`.
 
+### OMP (`omp.sh`)
+
+OMP inherits Claude Code plugin skills on install:
+
+```bash
+omp plugin install github:MonsieurBarti/lumen
+```
+
+Reload with `/reload-extensions`. Skills follow the [Agent Skills](https://agentskills.io/specification) `SKILL.md` format.
+
 ## 🎯 Skills
 
 Skills are organized in three tiers (inspired by Shiv Sakhuja's [Skill Graphs 2.0](https://x.com/shivsakhuja/status/2047124337191444844)):
@@ -89,7 +99,8 @@ Skills are organized in three tiers (inspired by Shiv Sakhuja's [Skill Graphs 2.
 | `lumen-diagram` | Architecture / flow / sequence / ER / state / gantt / network / dependency-graph / AI-pattern diagrams | `draw`, `diagram`, `visualize`, `sketch`, `architecture of X` |
 | `lumen-chart` | Bar / pie / line / area / scatter / radar / funnel / bubble / table | `chart`, `graph`, `plot`, `trend`, `comparison` |
 | `lumen-mermaid` | Mermaid with zoom / pan / fit / new-tab export | `mermaid diagram`, raw mermaid source |
-| `lumen-slides` | Magazine-quality scroll-snap deck, 10 slide patterns, horizontal/vertical nav, presenter mode + speaker notes, content-budget gates | `create deck`, `slides`, `pitch`, `presentation` |
+| `lumen-slides` | Scroll-snap deck, presenter mode, content-budget gates (default aesthetic: `aurora`) | `deck`, `slides`, `pitch`, `presentation` |
+| `lumen-slides-export` | Export deck HTML → editable `.pptx` (user-invoked) | `export slides`, `pptx` |
 | `lumen-gallery` | Image / audio comparison gallery, 5 templates, dynamic filters (standalone — not chained from any composite) | `gallery`, `showcase`, `compare visually`, `side by side` |
 | `lumen-guide` | Multi-tab HTML doc with component library | `write a guide`, `architecture doc`, `multi-tab doc` |
 | `lumen-recap` | Project state recap (state + recent + debt + next) | `recap`, `where are we`, `summarize the project` |
@@ -111,7 +122,7 @@ Skills are organized in three tiers (inspired by Shiv Sakhuja's [Skill Graphs 2.
 | `lumen-document-this-project` | `lumen-readme-pack` + `lumen-architecture-doc` (+ conditional) | `document this project`, `full docs pack`, `bootstrap project docs` |
 | `lumen-release-pack` | `lumen-launch-deck` + `lumen-readme-pack` (+ conditional) | `release pack`, `package the release`, `release artifacts` |
 
-> Playbooks are **human-in-the-loop**: they pause for scope confirmation before executing. Don't run them from CI or cron.
+> Composites and playbooks use `disable-model-invocation` — invoke by name (`/lumen-architecture-doc`, etc.). Playbooks pause for scope confirmation before executing.
 
 Each skill ships with a full `SKILL.md` describing triggers, pipeline, output spec, quality checks, and PI extension route.
 

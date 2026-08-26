@@ -4,8 +4,8 @@
  * Lifted from @the-forge-flow/visual-explainer-pi: src/index.ts. Adapted:
  *   - tool name `tff-generate_visual` → `lumen-generate_visual`
  *   - slash commands `visual-{reopen,list}` → `lumen-{reopen,list}`
- *   - in v0.1.x only `mermaid_custom` is wired through generateVisual; other
- *     types throw NotImplementedError until lumen-{diagram,chart,...} land.
+ *   - `lumen-generate_visual` wires mermaid, fgraph diagram, and chart;
+ *     slides/galleries/guides/recaps use the matching lumen-* skills.
  *
  * The same `skills/` tree is consumed by the Claude Code plugin
  * (`.claude-plugin/plugin.json`) and shipped to PI under `dist/skills/` via
@@ -46,10 +46,22 @@ export const LUMEN_CAPABILITIES = [
 	"lumen-chart",
 	"lumen-mermaid",
 	"lumen-slides",
+	"lumen-slides-export",
 	"lumen-gallery",
 	"lumen-guide",
 	"lumen-recap",
 	"lumen-fact-check",
+] as const;
+
+/** Types with deterministic TS renderers in `lumen-generate_visual`. */
+export const WIRED_VISUAL_TYPES = [
+	"flowchart",
+	"sequence",
+	"er",
+	"state",
+	"mermaid_custom",
+	"diagram",
+	"chart",
 ] as const;
 
 export const LUMEN_COMPOSITES = [
@@ -223,25 +235,10 @@ export default function lumenExtension(pi: ExtensionAPI) {
 			"For visual types other than mermaid + diagram + chart, invoke the matching lumen-* skill directly until that route lands.",
 		],
 		parameters: Type.Object({
-			type: StringEnum(
-				[
-					"architecture",
-					"chart",
-					"diagram",
-					"flowchart",
-					"sequence",
-					"er",
-					"state",
-					"table",
-					"diff",
-					"plan",
-					"timeline",
-					"dashboard",
-					"slides",
-					"mermaid_custom",
-				] as const,
-				{ description: "Type of visualization to generate" },
-			),
+			type: StringEnum(WIRED_VISUAL_TYPES, {
+				description:
+					"Wired visualization type. For slides, galleries, guides, recaps, and fact-checks invoke the matching lumen-* skill.",
+			}),
 			content: Type.Union([
 				Type.String({ description: "Raw content (mermaid syntax, markdown)" }),
 				Type.Array(Type.Record(Type.String(), Type.Unknown()), {

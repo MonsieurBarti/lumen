@@ -2,9 +2,8 @@
  * Shared types for the lumen PI extension.
  * Lifted from @the-forge-flow/visual-explainer-pi: src/types.ts.
  *
- * v0.1.x ships only the `mermaid_custom` type fully wired. Other types are
- * declared so callers can pre-populate JSON, but `generateVisual` will throw
- * NotImplementedError for them until lumen-{diagram,chart,slides,...} land.
+ * v0.1.x wires mermaid + fgraph diagram + chart through `lumen-generate_visual`.
+ * Slides, galleries, guides, recaps, and fact-checks are skill-authored HTML.
  */
 
 export type VisualType =

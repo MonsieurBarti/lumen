@@ -6,36 +6,43 @@
 <title>Lumen v0.2 — what shipped</title>
 <!--
   Example deck demonstrating lumen-slides patterns.
-  Aesthetic: Midnight Editorial (deep navy + warm gold accents).
+  Aesthetic: Aurora (luminous gradients + Outfit type).
   8 slides covering 7 of the 10 .slide--* selectors:
     title → section → content → split → diagram → quote → code → closing
   Self-contained, offline-safe, horizontal scroll-snap nav + presenter mode (S).
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --font-body: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
-  --bg: #0f1729;
-  --surface: #162040;
-  --surface2: #1d2b52;
-  --border: rgba(200, 180, 140, 0.10);
-  --border-bright: rgba(200, 180, 140, 0.18);
-  --text: #f5edd8;
-  --text-dim: #b8ad8f;
-  --text-muted: #8a8166;
-  --accent: #d4a437;
-  --accent-bright: #f0c060;
-  --accent-dim: rgba(212, 164, 55, 0.16);
+  --bg: #070b16;
+  --surface: rgba(16, 24, 43, 0.72);
+  --surface2: rgba(30, 44, 82, 0.85);
+  --border: rgba(160, 200, 255, 0.12);
+  --border-bright: rgba(160, 200, 255, 0.28);
+  --text: #eef4ff;
+  --text-dim: #9aadc8;
+  --text-muted: #6d809e;
+  --accent: #5eead4;
+  --accent-bright: #a5f3fc;
+  --accent-dim: rgba(94, 234, 212, 0.16);
+  --aurora-1: #22d3ee;
+  --aurora-2: #a78bfa;
+  --aurora-3: #f472b6;
 }
 
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-body);
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(34, 211, 238, 0.18), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 90% 80%, rgba(167, 139, 250, 0.16), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 50% 50%, rgba(244, 114, 182, 0.08), transparent 60%),
+    var(--bg);
   color: var(--text);
   overflow: hidden;
   height: 100vh;
@@ -86,8 +93,12 @@ body.presenter-local .presenter-banner strong { color: var(--accent); }
 .slide__display {
   font-size: clamp(48px, 8vw, 112px);
   line-height: 1.02;
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 55%, var(--aurora-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .slide__heading {
   font-size: clamp(32px, 4.5vw, 56px);
@@ -186,8 +197,9 @@ body.presenter-local .presenter-banner strong { color: var(--accent); }
 .slide__panel {
   padding: clamp(24px, 3vh, 40px);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 16px;
   background: var(--surface);
+  backdrop-filter: blur(12px);
 }
 .slide__panel--secondary {
   background: var(--surface2);
@@ -307,7 +319,7 @@ body.presenter-local .presenter-banner strong { color: var(--accent); }
   display: flex;
   gap: 16px;
   align-items: center;
-  background: rgba(15, 23, 41, 0.85);
+  background: rgba(7, 11, 22, 0.82);
   backdrop-filter: blur(12px);
   padding: 10px 20px;
   border-radius: 100px;
@@ -408,32 +420,32 @@ body.presenter-local .presenter-banner strong { color: var(--accent); }
       <svg viewBox="0 0 1000 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:var(--font-mono);">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-            <path d="M0 0 L10 5 L0 10 z" fill="#d4a437"/>
+            <path d="M0 0 L10 5 L0 10 z" fill="#5eead4"/>
           </marker>
         </defs>
         <!-- 5 boxes left → right -->
-        <g font-size="14" fill="#f5edd8" text-anchor="middle">
-          <rect x="20"  y="80" width="160" height="80" rx="4" fill="#162040" stroke="#d4a437" stroke-width="1.5"/>
+        <g font-size="14" fill="#eef4ff" text-anchor="middle">
+          <rect x="20"  y="80" width="160" height="80" rx="12" fill="rgba(16,24,43,0.9)" stroke="#5eead4" stroke-width="1.5"/>
           <text x="100" y="115" font-weight="600">PI tool call</text>
-          <text x="100" y="135" font-size="11" fill="#b8ad8f">lumen-generate_visual</text>
+          <text x="100" y="135" font-size="11" fill="#9aadc8">lumen-generate_visual</text>
 
-          <rect x="220" y="80" width="160" height="80" rx="4" fill="#162040" stroke="#d4a437" stroke-width="1.5"/>
+          <rect x="220" y="80" width="160" height="80" rx="12" fill="rgba(16,24,43,0.9)" stroke="#5eead4" stroke-width="1.5"/>
           <text x="300" y="115" font-weight="600">validate</text>
-          <text x="300" y="135" font-size="11" fill="#b8ad8f">type + content shape</text>
+          <text x="300" y="135" font-size="11" fill="#9aadc8">type + content shape</text>
 
-          <rect x="420" y="80" width="160" height="80" rx="4" fill="#162040" stroke="#d4a437" stroke-width="1.5"/>
+          <rect x="420" y="80" width="160" height="80" rx="12" fill="rgba(16,24,43,0.9)" stroke="#5eead4" stroke-width="1.5"/>
           <text x="500" y="115" font-weight="600">route</text>
-          <text x="500" y="135" font-size="11" fill="#b8ad8f">mermaid · diagram · chart</text>
+          <text x="500" y="135" font-size="11" fill="#9aadc8">mermaid · diagram · chart</text>
 
-          <rect x="620" y="80" width="160" height="80" rx="4" fill="#162040" stroke="#d4a437" stroke-width="1.5"/>
+          <rect x="620" y="80" width="160" height="80" rx="12" fill="rgba(16,24,43,0.9)" stroke="#5eead4" stroke-width="1.5"/>
           <text x="700" y="115" font-weight="600">render</text>
-          <text x="700" y="135" font-size="11" fill="#b8ad8f">single-file HTML</text>
+          <text x="700" y="135" font-size="11" fill="#9aadc8">single-file HTML</text>
 
-          <rect x="820" y="80" width="160" height="80" rx="4" fill="#1d2b52" stroke="#f0c060" stroke-width="2"/>
-          <text x="900" y="115" font-weight="600" fill="#f0c060">open</text>
-          <text x="900" y="135" font-size="11" fill="#b8ad8f">in browser</text>
+          <rect x="820" y="80" width="160" height="80" rx="12" fill="rgba(30,44,82,0.95)" stroke="#a5f3fc" stroke-width="2"/>
+          <text x="900" y="115" font-weight="600" fill="#a5f3fc">open</text>
+          <text x="900" y="135" font-size="11" fill="#9aadc8">in browser</text>
         </g>
-        <g stroke="#d4a437" stroke-width="1.5" fill="none" marker-end="url(#arr)">
+        <g stroke="#5eead4" stroke-width="1.5" fill="none" marker-end="url(#arr)">
           <line x1="180" y1="120" x2="220" y2="120"/>
           <line x1="380" y1="120" x2="420" y2="120"/>
           <line x1="580" y1="120" x2="620" y2="120"/>
@@ -447,7 +459,7 @@ body.presenter-local .presenter-banner strong { color: var(--accent); }
 <section class="slide slide--quote">
   <span class="slide__number">06</span>
   <div class="slide__inner">
-    <div class="slide__quote-mark reveal">"</div>
+    <div class="slide__quote-mark reveal"><span>"</span></div>
     <blockquote class="reveal">Skills should ship the renderer next to the recipe, not behind a service.</blockquote>
     <cite class="reveal">— Lumen design rule, README §Architecture</cite>
   </div>

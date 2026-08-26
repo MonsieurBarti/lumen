@@ -50,8 +50,8 @@ describe("resolveTheme", () => {
 		const result = await resolveTheme({ cwd: projectTempDir });
 
 		expect(result.source).toBe("preset");
-		expect(result.path).toBe("skills/_shared/aesthetics/editorial.css");
-		expect(result.css).toContain("editorial.css");
+		expect(result.path).toBe("skills/_shared/aesthetics/aurora.css");
+		expect(result.css).toContain("aurora.css");
 		expect(result.css.length).toBeGreaterThan(0);
 	});
 
@@ -59,7 +59,7 @@ describe("resolveTheme", () => {
 		// No project, no global -> preset
 		let result = await resolveTheme({ cwd: projectTempDir });
 		expect(result.source).toBe("preset");
-		expect(result.path).toContain("editorial.css");
+		expect(result.path).toContain("aurora.css");
 
 		// Add global theme -> global
 		const globalDir = join(homeTempDir, ".agent", "lumen");
@@ -85,11 +85,11 @@ describe("resolveTheme", () => {
 		expect(result.css).toContain("midnight-editorial.css");
 	});
 
-	it("defaults to editorial preset when no preset is specified", async () => {
+	it("defaults to aurora preset when no preset is specified", async () => {
 		const result = await resolveTheme({ cwd: projectTempDir });
 
 		expect(result.source).toBe("preset");
-		expect(result.path).toContain("editorial.css");
+		expect(result.path).toContain("aurora.css");
 	});
 
 	it("propagates non-ENOENT errors from the project path", async () => {
