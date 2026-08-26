@@ -37,6 +37,7 @@
 		"prepare": "lefthook install || true"
 	},
 	"keywords": [
+		"agent-skills",
 		"pi-package",
 		"pi",
 		"pi-coding-agent",
@@ -47,6 +48,7 @@
 		"diagrams",
 		"charts",
 		"mermaid",
+		"omp",
 		"slides",
 		"gallery",
 		"visualization",
@@ -55,6 +57,9 @@
 		"tff",
 		"the-forge-flow"
 	],
+	"bin": {
+		"lumen-export-slides": "./dist/cli/export-slides.js"
+	},
 	"author": "The Forge Flow",
 	"license": "MIT",
 	"repository": {

@@ -28,7 +28,7 @@ export async function resolveTheme(
 	options: { cwd?: string; preset?: string } = {},
 ): Promise<ResolvedTheme> {
 	const cwd = options.cwd ?? process.cwd();
-	const preset = options.preset ?? "editorial";
+	const preset = options.preset ?? "aurora";
 
 	const projectPath = join(cwd, "_theme.css");
 	try {

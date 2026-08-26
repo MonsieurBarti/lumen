@@ -23,6 +23,8 @@ describe("skill manifest integrity", () => {
 				expect(body, "frontmatter must start at line 1").toMatch(/^---\n/);
 				expect(body).toMatch(/^name: /m);
 				expect(body).toMatch(/^description: /m);
+				expect(body).toMatch(/^license: MIT/m);
+				expect(body).toMatch(/^compatibility: /m);
 				expect(body).toMatch(/^version: \d+\.\d+\.\d+/m);
 			});
 
@@ -39,6 +41,37 @@ describe("skill manifest integrity", () => {
 				expect(body.toLowerCase()).toContain("mit");
 			});
 		}
+	}
+});
+
+const MODEL_INVOKED_CAPABILITIES = LUMEN_CAPABILITIES.filter((id) => id !== "lumen-slides-export");
+const USER_INVOKED_IDS = ["lumen-slides-export", ...LUMEN_COMPOSITES, ...LUMEN_PLAYBOOKS] as const;
+
+describe("writing-for-agents skill shape", () => {
+	for (const skill of MODEL_INVOKED_CAPABILITIES) {
+		it(`${skill} is model-invoked (no disable-model-invocation)`, () => {
+			const body = readFileSync(join(ROOT, "skills", skill, "SKILL.md"), "utf8");
+			expect(body).not.toMatch(/^disable-model-invocation: true/m);
+			const desc = body.match(/^description: (.+)$/m)?.[1] ?? "";
+			expect(desc.length).toBeLessThanOrEqual(160);
+		});
+
+		it(`${skill} SKILL.md body stays under 4KB`, () => {
+			const body = readFileSync(join(ROOT, "skills", skill, "SKILL.md"), "utf8");
+			expect(body.length).toBeLessThan(4096);
+		});
+	}
+
+	for (const id of USER_INVOKED_IDS) {
+		const tierDir = LUMEN_PLAYBOOKS.includes(id as (typeof LUMEN_PLAYBOOKS)[number])
+			? "playbooks"
+			: LUMEN_COMPOSITES.includes(id as (typeof LUMEN_COMPOSITES)[number])
+				? "composites"
+				: "skills";
+		it(`${id} is user-invoked (disable-model-invocation)`, () => {
+			const body = readFileSync(join(ROOT, tierDir, id, "SKILL.md"), "utf8");
+			expect(body).toMatch(/^disable-model-invocation: true/m);
+		});
 	}
 });
 

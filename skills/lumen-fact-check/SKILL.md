@@ -1,72 +1,19 @@
 ---
 name: lumen-fact-check
-description: Verify factual accuracy of a document against the actual codebase, then propose or apply in-place corrections. Invoke when user asks to fact-check, verify this doc, is this still accurate, audit this doc, or supplies a doc that may have drifted from code.
+description: Fact-check: verify document claims against the codebase. User asks to verify, audit, or check doc accuracy.
+license: MIT
+compatibility: Claude Code · Pi · OMP
 version: 0.1.9 # x-release-please-version
 ---
 
-# lumen-fact-check
+**Tier:** capability (atomic) — does not invoke other lumen skills.
 
-Read a document → extract every verifiable claim → check each against code + git → correct in place → append a verification summary.
+## Steps
 
-📄 Rendered example: [`docs/examples/fact-check/`](../../docs/examples/fact-check/) (before/after pair, 11 cited corrections)
+1. **Target** — resolve file from `$1` or latest `~/.agent/lumen/*.html`. Done when document is loaded.
+2. **Extract** — list verifiable claims (counts, names, behavior, structure, git history); skip opinions. Done when claim inventory is complete.
+3. **Verify** — check each against code/git; tag Confirmed / Corrected / Unverifiable with confidence. Done when every claim has an outcome.
+4. **Correct** — surgical edits in place; preserve layout. Done when corrections match sources (`file:line`).
+5. **Summarize** — append verification summary section. Done when counts and fixes are visible.
 
-**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
-
-## When to invoke
-
-Triggers: `fact-check`, `verify this doc`, `is this still accurate`, `check this against the codebase`, `does this README match the code`, `audit this doc`.
-
-## Pipeline
-
-Follow the full recipe in `references/fact-check-recipe.md` (lifted from visual-explainer). Summary:
-
-1. **Resolve target file** from `$1` (explicit path) or default to most recently modified `~/.agent/lumen/*.html` or `~/.agent/diagrams/*.html`.
-2. **Auto-detect document type** (HTML review page vs plan/spec markdown vs other) and adjust verification strategy.
-3. **Phase 1 — Extract claims:**
-   - Quantitative (line counts, file counts, metrics)
-   - Naming (functions, types, modules, file paths)
-   - Behavioral (what code does, before/after comparisons)
-   - Structural (architecture, dependencies, module boundaries)
-   - Temporal (git history claims, timeline entries)
-   - **Skip** subjective analysis (opinions, design judgments).
-4. **Phase 2 — Verify against source:**
-   - Re-read every referenced file; check signatures + behavior.
-   - For git history claims: re-run `git diff --stat`, `git log`, `git diff --name-status`; compare numbers.
-   - For diff-reviews: read both `git show <ref>:file` and working tree to catch before/after swaps.
-   - Classify each claim by outcome: **Confirmed** / **Corrected** / **Unverifiable**.
-   - Assign a confidence level to every checked claim: **High** (primary-source exact match), **Medium** (verified but required interpretation or inference), **Low** (secondary, outdated, or pushes beyond explicit source statement), **Unverifiable** (cannot be checked with available tools).
-5. **Phase 3 — Correct in place** via surgical `Edit` calls.
-   - Preserve layout, CSS, structure.
-   - For HTML: keep Mermaid diagrams unless a label is factually wrong.
-   - For markdown: keep heading structure + organization.
-6. **Phase 4 — Append verification summary:**
-   - HTML: insert as styled banner at top or final section, matching page styling.
-   - Markdown: append `## Verification Summary` at end.
-   - Include: claims checked, confirmed count, corrections (with `file.ts:LN` source for each fix), unverifiable flags.
-7. **Phase 5 — Report.** Tell the user what was checked, corrected, opened. If nothing needed correction, say so.
-
-## Boundaries (lift verbatim from upstream)
-
-This is **not** a re-review. It does not second-guess analysis, opinions, or design judgments. It does not change the document's structure or organization. It is a fact-checker — it verifies that the data presented matches reality, corrects what doesn't, and leaves everything else alone.
-
-## Output
-
-The corrected document, in place. Plus a verification summary section. The user sees both.
-
-## Quality checks
-
-- Every claim was either verified, corrected, or flagged unverifiable — none silently passed.
-- Corrections cite source location (`file.ts:LN` or git command).
-- Subjective analysis was untouched.
-- Document structure preserved.
-- Confidence level (High/Medium/Low/Unverifiable) is assigned to every checked claim and surfaced in the verification summary.
-- Uncertainty is transparent: Low and Unverifiable claims include an explanation of why evidence is weak and what would upgrade confidence.
-- Follow `skills/_shared/instructions.md` for evidence rules, citation format, and validation conventions.
-
-## PI extension route (v0.1.x)
-
-Permanently skill-path only by design. `lumen-fact-check` needs `Read` / `Grep` / `Bash` / `Edit` access to verify claims against the actual codebase and apply surgical corrections. A deterministic PI tool cannot perform this agentic verification loop.
-
-## Sources
-
-- [`nicobailon/visual-explainer` `commands/fact-check.md`](https://github.com/nicobailon/visual-explainer) (MIT) — full recipe lifted to `references/fact-check-recipe.md`
+Recipe + boundaries: `references/fact-check-recipe.md`. Example: `docs/examples/fact-check/`.

@@ -1,6 +1,6 @@
 # Phase 3 — Generate (lumen-guide)
 
-> **Self-check:** if you are reading this file, the `Read ${CLAUDE_PLUGIN_ROOT}/skills/lumen-guide/references/phase-3-generate.md` directive from `SKILL.md:Pipeline · Deliver` resolved. If you are building a lumen-guide split-file output and have not seen this header, abort and report the unresolved path — this body is mandatory for split-file generation.
+> **Self-check:** if you are reading this file, the path from `SKILL.md:Pipeline · Deliver` resolved. See `skills/_shared/platform-paths.md` for harness-specific roots (Claude Code `$CLAUDE_PLUGIN_ROOT`, Pi `dist/skills/`, OMP plugin install). If you are building a lumen-guide split-file output and have not seen this header, abort and report the unresolved path — this body is mandatory for split-file generation.
 
 **File paths:**
 ```

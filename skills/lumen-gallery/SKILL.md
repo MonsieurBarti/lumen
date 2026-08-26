@@ -1,104 +1,18 @@
 ---
 name: lumen-gallery
-description: Generate image or audio comparison gallery as HTML with pivot grouping, dynamic filters, search, lightbox, starring. 5 templates (pivot matrix, simple batches, comparison cards, audio players, multi-mode). Invoke when user asks to compare visually, showcase, gallery, side by side, show iterations, multi-mode gallery, audio comparison.
+description: Gallery: filterable comparison HTML (image or audio). User asks to showcase, compare side by side, or browse iterations.
+license: MIT
+compatibility: Claude Code · Pi · OMP
 version: 0.1.9 # x-release-please-version
 ---
 
-# lumen-gallery
+**Tier:** capability (atomic) — does not invoke other lumen skills.
 
-Multi-mode gallery. Auto-discovered filters. Lightbox + starring + lazy load + search.
+## Steps
 
-📄 Rendered example: [`docs/examples/gallery.html`](../../docs/examples/gallery.html)
+1. **Shape** — item list as `{src, dims, score?, label?}[]` (preferred) or filename strings with `inferMeta`. Done when every item has `data-*` dims for filtering.
+2. **Template** — copy closest `templates/*.html` (pivot, simple, comparison, audio, multi-mode). Walkthrough: `templates/README.md`. Done when template matches data shape.
+3. **Build** — wire `DIMS`, replace placeholders, link or inline `gallery-base.css` + `gallery-base.js`. Done when filters, lightbox, and search work.
+4. **Deliver** — write `~/.agent/diagrams/<slug>.html` (+ assets if split mode), open in browser. Done when path is returned.
 
-**Tier:** capability (atomic) — does not invoke other lumen skills. Composites and playbooks may invoke it.
-
-## When to invoke
-
-Triggers: `gallery`, `showcase`, `compare visually`, `sprite gallery`, `side by side`, `create a gallery`, `show iterations`, `multi-mode gallery`, `audio comparison`, `voice cloning A/B`.
-
-## 5 templates (`templates/`)
-
-| Template | Best for |
-|---|---|
-| `pivot-gallery.html` | Matrix view (col × row grouping, dynamic pivot segs, score filter) |
-| `simple-gallery.html` | Batch tabs + starring + lightbox + lazy load |
-| `comparison-gallery.html` | Cards with spec tables + verdict badges |
-| `audio-gallery.html` | Audio players + engine grouping (TTS A/B, voice cloning) |
-| `multi-mode-gallery.html` | Mode tabs + per-mode DIMS + downloads dropdown |
-
-Copy the closest template, replace `{{PLACEHOLDERS}}`, customize the `DIMS` object. Full template-by-template walkthrough in `templates/README.md`.
-
-## DIMS pattern (auto-discovered filters)
-
-Each gallery item exposes `data-*` attributes (e.g., `data-engine="elevenlabs"`, `data-voice="alice"`, `data-score="0.92"`). The `DIMS` JS object declares which dims are filterable; the runtime auto-discovers their unique values, builds filter buttons, and applies multi-select intersection filtering.
-
-## Runtime API (`templates/gallery-base.js`)
-
-- `buildDimFilters(DIMS, container)` — auto-discover unique values per dim, create filter buttons
-- `applyDimFilters(items, DIMS, activeFilters)` — filter visible items (intersection across dims)
-- `buildPivotSegsFromDims(DIMS, colId, rowId)` — auto-build col / row segmentation buttons
-- Lightbox (click to fullscreen, Esc to close, backdrop click to dismiss)
-- Lazy loading (`IntersectionObserver` + `loading="lazy"` fallback)
-- Starring (localStorage-persisted)
-- Search (substring across `data-*` attrs)
-- Size controls (zoom in/out)
-- Toast notifications
-
-Plus `templates/gallery-base.css` for the shared layout primitives (lightbox modal, filter chips, card grid, masonry/pivot variants).
-
-## Mode B (split files)
-
-Galleries link `gallery-base.{css,js}` rather than inline (galleries can be many MB; split keeps the shell light). When deploying, drop the gallery HTML next to the assets folder, with `gallery-base.css` + `gallery-base.js` in a sibling location.
-
-## Pipeline
-
-1. Receive item list:
-   - Filename strings (`["voice1.mp3", "voice2.mp3"]`) — fall back to `inferMeta(name)` from `gallery-base.js` to extract dims from filename patterns
-   - **OR** item objects (`[{src, dims, score?, label?}]`) — preferred when caller has structured data
-2. Pick template based on shape:
-   - matrix data → `pivot-gallery`
-   - iteration batches → `simple-gallery`
-   - spec comparison → `comparison-gallery`
-   - audio → `audio-gallery`
-   - multi-dataset → `multi-mode-gallery`
-3. Inject items + DIMS schema into template.
-4. Pick aesthetic (reuse `_shared/aesthetics/*.css`; default `editorial.css` for galleries).
-5. Write file.
-
-## Fixtures
-
-Reference input shapes ship in `fixtures/`:
-
-- `pivot.json` — matrix-shaped data with score
-- `simple.json` — batch-grouped iteration set
-- `comparison.json` — spec-comparison cards
-- `audio.json` — audio engine A/B
-
-Use them as a template for the JSON your caller passes in.
-
-## Quality checks
-
-- All `data-*` attrs match the keys declared in `DIMS`
-- Lightbox has Esc-to-close + backdrop click
-- Lazy loading fires below fold
-- Starring persists across reload
-- Mobile: touch swipe in lightbox, single-column fallback
-- `prefers-reduced-motion` disables zoom transitions
-- Files referenced in items[] exist (validate before writing HTML)
-
-## Output
-
-- Single-file mode (small galleries, ≤30 items): everything inlined.
-- Split-file mode (default for ≥30 items): shell HTML + `gallery-base.{css,js}` next to it.
-
-Either mode opens via `file://`.
-
-## PI extension route (v0.1.x)
-
-Not wired through `lumen-generate_visual` PI tool. A deterministic schema (template selector + item array with dims/scores + optional captions) is feasible but not yet implemented. Galleries still depend on user-provided assets (images / audio files), so the LLM-authored CC path remains the right fit when assets are present.
-
-## Sources
-
-- [`Roxabi/roxabi-forge/plugins/forge/references/gallery-templates/`](https://github.com/Roxabi/roxabi-forge) (MIT) — 5 templates + `gallery-base.css` + `gallery-base.js` + per-template walkthrough README
-- [`Roxabi/roxabi-forge/plugins/forge/skills/forge-gallery/fixtures/`](https://github.com/Roxabi/roxabi-forge) (MIT) — 4 input-shape fixtures
-- `skills/_shared/aesthetics/` (this package) — 5 aesthetics shared with diagrams + guides
+Example: `docs/examples/gallery.html`.
