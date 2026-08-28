@@ -70,6 +70,13 @@ describe("cross-platform compatibility", () => {
 		}
 	});
 
+	it("extension uses named typebox import (OMP remaps default imports incorrectly)", () => {
+		const src = readFileSync(join(ROOT, "src/index.ts"), "utf8");
+		expect(src).toMatch(/import\s*\{\s*Type\s*\}\s*from\s*["']typebox["']/);
+		expect(src).not.toMatch(/import\s+Type\s+from\s*["']typebox["']/);
+		expect(src).not.toMatch(/from\s*["']@mariozechner\/pi-ai["']/);
+	});
+
 	it("ships platform path guidance for harness-agnostic asset resolution", () => {
 		const path = join(ROOT, "skills/_shared/platform-paths.md");
 		expect(existsSync(path)).toBe(true);
