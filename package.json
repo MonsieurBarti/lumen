@@ -13,6 +13,7 @@
 	},
 	"files": [
 		"dist",
+		"src",
 		"skills",
 		"composites",
 		"playbooks",
@@ -21,7 +22,7 @@
 		"LICENSE"
 	],
 	"scripts": {
-		"prebuild": "rm -rf dist/skills dist/composites dist/playbooks && mkdir -p dist && cp -R skills dist/skills && cp -R composites dist/composites && cp -R playbooks dist/playbooks",
+		"prebuild": "mkdir -p dist",
 		"build": "tsc -p tsconfig.build.json",
 		"dev": "tsc -p tsconfig.build.json --watch",
 		"test": "vitest run",
@@ -34,7 +35,8 @@
 		"fmt": "biome format --write .",
 		"typecheck": "tsc --noEmit",
 		"clean": "rm -rf dist",
-		"prepare": "lefthook install || true"
+		"prepare": "lefthook install || true",
+		"prepack": "npm run build"
 	},
 	"keywords": [
 		"agent-skills",
@@ -76,14 +78,24 @@
 	"engines": {
 		"node": ">=22.5.0"
 	},
-	"pi": {
+	"omp": {
 		"extensions": [
-			"./dist/index.js"
+			"./src/index.ts"
 		],
 		"skills": [
-			"./dist/skills",
-			"./dist/composites",
-			"./dist/playbooks"
+			"./skills",
+			"./composites",
+			"./playbooks"
+		]
+	},
+	"pi": {
+		"extensions": [
+			"./src/index.ts"
+		],
+		"skills": [
+			"./skills",
+			"./composites",
+			"./playbooks"
 		]
 	},
 	"peerDependencies": {

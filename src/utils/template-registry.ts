@@ -3,8 +3,8 @@
  * pattern metadata from skills/lumen-slides/_templates/index.json.
  *
  * Path resolution: tries two candidate directories in order, uses the first
- * that exists. Production install ships skills/ both at the package root AND
- * mirrored at dist/skills/ (per the prebuild script in package.json).
+ * that exists. Skills live at the package root (`skills/`); when running
+ * from compiled `dist/utils/` the `../..` candidate resolves there.
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -29,7 +29,7 @@ function resolveTemplateDir(): string {
 		}
 	}
 	throw new Error(
-		`Could not locate slide template directory. Tried: ${CANDIDATE_TEMPLATE_DIRS.join(", ")}. Ensure the package was built (bun run build) so dist/skills/ exists.`,
+		`Could not locate slide template directory. Tried: ${CANDIDATE_TEMPLATE_DIRS.join(", ")}. Expected package-root skills/lumen-slides/_templates/.`,
 	);
 }
 

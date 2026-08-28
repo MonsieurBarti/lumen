@@ -5,9 +5,8 @@
  * deterministic).
  *
  * Path resolution: tries two candidate directories in order, uses the first
- * that exists. Production install ships skills/ both at the package root
- * (per package.files) AND mirrored at dist/skills/ (per the prebuild script
- * in package.json), so either layout resolves cleanly.
+ * that exists. Skills live at the package root (`skills/`); when running
+ * from compiled `dist/utils/` the `../..` candidate resolves there.
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -20,8 +19,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Candidate locations for the aesthetics CSS directory. Try each in order.
- *   - production install: <pkg>/dist/utils/ → <pkg>/dist/skills/_shared/aesthetics/
- *   - dev / vitest: src/utils/ → repo-root/skills/_shared/aesthetics/
+ *   - compiled: <pkg>/dist/utils/ → <pkg>/skills/_shared/aesthetics/
+ *   - source / vitest: src/utils/ → repo-root/skills/_shared/aesthetics/
  */
 const CANDIDATE_AESTHETICS_DIRS = [
 	join(__dirname, "..", "skills", "_shared", "aesthetics"),
@@ -39,7 +38,7 @@ function resolveAestheticsDir(): string {
 		}
 	}
 	throw new Error(
-		`Could not locate fgraph aesthetics directory. Tried: ${CANDIDATE_AESTHETICS_DIRS.join(", ")}. Ensure the package was built (bun run build) so dist/skills/ exists.`,
+		`Could not locate fgraph aesthetics directory. Tried: ${CANDIDATE_AESTHETICS_DIRS.join(", ")}. Expected package-root skills/_shared/aesthetics/.`,
 	);
 }
 
