@@ -13,10 +13,11 @@
  * prebuilt `dist/` (OMP/Pi load TypeScript directly).
  */
 
-import { StringEnum } from "@mariozechner/pi-ai";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { defineTool } from "@mariozechner/pi-coding-agent";
-import Type from "typebox";
+// Named import required: OMP remaps `typebox` to its shim and default-import
+// leaves `Type.String` undefined (→ "Type.String is not a function").
+import { Type } from "typebox";
 import { generateChartTemplate, parseChartContent } from "./templates/chart/index.js";
 import { generateDiagramTemplate, parseFgraphContent } from "./templates/diagram/index.js";
 import { generateMermaidTemplate } from "./templates/mermaid.js";
@@ -30,6 +31,7 @@ import type {
 import { checkForUpdates } from "./update-check.js";
 import { openInBrowser } from "./utils/browser-open.js";
 import { createInitialState, writeHtmlFile } from "./utils/file-writer.js";
+import { stringEnum } from "./utils/string-enum.js";
 import {
 	generateDefaultFilename,
 	isAesthetic,
@@ -236,7 +238,7 @@ export default function lumenExtension(pi: ExtensionAPI) {
 			"For visual types other than mermaid + diagram + chart, invoke the matching lumen-* skill directly until that route lands.",
 		],
 		parameters: Type.Object({
-			type: StringEnum(WIRED_VISUAL_TYPES, {
+			type: stringEnum(WIRED_VISUAL_TYPES, {
 				description:
 					"Wired visualization type. For slides, galleries, guides, recaps, and fact-checks invoke the matching lumen-* skill.",
 			}),
@@ -256,7 +258,7 @@ export default function lumenExtension(pi: ExtensionAPI) {
 			]),
 			title: Type.String({ description: "Title for the visualization" }),
 			aesthetic: Type.Optional(
-				StringEnum(
+				stringEnum(
 					[
 						"blueprint",
 						"editorial",
@@ -276,7 +278,7 @@ export default function lumenExtension(pi: ExtensionAPI) {
 				),
 			),
 			theme: Type.Optional(
-				StringEnum(["light", "dark", "auto"] as const, {
+				stringEnum(["light", "dark", "auto"] as const, {
 					description: "Color theme mode",
 				}),
 			),
