@@ -3,7 +3,7 @@ name: lumen-diagram
 description: Diagram: single-file fgraph HTML. User asks to draw, diagram, sketch, or visualize architecture, flow, or topology.
 license: MIT
 compatibility: Claude Code · Pi · OMP. Pi tool: type diagram.
-version: 0.1.9 # x-release-please-version
+version: 0.1.10 # x-release-please-version
 ---
 
 **Tier:** capability (atomic) — does not invoke other lumen skills.

@@ -4,7 +4,7 @@ description: Multi-tab architecture HTML via diagram → guide → fact-check. I
 disable-model-invocation: true
 license: MIT
 compatibility: Claude Code · Pi · OMP
-version: 0.1.9 # x-release-please-version
+version: 0.1.10 # x-release-please-version
 ---
 
 **Tier:** composite (molecular) — orchestrates capabilities in a fixed pipeline.

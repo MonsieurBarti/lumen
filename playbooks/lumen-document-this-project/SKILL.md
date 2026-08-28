@@ -4,7 +4,7 @@ description: Full docs pack (readme-pack + architecture-doc). Invoke manually �
 disable-model-invocation: true
 license: MIT
 compatibility: Claude Code · Pi · OMP
-version: 0.1.9 # x-release-please-version
+version: 0.1.10 # x-release-please-version
 ---
 
 **Tier:** playbook (compound) — human-in-the-loop orchestrator over composites.

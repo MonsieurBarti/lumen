@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.10](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.9...lumen-v0.1.10) (2026-08-28)
+
+
+### Features
+
+* **slides:** presenter mode, horizontal nav, modern aesthetics ([#39](https://github.com/MonsieurBarti/lumen/issues/39)) ([5f3709e](https://github.com/MonsieurBarti/lumen/commit/5f3709ef09d237882bab06eb207bb910df05bf3c))
+
+
+### Bug Fixes
+
+* **omp:** point extension manifest at src for GitHub installs ([#42](https://github.com/MonsieurBarti/lumen/issues/42)) ([fbfdaf3](https://github.com/MonsieurBarti/lumen/commit/fbfdaf380dff6be87436a72725124705b07e82ac))
+* **omp:** use named typebox import for extension load ([#43](https://github.com/MonsieurBarti/lumen/issues/43)) ([b992efc](https://github.com/MonsieurBarti/lumen/commit/b992efc4e015cd32c65273a127449d57f905e08b))
+
 ## [0.1.9](https://github.com/MonsieurBarti/lumen/compare/lumen-v0.1.8...lumen-v0.1.9) (2026-05-10)
 
 

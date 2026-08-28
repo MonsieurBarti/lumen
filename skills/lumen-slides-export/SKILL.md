@@ -4,7 +4,7 @@ description: Export an existing lumen deck HTML to editable .pptx via lumen-expo
 disable-model-invocation: true
 license: MIT
 compatibility: Claude Code · Pi · OMP
-version: 0.1.9 # x-release-please-version
+version: 0.1.10 # x-release-please-version
 ---
 
 **Tier:** capability (atomic) — does not invoke other lumen skills.
