@@ -7,9 +7,10 @@
  *   - `lumen-generate_visual` wires mermaid, fgraph diagram, and chart;
  *     slides/galleries/guides/recaps use the matching lumen-* skills.
  *
- * The same `skills/` tree is consumed by the Claude Code plugin
- * (`.claude-plugin/plugin.json`) and shipped to PI under `dist/skills/` via
- * the `prebuild` script in package.json.
+ * The same `skills/` tree is consumed by Claude Code, Pi, and OMP via the
+ * source paths in package.json (`omp`/`pi` manifests → `./skills`, etc.).
+ * Extension entry is `./src/index.ts` so GitHub installs work without a
+ * prebuilt `dist/` (OMP/Pi load TypeScript directly).
  */
 
 import { StringEnum } from "@mariozechner/pi-ai";

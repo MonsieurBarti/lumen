@@ -76,13 +76,15 @@ Then reload PI with `/reload`.
 
 ### OMP (`omp.sh`)
 
-OMP inherits Claude Code plugin skills on install:
+Install from GitHub (source entry — no build required) or npm:
 
 ```bash
 omp plugin install github:MonsieurBarti/lumen
+# or
+omp plugin install @the-forge-flow/lumen
 ```
 
-Reload with `/reload-extensions`. Skills follow the [Agent Skills](https://agentskills.io/specification) `SKILL.md` format.
+Reload with `/reload-extensions`. Skills follow the [Agent Skills](https://agentskills.io/specification) `SKILL.md` format. The extension loads `src/index.ts` via the `omp`/`pi` package manifest.
 
 ## 🎯 Skills
 

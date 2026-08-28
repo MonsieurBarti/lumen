@@ -76,10 +76,12 @@ jobs:
         run: |
           # skills/_shared/ holds cross-cutting assets (no SKILL.md by design);
           # skip it. Every other skills/<name>/ MUST ship a SKILL.md.
+          # Manifest points at source skills/ (not dist/) so GitHub/OMP installs work.
           for d in skills/*/; do
             name=$(basename "$d")
             if [ "$name" = "_shared" ]; then continue; fi
-            test -f "dist/skills/$name/SKILL.md" || { echo "Missing dist/skills/$name/SKILL.md"; exit 1; }
+            test -f "skills/$name/SKILL.md" || { echo "Missing skills/$name/SKILL.md"; exit 1; }
           done
-          # And the shared aesthetics dir must be in the dist mirror.
-          test -d "dist/skills/_shared/aesthetics" || { echo "Missing dist/skills/_shared/aesthetics/"; exit 1; }
+          test -d "skills/_shared/aesthetics" || { echo "Missing skills/_shared/aesthetics/"; exit 1; }
+          test -f "src/index.ts" || { echo "Missing src/index.ts (omp/pi extension entry)"; exit 1; }
+          test -f "dist/index.js" || { echo "Missing dist/index.js after build (npm main/bin)"; exit 1; }

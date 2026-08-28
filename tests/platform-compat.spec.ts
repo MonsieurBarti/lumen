@@ -34,18 +34,40 @@ describe("cross-platform compatibility", () => {
 		expect(readme).toMatch(/omp\.sh|OMP/i);
 	});
 
-	it("package.json exposes pi extension manifest and slides export bin", () => {
+	it("package.json exposes omp+pi source manifests and slides export bin", () => {
 		const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
+			omp?: { extensions?: string[]; skills?: string[] };
 			pi?: { extensions?: string[]; skills?: string[] };
 			bin?: Record<string, string>;
+			files?: string[];
 			keywords?: string[];
+			scripts?: Record<string, string>;
 		};
-		expect(pkg.pi?.extensions).toContain("./dist/index.js");
-		expect(pkg.pi?.skills).toEqual(
-			expect.arrayContaining(["./dist/skills", "./dist/composites", "./dist/playbooks"]),
-		);
+		const skillRoots = ["./skills", "./composites", "./playbooks"];
+		for (const manifest of [pkg.omp, pkg.pi]) {
+			expect(manifest?.extensions).toEqual(["./src/index.ts"]);
+			expect(manifest?.skills).toEqual(skillRoots);
+		}
+		expect(existsSync(join(ROOT, "src/index.ts"))).toBe(true);
+		expect(pkg.files).toEqual(expect.arrayContaining(["src", "skills", "dist"]));
+		expect(pkg.scripts?.prepack).toMatch(/build/);
 		expect(pkg.bin?.["lumen-export-slides"]).toBe("./dist/cli/export-slides.js");
 		expect(pkg.keywords).toEqual(expect.arrayContaining(["agent-skills", "omp"]));
+	});
+
+	it("GitHub/OMP install does not require a committed dist/ tree", () => {
+		const gitignore = readFileSync(join(ROOT, ".gitignore"), "utf8");
+		expect(gitignore).toMatch(/^dist\/$/m);
+		const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
+			omp?: { extensions?: string[] };
+			pi?: { extensions?: string[] };
+		};
+		for (const entry of [...(pkg.omp?.extensions ?? []), ...(pkg.pi?.extensions ?? [])]) {
+			expect(entry.startsWith("./dist/"), `${entry} must not point at gitignored dist/`).toBe(
+				false,
+			);
+			expect(existsSync(join(ROOT, entry))).toBe(true);
+		}
 	});
 
 	it("ships platform path guidance for harness-agnostic asset resolution", () => {
