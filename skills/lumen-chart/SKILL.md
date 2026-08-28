@@ -3,7 +3,7 @@ name: lumen-chart
 description: Chart: single-file HTML/SVG or Chart.js from data. User asks for chart, plot, graph, trend, or comparison table.
 license: MIT
 compatibility: Claude Code · Pi · OMP. Pi tool: type chart.
-version: 0.1.9 # x-release-please-version
+version: 0.1.10 # x-release-please-version
 ---
 
 **Tier:** capability (atomic) — does not invoke other lumen skills.

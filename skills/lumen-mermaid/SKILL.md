@@ -3,7 +3,7 @@ name: lumen-mermaid
 description: Mermaid: self-contained HTML with zoom/pan shell. User supplies or requests mermaid source (flowchart, sequence, ER, state).
 license: MIT
 compatibility: Claude Code · Pi · OMP. Pi tool: flowchart, sequence, er, state, mermaid_custom.
-version: 0.1.9 # x-release-please-version
+version: 0.1.10 # x-release-please-version
 ---
 
 **Tier:** capability (atomic) — does not invoke other lumen skills.

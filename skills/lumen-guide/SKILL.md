@@ -3,7 +3,7 @@ name: lumen-guide
 description: Guide: multi-tab HTML document. User asks for guide, architecture overview, or tabbed reference doc.
 license: MIT
 compatibility: Claude Code · Pi · OMP
-version: 0.1.9 # x-release-please-version
+version: 0.1.10 # x-release-please-version
 ---
 
 **Tier:** capability (atomic) — does not invoke other lumen skills.

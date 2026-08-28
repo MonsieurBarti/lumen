@@ -3,7 +3,7 @@ name: lumen-fact-check
 description: Fact-check: verify document claims against the codebase. User asks to verify, audit, or check doc accuracy.
 license: MIT
 compatibility: Claude Code · Pi · OMP
-version: 0.1.9 # x-release-please-version
+version: 0.1.10 # x-release-please-version
 ---
 
 **Tier:** capability (atomic) — does not invoke other lumen skills.

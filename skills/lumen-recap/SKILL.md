@@ -3,7 +3,7 @@ name: lumen-recap
 description: Recap: project-state HTML from git. User asks where we are, recap, or returns after a break.
 license: MIT
 compatibility: Claude Code · Pi · OMP
-version: 0.1.9 # x-release-please-version
+version: 0.1.10 # x-release-please-version
 ---
 
 **Tier:** capability (atomic) — does not invoke other lumen skills.
